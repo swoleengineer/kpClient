@@ -1,4 +1,4 @@
-import { IQuestionState } from '../models';
+import { IQuestionState, IQuestion } from '../models';
 
 export const initialQuestionState: IQuestionState = {
   questions: [],
@@ -9,3 +9,9 @@ export const initialQuestionState: IQuestionState = {
   },
   selectedQuestion: {}
 };
+
+export const sortQuestionByDate = (a: IQuestion, b: IQuestion) => a.created > b.created
+  ? -1
+  : a.created < b.created
+    ? 1
+    : 0;

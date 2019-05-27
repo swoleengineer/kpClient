@@ -1,4 +1,4 @@
-import { IBookState } from '../models';
+import { IBookState, IBook } from '../models';
 
 export const initialBookState: IBookState = {
   books: [],
@@ -15,3 +15,9 @@ export const initialBookState: IBookState = {
   },
   selectedBook: {}
 }
+
+export const sortBooksByViews = (a: IBook, b: IBook) => a.views < b.views
+  ? -1
+  : a.views > b.views
+    ? 1
+    : 0;

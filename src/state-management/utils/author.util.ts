@@ -1,4 +1,4 @@
-import { IAuthorState } from '../models/';
+import { IAuthorState, IAuthor } from '../models/';
 
 export const initialAuthorState: IAuthorState = {
   selectedAuthor: {},
@@ -8,3 +8,9 @@ export const initialAuthorState: IAuthorState = {
     website: ''
   }
 };
+
+export const sortByAuthorName = (a: IAuthor, b: IAuthor) => a.name < b.name
+  ? -1
+  : a.name > b.name
+    ? 1
+    : 0;

@@ -18,7 +18,6 @@
     "antd": "^3.9.2",
     "axios": "^0.18.0",
     "history": "^4.7.2",
-    "loadjs": "^3.5.4",
     "lodash": "^4.17.4",
     "moment": "^2.22.2",
     "query-string": "^6.1.0",

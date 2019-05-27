@@ -6,9 +6,8 @@ import * as reducers from './state-management/reducers';
 import { IStore } from './state-management/models';
 import querySerializer from 'query-string';
 import { initialAppState } from './state-management/utils';
-import loadjs from 'loadjs';
 
-// const history = createHistory();
+
 const development = process.env.NODE_ENV !== 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
@@ -16,7 +15,7 @@ const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   title: state => state.appData.pageTitle,
   onAfterChange: (dispatch, getState) => {
     const { page, location: { prev: { type } } } = getState() as IStore;
-
+    console.log(page);
   }
 });
 

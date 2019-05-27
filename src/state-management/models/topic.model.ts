@@ -2,7 +2,7 @@ import { IUser } from './';
 
 export interface ITopicBodyObj {
   topic: string | ITopic;
-  agreed: IUser[] | string[];
+  agreed: Array<IUser | string>;
   created: Date;
 }
 
@@ -14,7 +14,7 @@ export interface ITopicRequest {
 export interface ITopic extends ITopicRequest {
   _id: string;
   active: boolean;
-  similar: ITopic[] | string[]
+  similar: Array<ITopic|string>;
 }
 
 

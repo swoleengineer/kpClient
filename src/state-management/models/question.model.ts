@@ -2,7 +2,7 @@ import { ITopicBodyObj, IUser, IComment } from './';
 import { IReport } from './report.model';
 
 export interface IQuestionRequest {
-  topics: string[] | ITopicBodyObj[];
+  topics: Array<string | ITopicBodyObj>;
   title: string;
   text: string;
 }
