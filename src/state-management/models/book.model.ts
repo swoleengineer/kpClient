@@ -1,4 +1,4 @@
-import {  ITopicBodyObj, IAuthor  }  from './';
+import {  ITopicBodyObj, IAuthor, IComment, IReport }  from './';
 
 export interface IBookRequest {
   title: string;
@@ -27,4 +27,14 @@ export interface IBook extends IBookRequest {
   active: boolean;
   likes: string[];
   created: Date;
+}
+
+export interface IExpandedBook extends IBook {
+  comments: IComment[];
+  reports: IReport[];
+}
+export interface IBookState {
+  books: IExpandedBook[];
+  newBook: IBookRequest;
+  selectedBook: IExpandedBook | {};
 }

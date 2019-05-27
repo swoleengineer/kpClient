@@ -14,3 +14,8 @@ export interface IReport extends IReportRequest {
   _id: string;
   created: Date;
 }
+
+export interface IReportState {
+  newReport: IReportRequest;
+  myReports: IReport[];
+}

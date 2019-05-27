@@ -16,3 +16,9 @@ export interface ITopic extends ITopicRequest {
   active: boolean;
   similar: ITopic[] | string[]
 }
+
+
+export interface ITopicState {
+  allTopics: ITopic[];
+  newTopic: ITopicRequest;
+}

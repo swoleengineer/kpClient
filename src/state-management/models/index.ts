@@ -5,3 +5,4 @@ export * from './question.model';
 export * from './comment.model';
 export * from './book.model';
 export * from './author.model';
+export * from './store.model';

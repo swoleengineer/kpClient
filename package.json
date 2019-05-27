@@ -9,6 +9,7 @@
   "author": "Swole Engineer",
   "license": "ISC",
   "dependencies": {
+    "@sentry/browser": "^5.3.0",
     "@types/history": "^4.6.2",
     "@types/query-string": "^6.1.0",
     "@types/redux-first-router": "^1.10.4",

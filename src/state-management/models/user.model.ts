@@ -35,3 +35,10 @@ export interface IUser extends INewUserRequest {
   notification_question_comment: boolean;
   created: Date;
 }
+
+
+export interface IUserState {
+  jwt: string;
+  user: IUser | {};
+  loggedIn: boolean;
+}

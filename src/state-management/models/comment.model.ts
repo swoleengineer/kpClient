@@ -16,3 +16,8 @@ export interface IComment {
   _id: string;
   created: Date;
 }
+
+
+export interface ICommentState {
+  newComment: ICommentRequest
+}

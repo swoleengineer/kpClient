@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Sentry from '@sentry/browser';
 
 const currentUrl = window.location.hostname;
 
@@ -19,7 +20,7 @@ export const config = () => ({
 const instance = axios.create({
   baseURL: getApiUrl(),
   headers: {
-    'x-access-token': token
+    'x-access-token': token()
   }
 })
 
@@ -34,14 +35,11 @@ instance.interceptors.response.use(response => response, error => {
   } else {
     message = `Something happened in setting up the request that triggered an error... ${JSON.stringify(error.message)}`;
   }
-
-  // Replace with Sentry error logging code.
-
-  // Raven.captureException(error, { extra: {
-  //   type: 'HTTP Request Error',
-  //   message
-  // }})
-
+  Sentry.captureException({
+    type: 'HTTP Request Error',
+    message,
+    data: error
+  });
   return Promise.reject(error);
 });
 
