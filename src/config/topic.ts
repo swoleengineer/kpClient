@@ -1,8 +1,8 @@
-import {  AxiosPromise }  from 'axios';
-import { ITopicRequest }  from '../state-management/models/';
+import {  AxiosPromise } from 'axios';
+import { ITopicRequest } from '../state-management/models/';
 import { topicGetSingleUrl, topicGetAllUrl, topicCreateNewUrl, topicDeleteUrl,
-  topicSearchUrl }  from './';
-import API, {  config }  from './api';
+  topicSearchUrl } from './';
+import API, {  config } from './api';
 
 export const getSingleTopic = (id: string): AxiosPromise => API.get(topicGetSingleUrl(id));
 export const getAllTopics = (): AxiosPromise => API.get(topicGetAllUrl);

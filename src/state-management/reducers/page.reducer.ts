@@ -3,6 +3,7 @@ import { initialAppState } from '../utils';
 
 const routes: {[key: string]: string } = {
   HOME: 'main/home',
+  [NOT_FOUND]: 'notFound',
 }
 
 export const pageReducer = (state: string = initialAppState.page, action: {

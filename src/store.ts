@@ -12,10 +12,10 @@ const development = process.env.NODE_ENV !== 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   querySerializer,
-  title: state => state.appData.pageTitle,
+  // title: state => state.appData.pageTitle,
   onAfterChange: (dispatch, getState) => {
     const { page, location: { prev: { type } } } = getState() as IStore;
-    console.log(page);
+    console.log(page, type);
   }
 });
 
@@ -23,7 +23,14 @@ const middlewares = applyMiddleware(middleware);
 
 export const rootReducer = combineReducers<IStore>({
   page: reducers.pageReducer,
-  location: reducer
+  location: reducer,
+  user: reducers.userReducer,
+  topic: reducers.topicReducer,
+  report: reducers.reportReducer,
+  question: reducers.questionReducer,
+  comment: reducers.commentReducer,
+  book: reducers.bookReducer,
+  author: reducers.authorReducer
 });
 
 function configureStore(initialState?: any) {

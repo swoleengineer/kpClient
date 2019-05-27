@@ -1,8 +1,8 @@
-import {  AxiosPromise }  from 'axios';
-import { IAuthorRequest }  from '../state-management/models/';
+import {  AxiosPromise } from 'axios';
+import { IAuthorRequest } from '../state-management/models/';
 import { authorCreateUrl, authorGetSingleUrl, authorGetManyUrl,
-  authorUpdateUrl, authorRemoveUrl }  from './';
-import API, {  config }  from './api';
+  authorUpdateUrl, authorRemoveUrl } from './';
+import API, {  config } from './api';
 
 export const postAuthorCreate = (body: IAuthorRequest): AxiosPromise => API.post(authorCreateUrl, body, config());
 export const getSingleAuthor = (id: string): AxiosPromise => API.get(authorGetSingleUrl(id));

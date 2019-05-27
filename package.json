@@ -4,7 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist",
+    "build": "yarn run clean && webpack-dashboard -- webpack --config config/webpack.config.js --env.build --env.sourceMap",
+    "dev": "webpack-dev-server --config config/webpack.config.js --open",
+    "dev:dashboard": "webpack-dashboard -m -- webpack-dev-server --config config/webpack.config.js --open",
+    "dev:awesome": "webpack-dashboard -m -- webpack-dev-server --config config/webpack.config.js --open --env.awesome",
+    "lint": "tslint --project tsconfig.json",
+    "tsc": "tsc -p . --noEmit",
+    "tsc:watch": "tsc -p . --noEmit -w",
+    "test": "jest --config jest.json",
+    "test:watch": "jest --config jest.json --watch",
+    "test:update": "jest --config jest.json -u",
+    "reinstall": "rm -rf node_modules && yarn",
+    "reinstall:win": "rd /s /q node_modules && yarn",
+    "precommit": "yarn run lint",
+    "prepush": "yarn run lint",
+    "deploy": "echo 'deploy not set!'"
   },
   "author": "Swole Engineer",
   "license": "ISC",

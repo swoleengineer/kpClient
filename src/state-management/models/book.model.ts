@@ -1,4 +1,4 @@
-import {  ITopicBodyObj, IAuthor, IComment, IReport }  from './';
+import {  ITopicBodyObj, IAuthor, IComment, IReport } from './';
 
 export interface IBookRequest {
   title: string;

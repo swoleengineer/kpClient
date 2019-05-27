@@ -1,8 +1,8 @@
-import {  AxiosPromise }  from 'axios';
-import { IQuestionRequest }  from '../state-management/models/';
+import {  AxiosPromise } from 'axios';
+import { IQuestionRequest } from '../state-management/models/';
 import { questionGetSingleUrl, questionGetManyUrl, questionCreateUrl, questionUpdateUrl, questionDeleteUrl,
-  questionAddTopicUrl, questionRmTopic, questionToggleAgree }  from './';
-import API, {  config }  from './api';
+  questionAddTopicUrl, questionRmTopic, questionToggleAgree } from './';
+import API, {  config } from './api';
 
 export const getSingleQuestion = (id: string): AxiosPromise => API.get(questionGetSingleUrl(id));
 export const getQuestionsByTopic = (topicId: string): AxiosPromise => API.get(questionGetManyUrl(topicId));

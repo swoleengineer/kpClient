@@ -1,4 +1,4 @@
-import  {IUser, acceptableTypes}  from './';
+import { IUser, acceptableTypes } from './';
 
 export interface ICommentRequest {
   author: string | IUser;

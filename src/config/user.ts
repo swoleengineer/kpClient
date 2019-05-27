@@ -1,9 +1,9 @@
-import {  AxiosPromise }  from 'axios';
-import {  INewUserRequest, IUserLoginRequest, IUserNotificationSettings }  from '../state-management/models/';
+import {  AxiosPromise } from 'axios';
+import {  INewUserRequest, IUserLoginRequest } from '../state-management/models/';
 import {  userGetDetailsUrl, userRegisterUrl, userLoginUrl, userSearchUrl,
-  userAutoAuthUrl, userForgotPassUrl, userChangePassUrl, userUpdatePicUrl,
-  userUpdateUrl, userChangeNotificationsUrl }  from './';
-import API, {  config }  from './api';
+  userAutoAuthUrl, userForgotPassUrl, userUpdatePicUrl,
+  userUpdateUrl, userChangeNotificationsUrl } from './';
+import API, {  config } from './api';
 
 export const postNewUser = (body: INewUserRequest): AxiosPromise => API.post(userRegisterUrl, body);
 export const postUserLogin = (body: IUserLoginRequest): AxiosPromise => API.post(userLoginUrl, body);

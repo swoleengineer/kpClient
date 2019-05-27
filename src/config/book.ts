@@ -1,8 +1,8 @@
-import {  AxiosPromise }  from 'axios';
-import { IBookRequest, IBookPicture }  from '../state-management/models/';
+import {  AxiosPromise } from 'axios';
+import { IBookRequest, IBookPicture } from '../state-management/models/';
 import { bookGetOneUrl, bookGetManyByTopic, bookGetAllUrl, bookAddBeginUrl, bookEditUrl,
-  bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl }  from './';
-import API, {  config }  from './api';
+  bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl } from './';
+import API, {  config } from './api';
 
 export const getSingleBook = (id: string): AxiosPromise => API.get(bookGetOneUrl(id));
 export const getManyBooksByTopic = (topicId: string): AxiosPromise => API.get(bookGetManyByTopic(topicId));

@@ -1,7 +1,7 @@
-import {  AxiosPromise }  from 'axios';
-import { ICommentRequest, ICommentSearch }  from '../state-management/models/';
-import { commentGetManyUrl, commentGetSingleUrl, commentCreateUrl, commentUpdateUrl, commentRemoveUrl }  from './';
-import API, {  config }  from './api';
+import {  AxiosPromise } from 'axios';
+import { ICommentRequest, ICommentSearch } from '../state-management/models/';
+import { commentGetManyUrl, commentGetSingleUrl, commentCreateUrl, commentUpdateUrl, commentRemoveUrl } from './';
+import API, {  config } from './api';
 
 export const postSearchManyComments = (body: ICommentSearch): AxiosPromise => API.post(commentGetManyUrl, body);
 export const getSingleComment = (id: string): AxiosPromise => API.get(commentGetSingleUrl(id));

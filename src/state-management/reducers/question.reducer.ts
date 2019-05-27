@@ -1,4 +1,4 @@
-import { IQuestionState, IQuestionRequest } from '../models';
+import { IQuestionState } from '../models';
 import { questionActionTypes as types } from '../actions';
 import { initialQuestionState, sortQuestionByDate } from '../utils';
 

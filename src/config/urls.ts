@@ -1,5 +1,5 @@
 // User
-export const userGetDetailsUrl = (id: string):string => `/user/userDetails/${id}`
+export const userGetDetailsUrl = (id: string): string => `/user/userDetails/${id}`
 export const userRegisterUrl: string = `/user/register`;
 export const userLoginUrl: string = `/user/auth`;
 export const userSearchUrl: string = `/user/search`;

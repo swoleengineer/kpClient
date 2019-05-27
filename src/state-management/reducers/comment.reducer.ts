@@ -1,6 +1,6 @@
 import { ICommentState } from '../models';
 import { commentActionTypes as types } from '../actions';
-import { initialCommentState} from '../utils';
+import { initialCommentState } from '../utils';
 
 
 
