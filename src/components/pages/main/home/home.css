@@ -1,0 +1,42 @@
+.heroSection {
+  background-color: #efefef;
+  font-family: ministry, sans-serif;
+  padding: 45px 15px 25px
+}
+.heroSection h2 {
+  font-size: 32pt;
+  font-weight: 400;
+  color: #303030;
+}
+.heroSection .heroDescription {
+  font-size: 20px;
+  color: #303030;
+  font-weight: 200;
+}
+
+.heroSection h2::selection, .heroSection .heroDescription::selection {
+  background-color: rgba(167, 182, 194, 0.3);
+  color: rgb(24, 32, 38);
+}
+.heroSearchWrapper {
+  width: 70%;
+}
+.heroSearchWrapper .bp3-popover-wrapper,
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target,
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group  {
+  width: 100%
+}
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input {
+  border-radius: 5px;
+  background-color: white;
+  border: 3px solid rgba(48, 48, 48, .47);
+  font-size: 25px;
+  height: 50px;
+  font-family: ministry, sans-serif;
+  font-weight: 200;
+  padding: 10px 15px;
+  outline: none
+}
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus {
+  box-shadow: none;
+}

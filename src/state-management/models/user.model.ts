@@ -4,7 +4,7 @@ export interface IUserProfile {
   picture: {
     public_id: string;
     link: string;
-  }
+  } | {}
 }
 
 export interface INewUserRequest {
@@ -34,11 +34,12 @@ export interface IUser extends INewUserRequest {
   notification_book_comment: boolean;
   notification_question_comment: boolean;
   created: Date;
+  username: string;
 }
 
 
 export interface IUserState {
   jwt: string;
-  user: IUser | {};
+  user:  IUser;
   loggedIn: boolean;
 }

@@ -1,0 +1,48 @@
+.appHeader {
+  background-color: #efefef;
+}
+.headerWrapper {
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.logoWrapper {
+  position: relative;
+  top: 5px
+}
+.logoWrapper span {
+  font-family: ministry, sans-serif;
+  color: #303030;
+}
+.logoWrapper span.logoKeen {
+  font-weight: 300;
+  font-size: 15px;
+}
+.logoWrapper span.logoPages {
+  font-weight: 500;
+  font-size: 15px
+}
+.logoWrapper span.logoTld {
+  font-weight: 500;
+  font-size: 11px
+}
+.logoArea {
+  float: left
+}
+.menuArea {
+  float: right;
+}
+.menuArea .authStatusWrapper {
+  display: inline;
+  margin-right: 15px;
+  position: relative;
+  top: 3px
+}
+.menuArea span {
+  transition: all .10s ease;
+}
+.menuArea .bp3-popover-wrapper:hover {
+  cursor: pointer;
+}
+.menuArea .bp3-popover-wrapper:hover span {
+  color: black
+}
