@@ -1,3 +1,10 @@
+.section_padding {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.section_padding h6 {
+  margin: 10px 0 20px;
+}
 .heroSection {
   background-color: #efefef;
   font-family: ministry, sans-serif;
@@ -19,7 +26,11 @@
   color: rgb(24, 32, 38);
 }
 .heroSearchWrapper {
-  width: 70%;
+  display: flex;
+  margin-bottom: 10px;
+}
+.heroSearchWrapper .bp3-popover-wrapper {
+  margin-right: 5px;
 }
 .heroSearchWrapper .bp3-popover-wrapper,
 .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target,
@@ -35,8 +46,56 @@
   font-family: ministry, sans-serif;
   font-weight: 200;
   padding: 10px 15px;
-  outline: none
+  outline: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus {
-  box-shadow: none;
+  box-shadow: 0 8px 17px rgba(0, 0, 0, 0.08);
+}
+
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input-action {
+  width: 100px;
+  background-color: #efefef;
+  border-radius: 0 5px 5px 0;
+  border-top: 3px solid rgba(48, 48, 48, .47);
+  border-right: 3px solid rgba(48, 48, 48, .47);
+  border-bottom: 3px solid rgba(48, 48, 48, .47);
+  height: 50px;
+  text-align: center;
+  padding-top: 8px;
+  color: #696969;
+}
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group:hover .bp3-input,
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group:hover .bp3-input-action {
+  border-color:rgba(48, 48, 48, .67);
+}
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus + .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input-action {
+  background: white
+}
+.heroAddBookBtn {
+  border-radius: 5px;
+  background-color: #e7e7e7;
+  border: 3px solid rgba(48, 48, 48, .47);
+  font-size: 16px;
+  height: 50px;
+  font-family: ministry, sans-serif;
+  font-weight: 500;
+  width: 150px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  color: #676767;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.heroAddBookBtn:hover {
+  background-color:rgba(255,255,255,.4);
+  box-shadow: 0 8px 17px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+.topicListTitle {
+  font-weight: 300
+}
+.topicListItem {
+  font-weight: 200
 }

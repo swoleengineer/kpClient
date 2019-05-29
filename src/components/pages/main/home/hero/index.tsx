@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Suggest, ItemRenderer } from '@blueprintjs/select';
-import { MenuItem, Icon } from '@blueprintjs/core';
+import { MenuItem, Icon, Divider } from '@blueprintjs/core';
 import { ITopic, IStore } from '../../../../../state-management/models';
 import { filterTopic, areTopicsEqual } from '../../../../../state-management/utils';
 import { connect } from 'react-redux';
@@ -27,7 +27,7 @@ const Hero = (props: { topics: Array<ITopic>}) => {
   const [componentTopics, setTopics] = useState(topics);
   const inputProps = {
     placeholder: 'Type a topic...',
-    rightElement: <Icon icon='search' />,
+    rightElement: <Icon icon='search' iconSize={25} />,
     large: true,
   }
   const suggestProps = {
@@ -90,6 +90,13 @@ const Hero = (props: { topics: Array<ITopic>}) => {
                 />
               }}
             />
+            <Divider />
+            <button className='heroAddBookBtn'>Add Book</button>
+          </div>
+          <div className='recentTagsLIst'>
+            <p>
+              <span className='topicListTitle'>Recent Topics:</span> {componentTopics.map((topic, i) => <a key={topic._id} className='topicListItem'>{topic.name}{i !== componentTopics.length - 1 && ', '}</a>)}
+            </p>
           </div>
         </div>
       </div>
