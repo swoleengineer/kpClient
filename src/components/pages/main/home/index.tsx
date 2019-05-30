@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from './hero';
 import BooksSection from './books';
+import Questions from './questions';
 import './home.css';
 
 const HomePage = () => {
@@ -8,6 +9,7 @@ const HomePage = () => {
     <div>
       <Hero />
       <BooksSection />
+      <Questions />
       <p>Hello this will eventually become the home page of Keen Pages.</p>
     </div>
   );

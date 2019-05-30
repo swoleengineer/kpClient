@@ -5,6 +5,9 @@
 .section_padding h6 {
   margin: 10px 0 20px;
 }
+.section_gray {
+  background: #efefef
+}
 .heroSection {
   background-color: #efefef;
   font-family: ministry, sans-serif;

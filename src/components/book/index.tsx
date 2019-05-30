@@ -5,11 +5,12 @@ import { Icon, Tooltip, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { IAuthor, IExpandedBook } from 'src/state-management/models';
 
 const Book = ({ book }: { book: IExpandedBook }) => {
-  const { title, author } = book;
+  const { title, author, pictures } = book;
   const { name: authorName } = author as IAuthor;
+  const [ picture = { link: undefined}] = pictures
   return (
     <div className='singleBookWrapper'>
-      <div className='bookPicture' style={{backgroundImage: `url('http://inspiredwomenamazinglives.com/wp-content/uploads/2018/12/Becoming-Michelle-Obama.jpg')`}}>
+      <div className='bookPicture' style={{backgroundImage: `url(${picture.link || 'http://inspiredwomenamazinglives.com/wp-content/uploads/2018/12/Becoming-Michelle-Obama.jpg'})`}}>
         <Link className='bookLink' to={{ type: 'HOME' }} />
         <span className='bookMark'>
           <Icon icon='bookmark' iconSize={40} />

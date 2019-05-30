@@ -9,19 +9,24 @@ const BooksSection = ({ books }) => {
   return (
     <section className='section_padding'>
       <div className='container'>
-        <h6>
-          Recent Books
-          <div className='headerMenu'>
-            <ButtonGroup>
-              <Button icon='refresh'>Random</Button>
-              <Button icon='add'>Add Book</Button>
-            </ButtonGroup>
-            <Divider />
-            <Button icon='arrow-right'>All Books</Button>
-          </div>
-        </h6>
+        
         <div className='row'>
-          {books.map((book, i) => i < 4
+          <div className='col-6'>
+            <h5>Recent Books</h5>
+          </div>
+          <div className='col-6'>
+            <div className='headerMenu'>
+              <ButtonGroup>
+                <Button icon='refresh'>Random</Button>
+                <Button icon='add'>Add Book</Button>
+              </ButtonGroup>
+              <Divider />
+              <Button icon='arrow-right'>All Books</Button>
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+          {books.map((book, i) => i < 6
             ? <div className='col-2' key={book._id}><Book book={book}  /></div>
             : null)}
         </div>

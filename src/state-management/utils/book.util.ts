@@ -24,7 +24,11 @@ export const mockBooks: IExpandedBook[] = [{
     website: 'https://swoleengineer.com'
   },
   views: 10,
-  pictures: [],
+  pictures: [{
+    default: true,
+    link: 'https://christianaudio.com/media/catalog/product/cache/1/image/1050x1050/170ec19af00183b5e0368529fc2daa2f/9/7/9780718074326.jpg',
+    public_id: 'hf7qph4f'
+  }],
   affiliate_link: 'https://amazon.com',
   active: true,
   likes: ['1234', '2234'],
@@ -55,7 +59,11 @@ export const mockBooks: IExpandedBook[] = [{
     website: 'https://swoleengineer.com'
   },
   views: 10,
-  pictures: [],
+  pictures: [{
+    default: true,
+    link: 'https://images-na.ssl-images-amazon.com/images/I/51FyrCUjKOL._SX342_.jpg',
+    public_id: 'hf7qph4f'
+  }],
   affiliate_link: 'https://amazon.com',
   active: true,
   likes: ['1234', '2234'],
@@ -92,6 +100,99 @@ export const mockBooks: IExpandedBook[] = [{
   likes: ['1234', '2234'],
   created: new Date(),
   title: 'How To Lose',
+  writer: { },
+  description: 'Fake book used in here yeah',
+  topics: [{
+    topic: 'Entrepreneurship',
+    agreed: ['1', '2', '3'],
+    created: new Date()
+  }],
+  isbn: '548799865',
+  amazon_link: 'https://amazon.com'
+}, {
+  comments: [],
+  reports: [],
+  _id: '434564',
+  author: {
+    _id: '1234',
+    picture: {
+      link: '',
+      public_id: ''
+    },
+    created: new Date(),
+    presence: [],
+    name: 'Swole Engineer',
+    website: 'https://swoleengineer.com'
+  },
+  views: 10,
+  pictures: [],
+  affiliate_link: 'https://amazon.com',
+  active: true,
+  likes: ['1234', '2234'],
+  created: new Date(),
+  title: 'First Coding Books To Have',
+  writer: { },
+  description: 'Fake book used in here yeah',
+  topics: [{
+    topic: 'Entrepreneurship',
+    agreed: ['1', '2', '3'],
+    created: new Date()
+  }],
+  isbn: '548799865',
+  amazon_link: 'https://amazon.com'
+}, {
+  comments: [],
+  reports: [],
+  _id: '54yu-vs',
+  author: {
+    _id: '1234',
+    picture: {
+      link: '',
+      public_id: ''
+    },
+    created: new Date(),
+    presence: [],
+    name: 'John Doe',
+    website: 'https://swoleengineer.com'
+  },
+  views: 10,
+  pictures: [],
+  affiliate_link: 'https://amazon.com',
+  active: true,
+  likes: ['1234', '2234'],
+  created: new Date(),
+  title: 'Dont Give A Damn',
+  writer: { },
+  description: 'Fake book used in here yeah',
+  topics: [{
+    topic: 'Entrepreneurship',
+    agreed: ['1', '2', '3'],
+    created: new Date()
+  }],
+  isbn: '548799865',
+  amazon_link: 'https://amazon.com'
+}, {
+  comments: [],
+  reports: [],
+  _id: 'vfsdpo9548g',
+  author: {
+    _id: '1234',
+    picture: {
+      link: '',
+      public_id: ''
+    },
+    created: new Date(),
+    presence: [],
+    name: 'Parov Stelar',
+    website: 'https://swoleengineer.com'
+  },
+  views: 10,
+  pictures: [],
+  affiliate_link: 'https://amazon.com',
+  active: true,
+  likes: ['1234', '2234'],
+  created: new Date(),
+  title: 'The Very Best In Music',
   writer: { },
   description: 'Fake book used in here yeah',
   topics: [{
