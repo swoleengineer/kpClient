@@ -18,12 +18,12 @@ const Header = (props: { user: IUserState }) => {
               <div className='authStatusWrapper'>
                 {loggedIn
                   ? <Popover>
-                    <span><Icon icon={'user'} /> &nbsp;{username} | Log Out</span>
-                    <Menu>
-                      <MenuItem icon='user' text={'My Profile'} />
-                      <Menu.Divider />
-                      <MenuItem icon='log-out' text={'Log out'} />
-                    </Menu>
+                      <span><Icon icon={'user'} /> &nbsp;{username} | Log Out</span>
+                      <Menu>
+                        <MenuItem icon='user' text={'My Profile'} />
+                        <Menu.Divider />
+                        <MenuItem icon='log-out' text={'Log out'} />
+                      </Menu>
                   </Popover>
                   : <div>
                     I will put something in here to encourage you to create an account.
