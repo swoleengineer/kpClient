@@ -73,7 +73,7 @@ export const mockBooks: IExpandedBook[] = [{
 }, {
   comments: [],
   reports: [],
-  _id: '1234',
+  _id: '654',
   author: {
     _id: '1234',
     picture: {
