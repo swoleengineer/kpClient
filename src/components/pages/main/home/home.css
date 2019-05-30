@@ -1,8 +1,8 @@
 .section_padding {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
-.section_padding h6 {
+.section_padding h6, .section_padding h5 {
   margin: 10px 0 20px;
 }
 .section_gray {

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './questions.css';
-import { Text, Divider, Tag, Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
+import { Text, Divider, Tag, Button, ButtonGroup, Popover, Menu, MenuItem, Collapse } from '@blueprintjs/core';
 import Slider from 'react-slick';
 
 const Questions = () => {
+  const [commentOpen, setCommentState] = useState(false);
   return (
     <section className='section_padding section_gray'>
       <div className='container'>
@@ -48,13 +49,10 @@ const Questions = () => {
                 </div>
                 <Divider />
                 <div className='row'>
-                  <div className='col-6'>
-                    
-                      <Button icon='comment' minimal={true}>5</Button>
-                      
-                    
+                  <div className='col-4'>
+                      <Button icon='book' minimal={true}>5</Button>
                   </div>
-                  <div className='col-6 text-right'>
+                  <div className='col-8 text-right'>
                     <ButtonGroup>
                     <Button icon='social-media' minimal={true} />
                     <Popover>
@@ -63,14 +61,23 @@ const Questions = () => {
                         <MenuItem icon='flag' text='Report' />
                       </Menu>
                     </Popover>
+                    <Button icon='book' minimal={true} onClick={() => setCommentState(!commentOpen)}>Suggest Book</Button>
                     </ButtonGroup>
                   </div>
                 </div>
+                <Collapse
+                  isOpen={commentOpen}
+
+                >
+                  {/* <ControlGroup fill={true} vertical={false}>
+                    <Suggest /> 
+                  </ControlGroup> */}
+                  In here I will put the form where they select book and add comment.
+                </Collapse>
               </div>
             </div>
           </div>
         </div>
-        This is where the questions stuff is gonna go instad
       </div>
     </section>
   )
