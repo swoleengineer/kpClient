@@ -16,3 +16,6 @@
 body {
   font-family: ministry, sans-serif;
 }
+button:focus {
+  outline: none;
+}

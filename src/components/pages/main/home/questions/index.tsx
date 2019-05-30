@@ -47,7 +47,6 @@ const Questions = () => {
                     <Tag icon='lightbulb' minimal={false}>Programming</Tag>
                   </Slider>
                 </div>
-                <Divider />
                 <div className='row'>
                   <div className='col-4'>
                       <Button icon='book' minimal={true}>5</Button>
