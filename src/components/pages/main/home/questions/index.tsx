@@ -1,10 +1,48 @@
 import React, { useState } from 'react';
 import './questions.css';
-import { Text, Divider, Tag, Button, ButtonGroup, Popover, Menu, MenuItem, Collapse } from '@blueprintjs/core';
+import { Text, Tag, Button, ButtonGroup, ControlGroup, InputGroup, Popover, Menu, MenuItem, Collapse, Icon } from '@blueprintjs/core';
 import Slider from 'react-slick';
+import { Select, ItemRenderer } from '@blueprintjs/select';
+import { connect } from 'react-redux';
+import { IStore, IExpandedBook } from 'src/state-management/models';
+import { filterBook } from '../../../../../state-management/utils/book.util';
 
-const Questions = () => {
+
+
+
+const BookSelect = Select.ofType<IExpandedBook>();
+const Questions = (props: { books: Array<IExpandedBook>}) => {
   const [commentOpen, setCommentState] = useState(false);
+  const [bookToAdd, setAddingBook] = useState({});
+  const { books } = props;
+  const renderBook: ItemRenderer<IExpandedBook> = (book, { handleClick, modifiers, query }) => {
+    if (!modifiers.matchesPredicate) {
+      return null;
+    }
+    return (
+      <MenuItem
+            active={modifiers.active}
+            disabled={modifiers.disabled}
+            key={book._id}
+            icon='book'
+            text={<div><strong>{book.title}</strong><br /><small>{book.author.name}</small></div>}
+            onClick={() => {
+              setAddingBook(book);
+              setCommentState(true);
+            }}
+      />
+    )
+  }
+  const addBookProps = {
+    itemPredicate: filterBook,
+    itemRenderer: renderBook,
+    items: books,
+    filterable: true,
+    hasInitialContent: false,
+    resetOnClose: true,
+    resetOnQuery: true,
+    resetOnSelect: true
+  }
   return (
     <section className='section_padding section_gray'>
       <div className='container'>
@@ -17,12 +55,22 @@ const Questions = () => {
           </div>
         </div>
         <div className='row'>
-          <div className='col-4'>
+          <div className='col-md-4'>
             <div className='questionCardWrapper'>
               <div className='questionCard_content'>
                 <div className='questionCard_meta'>
                   <span className='questionCard_meta_author'>Posted by: </span> @clervius
                   <span className='questionCard_meta_time'>20 hrs. ago</span>
+                  <span className='questionCard_meta_more'>
+                    <Popover>
+                      <Icon icon='more' />
+                      <Menu>
+                        <MenuItem icon='lightbulb' text='Add Topic' />
+                        <Menu.Divider />
+                        <MenuItem icon='flag' text='Report' />
+                      </Menu>
+                    </Popover>  
+                  </span>
                 </div>
                 <div className='questionCard_details'>
                   <span className='questionCard_details_title'>What book teaches you how to swim?</span>
@@ -39,39 +87,48 @@ const Questions = () => {
                     variableWidth={true}
                   >
                     <Tag icon='lightbulb' minimal={false}>Entrepreneur</Tag>
-                    <Divider />
+                    <span> &nbsp;&nbsp;</span>
                     <Tag icon='lightbulb' minimal={false}>Leadership</Tag>
-                    <Divider />
+                    <span> &nbsp;&nbsp;</span>
                     <Tag icon='lightbulb' minimal={false}>Headphones</Tag>
-                    <Divider />
+                    <span> &nbsp;&nbsp;</span>
                     <Tag icon='lightbulb' minimal={false}>Programming</Tag>
                   </Slider>
                 </div>
                 <div className='row'>
-                  <div className='col-4'>
+                  <div className='col-3'>
                       <Button icon='book' minimal={true}>5</Button>
                   </div>
-                  <div className='col-8 text-right'>
+                  <div className='col-9 text-right'>
                     <ButtonGroup>
-                    <Button icon='social-media' minimal={true} />
-                    <Popover>
-                      <Button icon='more' minimal={true} />
-                      <Menu>
-                        <MenuItem icon='flag' text='Report' />
-                      </Menu>
-                    </Popover>
-                    <Button icon='book' minimal={true} onClick={() => setCommentState(!commentOpen)}>Suggest Book</Button>
+                      <BookSelect
+                        {...addBookProps}
+                        noResults={<MenuItem disabled={true} text='No books.' />}
+                        onItemSelect={(item: IExpandedBook) => {
+                          console.log('item selected', item)
+                          setAddingBook(item);
+                          setCommentState(true);
+                        }}
+                      >
+                        <Button icon='book' minimal={true} >{Object.keys(bookToAdd).length ? bookToAdd.title : 'Suggest Book'}</Button>
+                      </BookSelect>
+                      {commentOpen && <Button
+                        icon='remove'
+                        minimal={true}
+                        onClick={() => {
+                          setCommentState(false);
+                          setAddingBook({});
+                        }}
+                      />}
                     </ButtonGroup>
+                    
                   </div>
                 </div>
-                <Collapse
-                  isOpen={commentOpen}
-
-                >
-                  {/* <ControlGroup fill={true} vertical={false}>
-                    <Suggest /> 
-                  </ControlGroup> */}
-                  In here I will put the form where they select book and add comment.
+                <Collapse isOpen={commentOpen} className='questionCard_comment'>
+                  <ControlGroup fill={true} vertical={false}>
+                    <InputGroup placeholder='Include a Comment' leftIcon='comment' />
+                    <Button icon='tick' />
+                  </ControlGroup>
                 </Collapse>
               </div>
             </div>
@@ -82,4 +139,8 @@ const Questions = () => {
   )
 }
 
-export default Questions;
+const mapStateToProps = (state: IStore) => ({
+  books: state.book.books
+})
+
+export default connect(mapStateToProps)(Questions);

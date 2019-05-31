@@ -14,6 +14,48 @@ const mockTopics: Array<ITopic> = [{
   similar: ['002', '003'],
   name: 'Leadership',
   description: 'How to  lead a team'
+}, {
+  _id: '003',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Conjuring',
+  description: 'How to  lead a team'
+}, {
+  _id: '004',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Whispering',
+  description: 'How to  lead a team'
+}, {
+  _id: '005',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Good Days',
+  description: 'How to  lead a team'
+}, {
+  _id: '006',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Distance',
+  description: 'How to  lead a team'
+}, {
+  _id: '007',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Memories',
+  description: 'How to  lead a team'
+}, {
+  _id: '008',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Driving',
+  description: 'How to  lead a team'
+}, {
+  _id: '009',
+  active: true,
+  similar: ['002', '003'],
+  name: 'Risk Management',
+  description: 'How to  lead a team'
 }]
 
 
@@ -39,6 +81,7 @@ export const filterTopic: ItemPredicate<ITopic> = (query, topic, _index, exactMa
   const { name, description } = topic
   const normalizedName = name.toLowerCase();
   const normalizedQuery = query.toLowerCase();
+  console.log('filtering', normalizedName, normalizedQuery)
   const normalizedDescription = description.toLowerCase();
   return exactMatch
     ? normalizedName === normalizedQuery

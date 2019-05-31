@@ -6,12 +6,12 @@
   margin: 10px 0 20px;
 }
 .section_gray {
-  background: #efefef
+  background-color: rgba(167, 182, 194, 0.13);
 }
 .heroSection {
-  background-color: #efefef;
+  background-color: rgba(167, 182, 194, 0.13);
   font-family: ministry, sans-serif;
-  padding: 45px 15px 25px
+  padding: 50px 15px 0;
 }
 .heroSection h2 {
   font-size: 32pt;
@@ -30,20 +30,21 @@
 }
 .heroSearchWrapper {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 50px;
 }
 .heroSearchWrapper .bp3-popover-wrapper {
   margin-right: 5px;
 }
+.heroSearchWrapper input,
 .heroSearchWrapper .bp3-popover-wrapper,
 .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target,
 .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group  {
   width: 100%
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input {
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input, .heroSearchWrapper input {
   border-radius: 5px;
   background-color: white;
-  border: 3px solid rgba(48, 48, 48, .47);
+  border: 3px solid rgba(167, 182, 194, 1);;
   font-size: 25px;
   height: 50px;
   font-family: ministry, sans-serif;
@@ -53,7 +54,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus {
+.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus, .heroSearchWrapper input:focus {
   box-shadow: 0 8px 17px rgba(0, 0, 0, 0.08);
 }
 
@@ -61,9 +62,9 @@
   width: 100px;
   background-color: #efefef;
   border-radius: 0 5px 5px 0;
-  border-top: 3px solid rgba(48, 48, 48, .47);
-  border-right: 3px solid rgba(48, 48, 48, .47);
-  border-bottom: 3px solid rgba(48, 48, 48, .47);
+  border-top: 3px solid rgba(167, 182, 194, 1);;
+  border-right: 3px solid rgba(167, 182, 194, 1);;
+  border-bottom: 3px solid rgba(167, 182, 194, 1);;
   height: 50px;
   text-align: center;
   padding-top: 8px;
@@ -79,7 +80,7 @@
 .heroAddBookBtn {
   border-radius: 5px;
   background-color: #e7e7e7;
-  border: 3px solid rgba(48, 48, 48, .47);
+  border: 3px solid rgba(167, 182, 194, 1);;
   font-size: 16px;
   height: 50px;
   font-family: ministry, sans-serif;
@@ -101,4 +102,22 @@
 }
 .topicListItem {
   font-weight: 200
+}
+
+.heroTopicsWrapper {
+  background-color: rgba(167, 182, 194, 0.85);
+  display: block;
+  margin: 0 -15px;
+  overflow: hidden;
+  padding: 5px
+}
+.heroTopicsWrapper .heroTopicsTitle {
+  display: block;
+  width: 60px;
+  float: left;
+}
+.heroTopicsWrapper .heroTopicsContainer {
+  display: block;
+  float: left;
+  width: calc(100% - 60px);
 }

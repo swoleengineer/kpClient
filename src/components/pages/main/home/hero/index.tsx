@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Suggest, ItemRenderer } from '@blueprintjs/select';
-import { MenuItem, Icon, Divider } from '@blueprintjs/core';
+import { MenuItem, Icon, Divider, Tag } from '@blueprintjs/core';
 import { ITopic, IStore } from '../../../../../state-management/models';
 import { filterTopic, areTopicsEqual } from '../../../../../state-management/utils';
 import { connect } from 'react-redux';
+import Slider from 'react-slick';
 
 const TopicSuggest = Suggest.ofType<ITopic>();
 
@@ -19,12 +20,13 @@ export const renderTopic: ItemRenderer<ITopic> = (topic, { handleClick, modifier
           onClick={handleClick}
           text={topic.name}
           icon='tag'
+          label={query}
       />
   );
 };
-const Hero = (props: { topics: Array<ITopic>}) => {
+const Hero = (props: { topics: Array<ITopic> }) => {
   const { topics } = props;
-  const [componentTopics, setTopics] = useState(topics);
+  const [componentTopics] = useState(topics);
   const inputProps = {
     placeholder: 'Type a topic...',
     rightElement: <Icon icon='search' iconSize={25} />,
@@ -51,7 +53,6 @@ const Hero = (props: { topics: Array<ITopic>}) => {
       <div className='row'>
         <div className='col-12'>
           <h2>Find a book that teaches you (x).</h2>
-          
         </div>
         <div className='col-md-8'>
           <p className='heroDescription'>Search a topic you want to learn, and we will show you books that have taught others the same thing.</p>
@@ -74,18 +75,11 @@ const Hero = (props: { topics: Array<ITopic>}) => {
                 return newTopic;
               }}
               createNewItemRenderer={(query, active, handleClick) => {
-                const newTopic: ITopic = {
-                  _id: `${new Date().getTime()}`,
-                  active: true,
-                  similar: [],
-                  name: query,
-                  description: 'this is a whole lot of stuff'
-                }
                 return <MenuItem
                   icon='add'
                   text={`Add topic: '${query}'`}
                   active={active}
-                  onClick={() => setTopics(componentTopics.concat(newTopic))}
+                  onClick={() => null}
                   shouldDismissPopover={false}
                 />
               }}
@@ -93,11 +87,34 @@ const Hero = (props: { topics: Array<ITopic>}) => {
             <Divider />
             <button className='heroAddBookBtn'>Add Book</button>
           </div>
-          <div className='recentTagsLIst'>
-            <p>
-              <span className='topicListTitle'>Recent Topics:</span> {componentTopics.map((topic, i) => <a key={topic._id} className='topicListItem'>{topic.name}{i !== componentTopics.length - 1 && ', '}</a>)}
-            </p>
-          </div>
+        </div>
+      </div>
+    </div>
+    <div className='heroTopicsWrapper'>
+      <div className='container'>
+        <span className='heroTopicsTitle'>
+          Topics: &nbsp;&nbsp;
+        </span>
+        
+        <div className='heroTopicsContainer'>
+          <Slider
+            dots={false}
+            infinite={true}
+            speed={1000}
+            slidesToShow={3}
+            slidesToScroll={2}
+            arrows={false}
+            variableWidth={true}
+            autoplay={true}
+            autoplaySpeed={6500}
+          >
+            {componentTopics
+              .reduce((acc, curr) => [...acc, curr, ``], [])
+              .map((topic: ITopic, i) => topic
+                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.name}</Tag>
+                : <span key={i}>&nbsp;&nbsp;</span>)
+            }
+          </Slider>
         </div>
       </div>
     </div>

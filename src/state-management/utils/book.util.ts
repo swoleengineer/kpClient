@@ -1,4 +1,5 @@
 import { IBookState, IBook, IExpandedBook } from '../models';
+import { ItemPredicate } from '@blueprintjs/select';
 
 
 
@@ -203,6 +204,24 @@ export const mockBooks: IExpandedBook[] = [{
   isbn: '548799865',
   amazon_link: 'https://amazon.com'
 }]
+
+
+
+export const areBooksEqual = (bookA: IExpandedBook, bookB: IExpandedBook) => bookA.isbn === bookB.isbn;
+
+export const doesBookEqualQuery = (book: IExpandedBook, query: string) => book.title.toLowerCase() === query.toLowerCase();
+
+export const arrayContainsBook = (books: Array<IExpandedBook>, bookToFind: IExpandedBook): boolean => books.some(book => book.isbn === bookToFind.isbn);
+
+export const filterBook: ItemPredicate<IExpandedBook> = (query, book, _index, exactMatch) => {
+  const { title, description } = book
+  const normalizedName = title.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+  const normalizedDescription = description.toLowerCase();
+  return exactMatch
+    ? normalizedName === normalizedQuery
+    : [normalizedName, normalizedDescription].some(text => text.includes(query))
+};
 
 export const initialBookState: IBookState = {
   books: mockBooks,
