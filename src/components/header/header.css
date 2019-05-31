@@ -9,6 +9,12 @@
   position: relative;
   top: 5px
 }
+.logoWrapper img {
+  width: 12px;
+  margin-right: 5px;
+  position: relative;
+  top: -3px
+}
 .logoWrapper span {
   font-family: ministry, sans-serif;
   color: #303030;

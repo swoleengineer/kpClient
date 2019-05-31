@@ -28,7 +28,7 @@ const Hero = (props: { topics: Array<ITopic> }) => {
   const { topics } = props;
   const [componentTopics] = useState(topics);
   const inputProps = {
-    placeholder: 'Type a topic...',
+    placeholder: 'Search a topic...',
     rightElement: <Icon icon='search' iconSize={25} />,
     large: true,
   }
