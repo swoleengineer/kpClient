@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
+import Footer from '../components/footer';
 // import DashboardFooter from '../components/dashboard/footer';
 const Fragment = React.Fragment;
 import pageMap from './pageMap';
@@ -14,7 +15,7 @@ const PageWrapper = ({ page }: { page: string }) => {
       <div>
         <Display />
       </div>
-      {/* <DashboardFooter /> */}
+      <Footer />
     </Fragment>
   );
 }

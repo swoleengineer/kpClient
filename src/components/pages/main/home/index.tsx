@@ -10,7 +10,6 @@ const HomePage = () => {
       <Hero />
       <BooksSection />
       <Questions />
-      <p>Hello this will eventually become the home page of Keen Pages.</p>
     </div>
   );
 }

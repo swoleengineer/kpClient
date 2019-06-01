@@ -18,6 +18,12 @@
   font-weight: 400;
   color: #303030;
 }
+.heroSection .container {
+  background-image: url('../../../../assets/bookShelf.png');
+  background-size: 42%;
+  background-repeat: no-repeat;
+  background-position: right 65%;
+}
 .heroSection .heroDescription {
   font-size: 20px;
   color: #303030;
