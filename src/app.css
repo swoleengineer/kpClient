@@ -19,3 +19,30 @@ body {
 button:focus {
   outline: none;
 }
+
+@media (max-width: 370px) {
+  .hidden-xs {
+    display: none;
+  }
+} 
+@media (max-width: 500px) {
+  .hidden-sm {
+    display: none
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+  
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}

@@ -49,7 +49,6 @@
   background-color: rgba(167, 182, 194, 0.85);
   text-transform: uppercase;
   display: block;
-  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
 }
 .topicsMeta .topicsHolder {
   padding: 5px;
@@ -102,6 +101,15 @@
 .bookMenu .bookMenu_item:not(:last-child) {
   border-right: 1px solid rgba(255, 255, 255, .5);
 }
-.colorLightBlue {
-  
-}
+
+
+@media (max-width: 370px) {
+  .bookMenu {
+    bottom: -1px;
+    visibility: visible;
+  }
+  .topicsMeta {
+    bottom: 30px !important;
+    visibility: visible !important;
+  }
+} 
