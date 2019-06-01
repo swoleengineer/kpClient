@@ -28,8 +28,8 @@ const Hero = (props: { topics: Array<ITopic> }) => {
   const { topics } = props;
   const [componentTopics] = useState(topics);
   const inputProps = {
-    placeholder: 'Search a topic...',
-    rightElement: <Icon icon='search' iconSize={25} />,
+    placeholder: 'Search a skill...',
+    rightElement: <Icon icon='search' iconSize={25} style={{ color: '#5c7080'}} />,
     large: true,
   }
   const suggestProps = {
@@ -55,7 +55,7 @@ const Hero = (props: { topics: Array<ITopic> }) => {
           <h2>Find a book that teaches you (x).</h2>
         </div>
         <div className='col-md-8'>
-          <p className='heroDescription'>Search a topic you want to learn, and we will show you books that have taught others the same thing.</p>
+          <p className='heroDescription'>Search a skill you want to learn, and we will show you books that have taught others the same thing.</p>
         </div>
         <div className='col-md-8'>
           <div className='heroSearchWrapper'>
@@ -77,7 +77,7 @@ const Hero = (props: { topics: Array<ITopic> }) => {
               createNewItemRenderer={(query, active, handleClick) => {
                 return <MenuItem
                   icon='add'
-                  text={`Add topic: '${query}'`}
+                  text={`Add skill: '${query}'`}
                   active={active}
                   onClick={() => null}
                   shouldDismissPopover={false}

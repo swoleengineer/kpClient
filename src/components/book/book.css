@@ -1,4 +1,7 @@
-.singleBookWrapper {}
+.singleBookWrapper {
+  width: 160px;
+  margin-right:40px
+}
 .singleBookWrapper div.bookPicture {
   width: 100%;
   height: 210px;
@@ -98,4 +101,7 @@
 
 .bookMenu .bookMenu_item:not(:last-child) {
   border-right: 1px solid rgba(255, 255, 255, .5);
+}
+.colorLightBlue {
+  
 }

@@ -34,3 +34,5 @@ typings/
 *.tgz
 .yarn-integrity
 .env
+
+fonts/

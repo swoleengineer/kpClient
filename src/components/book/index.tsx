@@ -10,6 +10,7 @@ const Book = ({ book }: { book: IExpandedBook }) => {
   const { name: authorName } = author as IAuthor;
   const [ picture = { link: undefined}] = pictures
   const [isRead, setRead] = useState(false);
+  const [isLiked, setLiked] = useState(false)
   return (
     <div className='singleBookWrapper'>
       <div className='bookPicture' style={{backgroundImage: `url(${picture.link || 'http://inspiredwomenamazinglives.com/wp-content/uploads/2018/12/Becoming-Michelle-Obama.jpg'})`}}>
@@ -41,9 +42,15 @@ const Book = ({ book }: { book: IExpandedBook }) => {
 
         </div>
         <div className='bookMenu'>
-          <div className='bookMenu_item'>
+          <div className='bookMenu_item' onClick={() => setLiked(!isLiked)}>
             <Tooltip content='Save Book'>
-              <span><Icon icon='heart' iconSize={12} /></span>
+              <span >
+                <Icon
+                  icon='heart'
+                  iconSize={12}
+                  style={{ color: isLiked ? 'white' : 'rgba(167, 182, 194, 0.85)' }}
+                />
+              </span>
             </Tooltip>
           </div>
           <div className='bookMenu_item'>
@@ -57,7 +64,11 @@ const Book = ({ book }: { book: IExpandedBook }) => {
                 <span><Icon icon='more' iconSize={12} /></span>
               </Tooltip>
               <Menu>
-                <MenuItem icon='social-media' text='Share' />
+                <MenuItem
+                  icon='social-media'
+                  text='Share'
+                  
+                />
                 <MenuItem icon='bookmark' text='Mark as read' onClick={() => setRead(!isRead)} />
                 <Menu.Divider />
                 <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />}/>

@@ -57,7 +57,7 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
         <div className='row'>
           <div className='col-md-4'>
             <div className='questionCardWrapper'>
-              <div className='questionCard_content'>
+              <div className='questionCard_content' style={{ paddingBottom: commentOpen ? '10px' : '0px'}}>
                 <div className='questionCard_meta'>
                   <span className='questionCard_meta_author'>Posted by: </span> @clervius
                   <span className='questionCard_meta_time'>20 hrs. ago</span>
@@ -96,10 +96,10 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
                   </Slider>
                 </div>
                 <div className='row'>
-                  <div className='col-3'>
+                  <div className='col-1'>
                       <Button icon='book' minimal={true}>5</Button>
                   </div>
-                  <div className='col-9 text-right'>
+                  <div className='col-11 text-right'>
                     <ButtonGroup>
                       <BookSelect
                         {...addBookProps}
@@ -113,7 +113,7 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
                         <Button icon='book' minimal={true} >{Object.keys(bookToAdd).length ? bookToAdd.title : 'Suggest Book'}</Button>
                       </BookSelect>
                       {commentOpen && <Button
-                        icon='remove'
+                        icon='cross'
                         minimal={true}
                         onClick={() => {
                           setCommentState(false);
@@ -126,8 +126,7 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
                 </div>
                 <Collapse isOpen={commentOpen} className='questionCard_comment'>
                   <ControlGroup fill={true} vertical={false}>
-                    <InputGroup placeholder='Include a Comment' leftIcon='comment' />
-                    <Button icon='tick' />
+                    <InputGroup placeholder='Add optional comment' leftIcon='comment' rightElement={<Button minimal={true} icon='tick' />} />
                   </ControlGroup>
                 </Collapse>
               </div>
