@@ -1,9 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './question.css';
-// import {} from '../'
+import { Text, Tag, Button, ButtonGroup, ControlGroup, InputGroup, Popover, Menu, MenuItem, Collapse, Icon } from '@blueprintjs/core';
+import Slider from 'react-slick';
+import { Select, ItemRenderer } from '@blueprintjs/select';
+import { filterBook } from '../../state-management/utils/book.util';
+import { IExpandedBook } from 'src/state-management/models';
 
 
-const QuestionCard = (props) => {
+const BookSelect = Select.ofType<IExpandedBook>();
+const QuestionCard = (props: { books: IExpandedBook[] }) => {
+  const [commentOpen, setCommentState] = useState(false);
+  const [bookToAdd, setAddingBook] = useState({});
+  const { books } = props;
+  const renderBook: ItemRenderer<IExpandedBook> = (book, { handleClick, modifiers, query }) => {
+    if (!modifiers.matchesPredicate) {
+      return null;
+    }
+    return (
+      <MenuItem
+            active={modifiers.active}
+            disabled={modifiers.disabled}
+            key={book._id}
+            icon='book'
+            text={<div><strong>{book.title}</strong><br /><small>{book.author.name}</small></div>}
+            onClick={() => {
+              setAddingBook(book);
+              setCommentState(true);
+            }}
+      />
+    )
+  }
+  const addBookProps = {
+    itemPredicate: filterBook,
+    itemRenderer: renderBook,
+    items: books,
+    filterable: true,
+    hasInitialContent: false,
+    resetOnClose: true,
+    resetOnQuery: true,
+    resetOnSelect: true
+  }
   return (
     <div className='questionCardWrapper'>
               <div className='questionCard_content' style={{ paddingBottom: commentOpen ? '10px' : '0px'}}>
