@@ -10,7 +10,7 @@ const Footer = () => {
       <div className='container'>
         <div className='row'>
           <div className='col-md-6 footer_identity'>
-            <Logo />
+            <Logo large={false} />
             <small>CopyRight &copy; 2019 keenpages.com | All rights reserved.</small>
           </div>
           <div className='col-md-6 footer_site_links'>

@@ -12,7 +12,7 @@ const Header = (props: { user: IUserState }) => {
         <div className='row'>
           <div className='col-12'>
             <div className='logoArea'>
-              <Logo />
+              <Logo large={false}/>
             </div>
             <div className='menuArea'>
               <div className='authStatusWrapper'>

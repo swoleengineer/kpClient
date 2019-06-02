@@ -1,11 +1,11 @@
 import {  AxiosPromise } from 'axios';
-import {  INewUserRequest, IUserLoginRequest } from '../state-management/models/';
+import {  INewUserRequest, IUserLoginRequest, IUser } from '../state-management/models/';
 import {  userGetDetailsUrl, userRegisterUrl, userLoginUrl, userSearchUrl,
   userAutoAuthUrl, userForgotPassUrl, userUpdatePicUrl,
   userUpdateUrl, userChangeNotificationsUrl } from './';
 import API, {  config } from './api';
 
-export const postNewUser = (body: INewUserRequest): AxiosPromise => API.post(userRegisterUrl, body);
+export const postNewUser = (body: INewUserRequest): AxiosPromise<{ user: IUser; jwt: string}> => API.post(userRegisterUrl, body);
 export const postUserLogin = (body: IUserLoginRequest): AxiosPromise => API.post(userLoginUrl, body);
 export const postUserSearch = (body: { account: string }): AxiosPromise => API.post(userSearchUrl, body);
 export const getUserDetails = (id: string): AxiosPromise => API.get(userGetDetailsUrl(id), config());

@@ -7,7 +7,6 @@ import pageMap from './pageMap';
 import '../components/header/header.css'
 
 const PageWrapper = ({ page }: { page: string }) => {
-  console.log('In page Wrapper, displaying page:', page)
   const Display = pageMap[page];
   return (
     <Fragment>

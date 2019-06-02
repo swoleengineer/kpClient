@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const DashboardPlugin = require('webpack-dashboard/plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -127,7 +127,7 @@ module.exports = (env = {}) => {
           },
           comments: false,
           sourceMap: isSourceMap,
-        }),
+        })
       ] : []),
     ]
   }

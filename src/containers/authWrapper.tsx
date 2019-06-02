@@ -35,7 +35,7 @@ const AuthWrapper = (props: IAuthWrapperProps) => {
     <div className='container'>
       <div className={`authContainer ${cardWidth}`} style={{ paddingTop: topPadding }}>
         <div className='authLogoWrapper'>
-          <Logo />
+          <Logo large={true} />
         </div>
         <h3>{pageTitle}&nbsp;
           <small>{pageSubtitle}</small>

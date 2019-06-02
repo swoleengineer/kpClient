@@ -8,7 +8,7 @@ import querySerializer from 'query-string';
 import { initialAppState } from './state-management/utils';
 
 
-const development = process.env.NODE_ENV !== 'development';
+const development = process.env.NODE_ENV === 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   querySerializer,

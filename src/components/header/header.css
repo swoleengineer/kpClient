@@ -31,6 +31,16 @@
   font-weight: 500;
   font-size: 11px
 }
+.logoWrapper.larger img {
+  width: 17px;
+  top: -5px
+}
+.logoWrapper.larger span.logoKeen, .logoWrapper.larger span.logoPages {
+  font-size: 20px;
+}
+.logoWrapper.larger span.logoTld {
+  font-size: 16px;
+}
 .logoArea {
   float: left
 }
