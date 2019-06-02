@@ -2,7 +2,7 @@ import React from 'react';
 import { FormGroup, InputGroup, Button } from '@blueprintjs/core';
 import '../../auth/auth.css';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   return (
     <div>
       <div>
@@ -36,4 +36,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage;
+export default RegisterPage;

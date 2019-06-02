@@ -16,7 +16,7 @@ const routesMap = {
     }
   },
   REGISTER: {
-    path: '/createAccount',
+    path: '/register',
     thunk: (dispatch, getState) => {
     }
   },

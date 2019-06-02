@@ -4,6 +4,7 @@ import { initialAppState } from '../utils';
 const routes: {[key: string]: string } = {
   HOME: 'main/home',
   LOGIN: 'auth/login',
+  REGISTER: 'auth/register',
   [NOT_FOUND]: 'notFound',
 }
 

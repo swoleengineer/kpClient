@@ -32,13 +32,37 @@ button:focus {
 }
 .authContainerPageWrapper {
   background-color: white;
-  padding: 10px;
+  padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+  border-bottom: 3px solid rgba(167, 182, 194, 0.85);
 }
 .authLogoWrapper {
   margin-bottom: 10px;
 }
+.authBottomLinks {}
+.authBottomLinks ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+.authBottomLinks ul li {
+  text-align: center;
+}
+.authBottomLinks ul li a {
+  color: #5c7080;
+}
+.authBottomLinks ul li:not(:last-child) {
+  border-right: 1px solid rgba(167, 182, 194, 0.85)
+}
+.authBottomLinks ul li.forLogin {
+  width: 50%;
+
+}
+.authBottomLinks ul li.forRegister {
+  width: 100%;
+}
+
 @media (max-width: 370px) {
   .hidden-xs {
     display: none;
