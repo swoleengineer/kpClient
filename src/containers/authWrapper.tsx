@@ -1,9 +1,6 @@
 import React from 'react';
-// import Link from 'redux-first-router-link';
-// import Login from '../components/auth/login';
-// import ForgotPassword from '../components/auth/forgotPassword';
-// import Register from '../components/auth/register';
-// import ResetPassword from '../components/auth/resetPassword';
+import pageMap from './pageMap';
+import Logo from '../components/header/logo';
 
 type IAuthWrapperProps = {
   page: string
@@ -11,15 +8,34 @@ type IAuthWrapperProps = {
 
 
 const AuthWrapper = (props: IAuthWrapperProps) => {
-  // const { page } = props;
-  // let AuthComponent = Login;
-  // if (page === 'auth/login') { AuthComponent = Login };
-  // if (page === 'auth/forgotPassword') { AuthComponent = ForgotPassword };
-  // if (page === 'auth/register') { AuthComponent = Register };
-  // if (page === 'auth/resetPassword') { AuthComponent = ResetPassword };
+  const { page } = props;
+  const Display = pageMap[page];
+  const pageType = page.split('/')[1];
+  const { cardWidth, topPadding, pageSubtitle, pageTitle, pageDescription } = {
+    login: {
+      cardWidth: 'col-md-3',
+      topPadding: '25%',
+      pageTitle: 'Login,',
+      pageSubtitle: 'Good to see you!',
+      pageDescription: 'Login to get the best of keenpages.com'
+    }
+  }[pageType];
+
+
   return (
-  <div>
-    {/* <AuthComponent /> */}
+  <div className='authWrapper'>
+    <div className='container'>
+      <div className={`authContainer ${cardWidth}`} style={{ paddingTop: topPadding }}>
+        <div className='authLogoWrapper'>
+          <Logo />
+        </div>
+        <h3>{pageTitle}&nbsp;
+          <small>{pageSubtitle}</small>
+        </h3>
+        <p>{pageDescription}</p>
+        <div className='authContainerPageWrapper'><Display /></div>
+      </div>
+    </div>
   </div>
   )
 }

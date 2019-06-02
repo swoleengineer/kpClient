@@ -7,6 +7,9 @@ const routesMap = {
     thunk: (dispatch: Function, getState: Function) => {
     }
   },
+  LOGIN: {
+    path: '/login'
+  },
   FORGOTPASSWORD: {
     path: '/forgot',
     thunk: (dispatch, getState) => {
