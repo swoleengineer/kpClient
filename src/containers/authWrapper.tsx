@@ -41,7 +41,7 @@ const AuthWrapper = (props: IAuthWrapperProps) => {
           <small>{pageSubtitle}</small>
         </h3>
         <p>{pageDescription}</p>
-        <div className='authContainerPageWrapper'><Display /></div>
+        <div className='authContainerPageWrapper'><Display goToNext={true} /></div>
         <div className='authBottomLinks'>
           {pageTitle === 'Login,' && <ul>
             <li className='forLogin'><Link to={{}}>Forgot Password</Link></li>

@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -92,19 +93,52 @@ module.exports = (env = {}) => {
     }
     ]
     },
+    optimization: {
+      runtimeChunk: {
+        name: 'common'
+      },
+      minimizer: [
+        new TerserPlugin()
+      ],
+      splitChunks: {
+        chunks: 'all',
+        minSize: 0,
+        maxAsyncRequests: Infinity,
+        maxInitialRequests: Infinity,
+        name: true,
+        cacheGroups: {
+          default: {
+            chunks: 'async',
+            minSize: 30000,
+            minChunks: 2,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            priority: -20,
+            reuseExistingChunk: true
+          },
+          commons: {
+            name: 'bundle',
+            chunks: 'all',
+            minChunks: 2,
+            enforce: true,
+            priority: -5
+          },
+          vendor: {
+            chunks: 'initial',
+            name: 'vendor',
+            minChunks: 2,
+            priority: -10,
+            test: /node_modules\/(.*)\.js/
+          }
+        }
+      }
+    },
     plugins: [
       new DashboardPlugin(),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify(isDev ? 'development': 'production')
         }
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: (module) => module.context && module.context.indexOf('node_modules') !== -1,
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
       }),
       new HtmlWebpackPlugin({
         template: './index.html'
@@ -119,14 +153,6 @@ module.exports = (env = {}) => {
         new webpack.LoaderOptionsPlugin({
           minimize: true,
           debug: false
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-          beautify: false,
-          compress: {
-            screw_ie8: true
-          },
-          comments: false,
-          sourceMap: isSourceMap,
         })
       ] : []),
     ]

@@ -4,8 +4,16 @@ import '../../auth/auth.css';
 import { register } from '../../../../state-management/thunks'
 import { has } from 'lodash';
 import { keenToaster } from '../../../../containers/switcher';
+import { validateEmail, validatePassword } from './validations';
 
-const RegisterPage = () => {
+const RegisterPage = (props: {
+  goToNext: boolean;
+  nextPayload?: {
+    type: string;
+    payload?: any;
+  }
+}) => {
+  const { goToNext, nextPayload = undefined } = props;
   const [formData, formUpdate] = useState({
     profile: {
       first_name: '',
@@ -16,17 +24,21 @@ const RegisterPage = () => {
     password: '',
     username: ''
   });
-  const [formErrors, updateError] = useState([])
-  const [confirmPass, setConfirm] = useState('');
-  const updateDetails = data => formUpdate({
-    ...formData,
-    ...(has(data, 'profile') ? {
-      profile: {
-        ...formData.profile,
-        ...data.profile
-      }
-    } : data)
-  });
+  const [formErrors, updateError] = useState<Array<{field: string; message: string; intent: 'danger' | 'none' | 'primary' | 'success'}>>([])
+  const [confirmPass, setConfirm] = useState<string>('');
+  const updateDetails = data => {
+    const keys = Object.keys(has(data, 'profile') ? data.profile : data)
+    updateError(formErrors.filter(error => !keys.includes(error.field)));
+    formUpdate({
+      ...formData,
+      ...(has(data, 'profile') ? {
+        profile: {
+          ...formData.profile,
+          ...data.profile
+        }
+      } : data)
+    });
+  }
   const updateErrors = error => updateError(formErrors.concat(error));
   const processForm = () => {
     if (confirmPass !== formData.password) {
@@ -53,6 +65,7 @@ const RegisterPage = () => {
         return field;
       }
       if (!formData[field]) {
+        console.log(field, 'is blank', formData)
         updateErrors({
           field,
           message: errMessage,
@@ -69,7 +82,7 @@ const RegisterPage = () => {
       });
       return;
     };
-    register(formData).catch(() => keenToaster.show({
+    register(formData, goToNext, nextPayload).catch(() => keenToaster.show({
       message: 'An error has occured',
       intent: 'danger',
       icon: 'error'
@@ -79,6 +92,7 @@ const RegisterPage = () => {
     const field = e.target.id;
     const value = e.target.value;
     if (!value) {
+      console.log('no value for field:', field, value)
       updateErrors({
         field,
         message: 'This field cannot be empty.',
@@ -86,7 +100,36 @@ const RegisterPage = () => {
       });
       return;
     }
-    if (field.endsWith('name')) {
+    if (field === 'email' && !validateEmail(value)) {
+      updateErrors({
+        field,
+        message: 'Please enter a valid email address.',
+        intent: 'danger'
+      });
+      return;
+    }
+    if (field === 'password' && !validatePassword(value)) {
+      updateErrors({
+        field,
+        message: 'Password must be 8 or more characters and include one of each (lowercase letter, uppercase letter, number, and special character)',
+        intent: 'danger'
+      });
+      return;
+    }
+    if (field === 'confirm_Input') {
+      if (value !== formData.password) {
+        updateErrors({
+          field,
+          message: 'The passwords must match.',
+          intent: 'danger'
+        });
+        return;
+      }
+      updateError(formErrors.filter(error => error.field !== field));
+      setConfirm(value);
+      return;
+    }
+    if (field.endsWith('name') && field !== 'username') {
       updateDetails({
         profile: { [field]: value }
       });
@@ -107,7 +150,7 @@ const RegisterPage = () => {
             helperText={getError('first_name').message}
             label='First Name'
             labelFor='first_name'
-            intent={getError('first_name').intent as 'danger' | 'none'}
+            intent={getError('first_name').intent}
           >
             <InputGroup
               leftIcon={getError('first_name').message ? 'error' : 'user'}
@@ -123,13 +166,13 @@ const RegisterPage = () => {
             helperText={getError('last_name').message}
             label='Last Name'
             labelFor='last_name'
-            intent={getError('last_name').intent as 'danger' | 'none'}
+            intent={getError('last_name').intent}
           >
             <InputGroup
               id='last_name'
               placeholder='Last Name'
               onBlur={processField}
-              intent={getError('last_name').intent as 'danger' | 'none'}
+              intent={getError('last_name').intent}
             />
           </FormGroup>
         </div>
@@ -140,14 +183,14 @@ const RegisterPage = () => {
             helperText={getError('username').message}
             label='Username'
             labelFor='username'
-            intent={getError('username').intent as 'danger' | 'none'}
+            intent={getError('username').intent}
           >
             <InputGroup
               leftIcon={getError('username').message ? 'error' : 'id-number'}
               id='username'
               placeholder='Userame'
               onBlur={processField}
-              intent={getError('username').intent as 'danger' | 'none'}
+              intent={getError('username').intent}
             />
           </FormGroup>
         </div>
@@ -156,12 +199,14 @@ const RegisterPage = () => {
             helperText={getError('email').message}
             label='Email'
             labelFor='email'
+            intent={getError('email').intent}
           >
             <InputGroup
-              leftIcon='envelope'
+              leftIcon={getError('email').message ? 'error' : 'envelope'}
               id='email'
               placeholder='Email Address'
               onBlur={processField}
+              intent={getError('email').intent}
             />
           </FormGroup>
         </div>
@@ -169,31 +214,35 @@ const RegisterPage = () => {
       <div className='row'>
         <div className='col-md-6'>
           <FormGroup
-            helperText={null}
+            helperText={getError('password').message}
             label='Password'
             labelFor='password'
+            intent={getError('password').intent}
           >
             <InputGroup
-              leftIcon='lock'
+              leftIcon={getError('password').message ? 'error' : 'lock'}
               id='password'
               placeholder='Password'
               type='password'
               onBlur={processField}
+              intent={getError('password').intent}
             />
           </FormGroup>
         </div>
         <div className='col-md-6'>
           <FormGroup
-            helperText={null}
+            helperText={getError('confirm_Input').message}
             label='Confirm Password'
             labelFor='confirm_Input'
+            intent={getError('confirm_Input').intent}
           >
             <InputGroup
-              leftIcon='lock'
+              leftIcon={getError('confirm_Input').message ? 'error' : 'lock'}
               id='confirm_Input'
               placeholder='Confirm Password'
               type='password'
-              onChange={e => setConfirm(e.target.value)}
+              onBlur={processField}
+              intent={getError('confirm_Input').intent}
             />
           </FormGroup>
         </div>
@@ -205,6 +254,7 @@ const RegisterPage = () => {
         rightIcon='chevron-right'
         minimal={true} 
         onClick={() => processForm()}
+        disabled={formErrors.length > 0}
       />
     </div>
   )
