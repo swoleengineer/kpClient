@@ -2,6 +2,7 @@ import React from 'react';
 import pageMap from './pageMap';
 import Logo from '../components/header/logo';
 import Link from 'redux-first-router-link';
+import { authSettings } from './authSettings';
 
 type IAuthWrapperProps = {
   page: string
@@ -12,24 +13,7 @@ const AuthWrapper = (props: IAuthWrapperProps) => {
   const { page } = props;
   const Display = pageMap[page];
   const pageType = page.split('/')[1];
-  const { cardWidth, topPadding, pageSubtitle, pageTitle, pageDescription } = {
-    login: {
-      cardWidth: 'col-md-4',
-      topPadding: '20%',
-      pageTitle: 'Login,',
-      pageSubtitle: 'Good to see you!',
-      pageDescription: 'Login to get the best of keenpages.com'
-    },
-    register: {
-      cardWidth: 'col-md-6',
-      topPadding: '15%',
-      pageTitle: 'Register,',
-      pageSubtitle: 'Join in the fun!',
-      pageDescription: 'Create your account to start using keenpages.com'
-    }
-  }[pageType];
-
-
+  const { cardWidth, topPadding, pageSubtitle, pageTitle, pageDescription } = authSettings[pageType];
   return (
   <div className='authWrapper'>
     <div className='container'>

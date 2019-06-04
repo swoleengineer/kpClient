@@ -25,11 +25,11 @@ const routesMap = {
     thunk: (dispatch: Function, getState: Function) => {
     }
   },
-
-  DASHBOARDHOME: {
-    path: '/dashboard',
-    thunk: (dispatch, getState) => {
-    }
+  NEWTOPIC: {
+    path: '/newTopic'
+  },
+  NEWBOOK: {
+    path: '/newBook',
   },
   PROFILE: {
     path: '/profile',

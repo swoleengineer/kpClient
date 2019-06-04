@@ -92,7 +92,6 @@ const RegisterPage = (props: {
     const field = e.target.id;
     const value = e.target.value;
     if (!value) {
-      console.log('no value for field:', field, value)
       updateErrors({
         field,
         message: 'This field cannot be empty.',

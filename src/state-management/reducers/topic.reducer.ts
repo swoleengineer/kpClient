@@ -16,8 +16,8 @@ export const topicReducer = (state: ITopicState = initialTopicState, action: {
       return {
         ...state,
         allTopics: action.payload.type === 'add'
-          ? state.allTopics.concat(action.payload).sort(sortTopicsByName)
-          : state.allTopics.filter(topic => topic._id !== action.payload._id)
+          ? state.allTopics.concat(action.payload.topic).sort(sortTopicsByName)
+          : state.allTopics.filter(topic => topic._id !== action.payload.topic._id)
       }
     case types.updateNew:
       return {

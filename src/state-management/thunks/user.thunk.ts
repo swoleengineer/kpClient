@@ -1,5 +1,5 @@
 import { store } from '../../store';
-import { INewUserRequest, IUserLoginRequest } from '../models';
+import { INewUserRequest, IUserLoginRequest, IStore } from '../models';
 import { postNewUser, postUserLogin } from '../../config';
 import { userActionTypes as types } from '../actions';
 import { Toaster } from '@blueprintjs/core'
@@ -72,3 +72,9 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
     })
   }
 )
+
+
+export const isLoggedIn = () => {
+  const { user: { loggedIn } } = store.getState() as IStore;
+  return loggedIn;
+}
