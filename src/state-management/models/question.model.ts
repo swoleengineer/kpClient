@@ -1,8 +1,8 @@
-import { ITopicBodyObj, IUser, IComment } from './';
+import { ITopicBodyObj, IUser, IComment, ITopic } from './';
 import { IReport } from './report.model';
 
 export interface IQuestionRequest {
-  topics: Array<string | ITopicBodyObj>;
+  topics: Array<string | ITopicBodyObj | ITopic>;
   title: string;
   text: string;
 }

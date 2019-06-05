@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import './book.css';
 import Link from 'redux-first-router-link';
 import { Icon, Tooltip, Menu, MenuItem, Popover, Tag } from '@blueprintjs/core';
-import { IAuthor, IExpandedBook } from 'src/state-management/models';
+import { IAuthor, IExpandedBook, IBookRequest } from 'src/state-management/models';
 import Slider from 'react-slick';
 
-const Book = ({ book }: { book: IExpandedBook }) => {
+const Book = ({ book }: { book: IExpandedBook | IBookRequest}) => {
   const { title, author, pictures } = book;
   const { name: authorName } = author as IAuthor;
   const [ picture = { link: undefined}] = pictures

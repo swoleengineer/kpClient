@@ -35,7 +35,7 @@ export const questionReducer = (state: IQuestionState = initialQuestionState, ac
           ...state.newQuestion,
           topics: action.payload.type === 'remove'
             ? state.newQuestion.topics.filter(topic => topic !== action.payload.topic)
-            : state.newQuestion.topics.concat(action.payload)
+            : state.newQuestion.topics.concat(action.payload.topic)
         }
       }
     case types.clearNewQuestion:

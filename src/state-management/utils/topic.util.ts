@@ -2,7 +2,7 @@ import { ITopicState, ITopic } from '../models';
 import { ItemPredicate } from '@blueprintjs/select';
 
 
-const mockTopics: Array<ITopic> = [{
+export const mockTopics: Array<ITopic> = [{
   _id: '001',
   active: true,
   similar: ['002', '003'],
@@ -90,7 +90,7 @@ export const filterTopic: ItemPredicate<ITopic> = (query, topic, _index, exactMa
 
 
 export const initialTopicState: ITopicState = {
-  allTopics: mockTopics,
+  allTopics: [],
   newTopic: {
     name: '',
     description: ''

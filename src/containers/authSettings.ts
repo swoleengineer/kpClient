@@ -26,5 +26,12 @@ export const authSettings = {
     pageTitle: 'Add Topic',
     pageSubtitle: '',
     pageDescription: `Add a new topic to keenpages.com's topics database`
+  },
+  question: {
+    cardWidth: 'col-md-5',
+    topPadding: '10%',
+    pageTitle: 'Ask Question',
+    page: 'Get book suggestions',
+    pageDescription: 'Ask for books to teach you something you want to learn.'
   }
 }

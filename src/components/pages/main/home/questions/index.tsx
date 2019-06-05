@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import './questions.css';
 import { connect } from 'react-redux';
-import { IStore, IExpandedBook } from 'src/state-management/models';
+import { IStore, IExpandedBook, IQuestion } from 'src/state-management/models';
 import QuestionCard from '../../../../question';
 import Slider from 'react-slick';
 import { ButtonGroup, Button, Divider } from '@blueprintjs/core';
 
 
-const Questions = (props: { books: Array<IExpandedBook>}) => {
+const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[] }) => {
   const [activeSlide, updateActiveSlide] = useState(0);
-  const { books } = props;
+  const { books, questions } = props;
 
   let componentSlider;
   return (
@@ -71,7 +71,7 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
                 }
               }]}
             >
-              {[1, 2, 3, 4, 5, 6].map((book, i) => <QuestionCard books={books} key={i} responsive={true} />)}
+              {questions.map((question, i) => <QuestionCard question={question} books={books} key={i} responsive={true} />)}
             </Slider>
           </div>
         </div>
@@ -81,7 +81,8 @@ const Questions = (props: { books: Array<IExpandedBook>}) => {
 }
 
 const mapStateToProps = (state: IStore) => ({
-  books: state.book.books
+  books: state.book.books,
+  questions: state.question.questions
 })
 
 export default connect(mapStateToProps)(Questions);

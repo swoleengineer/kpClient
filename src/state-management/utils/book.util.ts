@@ -229,7 +229,7 @@ export const initialBookState: IBookState = {
     title: '',
     writer: {
       id: undefined,
-      name: undefined
+      name: 'Joram Clervius'
     },
     description: '',
     topics: [],

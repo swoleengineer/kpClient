@@ -31,6 +31,9 @@ const routesMap = {
   NEWBOOK: {
     path: '/newBook',
   },
+  NEWQUESTION: {
+    path: '/newQuestion'
+  },
   PROFILE: {
     path: '/profile',
     thunk: (dispatch, getState) => {

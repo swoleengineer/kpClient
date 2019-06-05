@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Suggest, ItemRenderer } from '@blueprintjs/select';
 import { MenuItem, Icon, Divider, Tag } from '@blueprintjs/core';
 import { ITopic, IStore } from '../../../../../state-management/models';
@@ -26,7 +26,6 @@ export const renderTopic: ItemRenderer<ITopic> = (topic, { handleClick, modifier
 };
 const Hero = (props: { topics: Array<ITopic> }) => {
   const { topics } = props;
-  const [componentTopics] = useState(topics);
   const inputProps = {
     placeholder: 'Search a skill...',
     rightElement: <Icon icon='search' iconSize={25} style={{ color: '#5c7080'}} />,
@@ -35,7 +34,7 @@ const Hero = (props: { topics: Array<ITopic> }) => {
   const suggestProps = {
     allowCreate: true,
     closeOnSelect: true,
-    items: componentTopics,
+    items: topics,
     minimal: false,
     openOnKeyDown: true,
     resetOnClose: false,
@@ -97,7 +96,7 @@ const Hero = (props: { topics: Array<ITopic> }) => {
         </span>
         
         <div className='heroTopicsContainer'>
-          <Slider
+          {topics.length > 0 && <Slider
             dots={false}
             infinite={true}
             speed={1000}
@@ -108,13 +107,13 @@ const Hero = (props: { topics: Array<ITopic> }) => {
             autoplay={true}
             autoplaySpeed={6500}
           >
-            {componentTopics
+            {topics
               .reduce((acc, curr) => [...acc, curr, ``], [])
               .map((topic: ITopic, i) => topic
                 ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.name}</Tag>
                 : <span key={i}>&nbsp;&nbsp;</span>)
             }
-          </Slider>
+          </Slider>}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import {  ITopicBodyObj, IAuthor, IComment, IReport } from './';
+import {  ITopicBodyObj, IAuthor, IComment, IReport, ITopic  } from './';
+
 
 export interface IBookRequest {
   title: string;
@@ -7,7 +8,7 @@ export interface IBookRequest {
     name?: string;
   };
   description: string;
-  topics: ITopicBodyObj[];
+  topics: Array<ITopicBodyObj | ITopic>;
   isbn: string;
   amazon_link: string;
 }

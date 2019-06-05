@@ -7,3 +7,19 @@
   width: 100%;
   display: block;
 }
+
+.topicSearchWrapper,
+.topicSearchWrapper .bp3-popover-target ,
+.topicSearchWrapper .bp3-popover-target .bp3-active,
+.topicSearchWrapper .bp3-popover-target .bp3-active .bp3-input,
+.topicSearchWrapper .bp3-popover-target .bp3-active .bp3-input .bp3-tag-input-values,
+.topicSearchWrapper .bp3-popover-target .bp3-active .bp3-input .bp3-tag-input-values .bp3-input-ghost {
+  width: 100%;
+}
+
+.newQuestionTagsContainer {
+  background-color: rgba(167, 182, 194, 0.85);
+  margin: 5px 0 15px;
+  padding: 10px 15px;
+  width: 100%
+}

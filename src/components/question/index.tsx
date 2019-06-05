@@ -4,14 +4,15 @@ import { Text, Tag, Button, ButtonGroup, ControlGroup, InputGroup, Popover, Menu
 import Slider from 'react-slick';
 import { Select, ItemRenderer } from '@blueprintjs/select';
 import { filterBook } from '../../state-management/utils/book.util';
-import { IExpandedBook } from 'src/state-management/models';
+import { IExpandedBook, IQuestion, ITopic, IQuestionRequest } from 'src/state-management/models';
+import moment from 'moment';
 
 
 const BookSelect = Select.ofType<IExpandedBook>();
-const QuestionCard = (props: { books: IExpandedBook[]; responsive: boolean }) => {
+const QuestionCard = (props: { question: IQuestion | IQuestionRequest; books: IExpandedBook[]; responsive: boolean; }) => {
   const [commentOpen, setCommentState] = useState(false);
   const [bookToAdd, setAddingBook] = useState({});
-  const { books, responsive } = props;
+  const { books, responsive, question } = props;
   const renderBook: ItemRenderer<IExpandedBook> = (book, { handleClick, modifiers, query }) => {
     if (!modifiers.matchesPredicate) {
       return null;
@@ -40,13 +41,17 @@ const QuestionCard = (props: { books: IExpandedBook[]; responsive: boolean }) =>
     resetOnQuery: true,
     resetOnSelect: true
   }
+  if (!question) {
+    return null;
+  }
+  const { author, created, title, text, topics } = question;
   return (
     <div className={responsive ? 'responsiveQuestion' : ''}>
       <div className='questionCardWrapper'>
         <div className='questionCard_content' style={{ paddingBottom: commentOpen ? '10px' : '0px'}}>
           <div className='questionCard_meta'>
-            <span className='questionCard_meta_author'>Posted by: </span> @clervius
-            <span className='questionCard_meta_time'>20 hrs. ago</span>
+            <span className='questionCard_meta_author'>Posted by: </span> @{author.username}
+            <span className='questionCard_meta_time'>{moment(created).fromNow()}</span>
             <span className='questionCard_meta_more'>
               <Popover>
                 <Icon icon='more' />
@@ -59,11 +64,11 @@ const QuestionCard = (props: { books: IExpandedBook[]; responsive: boolean }) =>
             </span>
           </div>
           <div className='questionCard_details'>
-            <span className='questionCard_details_title'>What book teaches you how to swim?</span>
-            <span className='questionCard_details_description'><Text ellipsize={true}>I just want to learn it because the shit is tough you know so let me know which book.</Text></span>
+            <span className='questionCard_details_title'>{title}</span>
+            <span className='questionCard_details_description'><Text ellipsize={true}>{text}</Text></span>
           </div>
           <div className='questionCard_topics'>
-            <Slider
+            {topics.length > 0 && <Slider
               dots={false}
               infinite={false}
               speed={500}
@@ -72,14 +77,11 @@ const QuestionCard = (props: { books: IExpandedBook[]; responsive: boolean }) =>
               arrows={false}
               variableWidth={true}
             >
-              <Tag icon='lightbulb' minimal={false}>Entrepreneur</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Leadership</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Headphones</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Programming</Tag>
-            </Slider>
+              {topics.reduce((acc, curr) => [...acc, curr, ``], [])
+              .map((topic: ITopic, i) => topic
+                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
+                : <span key={i}>&nbsp;&nbsp;</span>)}
+            </Slider>}
           </div>
           <div className='row'>
             <div className='col-1'>

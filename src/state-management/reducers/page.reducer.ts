@@ -7,6 +7,7 @@ const routes: {[key: string]: string } = {
   REGISTER: 'auth/register',
   NEWTOPIC: 'auth/topic',
   NEWBOOK: 'auth/newBook',
+  NEWQUESTION: 'auth/question',
   [NOT_FOUND]: 'notFound',
 }
 

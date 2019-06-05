@@ -47,6 +47,7 @@ export const questionDeleteUrl = (id: string): string => `/question/single/${id}
 export const questionAddTopicUrl = (question: string, topicId: string): string => `/question/addTopic/${question}/${topicId}`;
 export const questionRmTopic = (question: string, topicId: string): string => `/question/rmTopic/${question}/${topicId}`;
 export const questionToggleAgree = (question: string, topicId: string): string => `/question/toggleAgree/${question}/${topicId}`;
+export const questionAllOfThem: string = `/question/getAll`;
 
 // Report '/report
 export const reportCreateUrl: string = `/report/new`;
