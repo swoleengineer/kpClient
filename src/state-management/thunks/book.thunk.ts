@@ -29,7 +29,8 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
   (err: any) => {
     let message;
     try {
-      message = err.response.data.message
+      const { message: mesaj =  '' } = { ...err.response.data, ...(err.response.data.data || {}) }
+      message = mesaj
     } catch {
       message = 'Could not create this book. Please try again later'
     }

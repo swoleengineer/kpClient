@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InputGroup, FormGroup, MenuItem, TextArea, Tag, Collapse, Button } from '@blueprintjs/core';
 import '../../auth/auth.css';
 import { keenToaster } from '../../../../containers/switcher';
-import { IBookRequest, IStore, IExpandedBook, IAuthor, ITopic  } from '../../../../state-management/models';
+import { IBookRequest, IStore, IExpandedBook, IAuthor, ITopic, IBook  } from '../../../../state-management/models';
 import { connect } from 'react-redux';
 import { bookActionTypes as types } from '../../../../state-management/actions/book.actions';
 import { Suggest, ItemRenderer } from '@blueprintjs/select';
@@ -47,7 +47,7 @@ const NewBookPage = (props: {
   const [formErrors, updateErrors] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' | 'primary' | 'success' }>>([]);
   const [topics, updateTopics] = useState<Array<ITopic>>([]);
   const [formComplete, updateStatus] = useState(false);
-  const [finalBook, updateFinal] = useState(newBook);
+  const [finalBook, updateFinal] = useState<IBookRequest | IBook>(newBook);
   const processField = e => {
     const field = e.target.id;
     const value = e.target.value;
@@ -79,7 +79,13 @@ const NewBookPage = (props: {
       })
       return;
     }
-    updateFinal(newBook);
+    updateFinal({
+      ...newBook,
+      author: {
+        name: 'Joram Clervius'
+      },
+      pictures: []
+    });
     createBook(newBook, goToNext, nextPayload)
     .then(() => {
       updateStatus(true);
