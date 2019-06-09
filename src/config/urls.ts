@@ -5,6 +5,7 @@ export const userLoginUrl: string = `/user/auth`;
 export const userSearchUrl: string = `/user/search`;
 export const userAutoAuthUrl: string = `/user/autoAuth`;
 export const userForgotPassUrl: string = `/user/forgotPass`;
+export const userResetPassUrl: string = `/user/resetPassword`;
 export const userChangePassUrl = (id: string): string => `/user/changePass/${id}`;
 export const userUpdatePicUrl = (id: string): string => `/user/updatePic/${id}`;
 export const userUpdateUrl = (id: string): string => `/user/update/${id}`;

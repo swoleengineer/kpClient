@@ -33,5 +33,19 @@ export const authSettings = {
     pageTitle: 'Ask Question',
     page: 'Get book suggestions',
     pageDescription: 'Ask for books to teach you something you want to learn.'
+  },
+  forgot: {
+    cardWidth: 'col-md-4',
+    topPadding: '20%',
+    pageTitle: 'Forgot Password',
+    pageSubtitle: '',
+    pageDescription: 'Please enter your email address below and we will send you a link to reset your password.'
+  },
+  reset: {
+    cardWidth: 'col-md-4',
+    topPadding: '20%',
+    pageTitle: 'Reset Password',
+    pageSubtitle: '',
+    pageDescription: 'Enter a new password. Make sure both fields match'
   }
 }

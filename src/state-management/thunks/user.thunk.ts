@@ -1,7 +1,7 @@
 import { store } from '../../store';
 import { INewUserRequest, IUserLoginRequest, IStore } from '../models';
 import { postNewUser, postUserLogin, postSaveBookToUser, postRmBookFrUser,
-  postUserAutoAuth
+  postUserAutoAuth, postUserForgotPass, postUserResetPassword
 } from '../../config';
 import { userActionTypes as types, bookActionTypes as bookTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core'
@@ -131,7 +131,7 @@ export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', typ
     
     
     AppToaster.show({
-      message: `'${book.title}' ${type === 'add' ? 'saved to' : 'removed from'} your library.`,
+      message: `'${book.title}' ${type === 'add' ? 'saved to' : 'removed from'} your ${list === 'readBooks' ? 'library' : 'saved books'}.`,
       intent: 'none',
       icon: type === 'add' && user.savedBooks.includes(id)
         ? 'book'
@@ -153,4 +153,71 @@ export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', typ
 export const isLoggedIn = () => {
   const { user: { loggedIn } } = store.getState() as IStore;
   return loggedIn;
+}
+
+export const logUserOut = () => {
+  localStorage.removeItem('x-access-token');
+  store.dispatch({ type: types.userLogout });
+  AppToaster.show({
+    message: `You've been logged out.`,
+    intent: 'none',
+    icon: 'log-out'
+  })
+}
+
+export const submitForgotPass = (params: { email: string }, goToNext: boolean = false, redirectPayload: {
+  type: string;
+  payload?: any
+} = { type: 'HOME' }) => postUserForgotPass(params).then(
+  () => 'If we have an account for that address, you should receive a reset link soon. Please check your email (Check spam/junk too!) for a link to reset your password.',
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not generate and send token to reset your password. Please try again later.'
+    }
+    return message;
+  }
+)
+
+
+export const submitResetPass = (params: { password: string }, goToNext: boolean = false, redirectPayload: {
+  type: string;
+  payload?: any
+} = { type: 'HOME' }) => {
+  const { ocation: { payload: { token }}} = store.getState();
+  return postUserResetPassword({ password: params.password, token }).then(
+    (res: any) => {
+      const { user, jwt } = res.data || { jwt: undefined, user: undefined };
+      store.dispatch({
+        type: types.setUser,
+        payload: user
+      });
+      store.dispatch({
+        type: types.updateLoggedIn,
+        payload: { loggedIn: true, jwt }
+      });
+      localStorage.setItem('x-access-token', jwt);
+      AppToaster.show({
+        message: `Password updated. You are now logged in.`,
+        intent: 'success',
+        icon: 'tick',
+        onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
+      });
+    },
+    (err: any) => {
+      let message;
+      try {
+        message = err.response.data.message
+      } catch {
+        message = 'Application error resetting your password.'
+      }
+      AppToaster.show({
+        message,
+        intent: 'danger',
+        icon: 'error'
+      })
+    }
+  )
 }

@@ -12,7 +12,7 @@ type IAuthWrapperProps = {
 const AuthWrapper = (props: IAuthWrapperProps) => {
   const { page } = props;
   const Display = pageMap[page];
-  const pageType = page.split('/')[1];
+  const pageType = page.split('/')[page.split('/').length - 1];
   const { cardWidth, topPadding, pageSubtitle, pageTitle, pageDescription } = authSettings[pageType];
   return (
   <div className='authWrapper'>
@@ -28,10 +28,13 @@ const AuthWrapper = (props: IAuthWrapperProps) => {
         <div className='authContainerPageWrapper'><Display goToNext={true} /></div>
         <div className='authBottomLinks'>
           {pageTitle === 'Login,' && <ul>
-            <li className='forLogin'><Link to={{}}>Forgot Password</Link></li>
+            <li className='forLogin'><Link to={{ type: 'FORGOTPASSWORD' }}>Forgot Password</Link></li>
             <li className='forLogin'><Link to={{ type: 'REGISTER'}}>Register</Link></li>
           </ul>}
           {pageTitle === 'Register,' && <ul>
+            <li className='forRegister'><Link to={{ type: 'LOGIN' }}>Login instead &raquo;</Link></li>
+          </ul>}
+          {pageType === 'forgot' && <ul>
             <li className='forRegister'><Link to={{ type: 'LOGIN' }}>Login instead &raquo;</Link></li>
           </ul>}
         </div>

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './book.css';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
-import { Icon, Tooltip, Menu, MenuItem, Popover, Tag } from '@blueprintjs/core';
-import { IAuthor, IExpandedBook, ITopicBodyObj, IUser, IStore } from 'src/state-management/models';
+import { Icon, Tooltip, Menu, MenuItem, Popover, Tag, IAlertProps, Alert } from '@blueprintjs/core';
+import { IAuthor, IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
-import { toggleUserBook } from '../../state-management/thunks';
+import { toggleUserBook, createReport } from '../../state-management/thunks';
 import { connect } from 'react-redux';
+import { keenToaster } from '../../containers/switcher'
 
 const Book = ({
   bookId, 
@@ -27,10 +28,58 @@ const Book = ({
   const { title, author, pictures, topics } = book;
   const { name: authorName } = author as IAuthor;
   const [ picture = { link: undefined}] = pictures
-  const isRead = user.readBooks.findIndex(livre => livre._id === book._id) > 0;
+  const isRead = user && user.readBooks.findIndex(livre => livre._id === book._id) > 0;
+  const [alertProps, updateAlertProps] = useState<IAlertProps>();
+  const [alertConfig, updateAlertConfig] = useState<{
+    type: 'deleteComment' | 'reportComment' | 'reportBook';
+    text: string;
+  }>({
+    type: 'deleteComment',
+    text: ''
+  });
+  const [itemToReport, updateReportingItem] = useState<IReportRequest>({
+    parentId: '',
+    parentType: acceptableTypes.comment,
+    author: user ? user._id : '',
+    reportType: 'inappropriate'
+  })
+  const submitNewReport = () => {
+    if (!itemToReport.parentId || !itemToReport.author) {
+      keenToaster.show({
+        intent: 'warning',
+        message: 'Improper report request. Please try again.',
+        icon: 'error'
+      });
+      return;
+    }
+    createReport(itemToReport)
+      .then(
+        () => {
+          updateAlertProps({ ...alertProps, isOpen: false });
+          updateReportingItem({
+            parentId: '',
+            parentType: acceptableTypes.comment,
+            author: user ? user._id : '',
+            reportType: 'inappropriate'
+          });
+          updateAlertConfig({ ...alertConfig, text: ''})
+        }
+      )
+      .catch(() => console.log('Could not add this report right now.'));
+  }
+  const alertFunctions = {
+    reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
+  }
   return (
     <div className='singleBookWrapper'>
       <div className='bookPicture' style={{backgroundImage: `url(${picture.link || KPBOOK})`}}>
+        <Alert
+          {...alertProps}
+          onConfirm={() => alertFunctions[alertConfig.type]()}
+          onCancel={() => updateAlertProps({ isOpen: false})}
+        >
+          {alertConfig.text}
+        </Alert>
         <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />
         {isRead
           ? <span className='bookMark'><Icon icon='bookmark' iconSize={40} intent='danger'/></span>
@@ -100,7 +149,29 @@ const Book = ({
                 <Menu.Divider />
                 <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
                 <Menu.Divider />
-                <MenuItem icon='flag' text='Report book' />
+                <MenuItem
+                  icon='flag'
+                  text='Report Book' 
+                  onClick={() => {
+                    updateReportingItem({
+                      parentId: book._id,
+                      parentType: acceptableTypes.book,
+                      author: user ? user._id : '',
+                      reportType: 'inappropriate'
+                    })
+                    updateAlertConfig({
+                      type: 'reportBook',
+                      text: `Are you sure you want to report '${book.title}' as Inappropriate?`
+                    })
+                    updateAlertProps({
+                      cancelButtonText: 'Nevermind',
+                      confirmButtonText: 'Report it',
+                      icon: 'flag',
+                      isOpen: true,
+                      intent: 'danger',
+                    });
+                  }}
+                />
               </Menu>
             </Popover>
             

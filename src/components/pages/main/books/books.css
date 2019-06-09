@@ -164,3 +164,7 @@
 .singleBook_actionsWrapper .keen_comments_wrapper {
 
 }
+.underBookMenu {
+  list-style: none;
+  padding: 0
+}

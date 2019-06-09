@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Popover, Icon, Menu, MenuItem, Collapse, ControlGroup, InputGroup, Button, Alert, IAlertProps } from '@blueprintjs/core';
 import Book from '../../../book';
-import { IExpandedBook, IStore, IUser, acceptableTypes, IComment } from '../../../../state-management/models';
+import { IExpandedBook, IStore, IUser, acceptableTypes, IComment, IReportRequest } from '../../../../state-management/models';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
-import { createComment, toggleUserBook, removeComment } from '../../../../state-management/thunks'
+import { createComment, toggleUserBook, removeComment, createReport } from '../../../../state-management/thunks'
+import { keenToaster } from '../../../../containers/switcher';
 
 const BookCard = (props: {
   book: IExpandedBook;
@@ -26,12 +27,12 @@ const BookCard = (props: {
     text: ''
   });
   const [commentToDelete, updateDeletingComment] = useState<IComment>();
-  // const [itemToReport, updateReportingItem] = useState<IReportRequest>({
-  //   parentId: '',
-  //   parentType: acceptableTypes.comment,
-  //   author: user ? user._id : null,
-  //   reportType: 'spam'
-  // })
+  const [itemToReport, updateReportingItem] = useState<IReportRequest>({
+    parentId: '',
+    parentType: acceptableTypes.comment,
+    author: user ? user._id : '',
+    reportType: 'spam'
+  })
   const [alertProps, updateAlertProps] = useState<IAlertProps>();
   const [alertConfig, updateAlertConfig] = useState<{
     type: 'deleteComment' | 'reportComment' | 'reportBook';
@@ -69,20 +70,42 @@ const BookCard = (props: {
         console.log(e);
       })
   }
+  
+  const submitNewReport = () => {
+    if (!itemToReport.parentId || !itemToReport.author) {
+      keenToaster.show({
+        intent: 'warning',
+        message: 'Improper report request. Please try again.',
+        icon: 'error'
+      });
+      return;
+    }
+    createReport(itemToReport)
+      .then(
+        () => {
+          updateAlertProps({ ...alertProps, isOpen: false });
+          updateReportingItem({
+            parentId: '',
+            parentType: acceptableTypes.comment,
+            author: user ? user._id : '',
+            reportType: 'spam'
+          });
+          updateAlertConfig({ ...alertConfig, text: ''})
+        }
+      )
+      .catch(() => console.log('Could not add this report right now.'));
+  }
   const alertFunctions = {
     deleteComment: () => commentToDelete ? removeComment(commentToDelete).then(
       () => {
         updateAlertProps({ ...alertProps, isOpen: false });
-      updateDeletingComment(undefined);
-      updateAlertConfig({ ...alertConfig, text: ''})
+        updateDeletingComment(undefined);
+        updateAlertConfig({ ...alertConfig, text: ''})
       }
-    ).catch() : null
- 
+    ).catch() : null,
+    reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
-
   const { comments = [], likes = [], topics = [] } = book;
-  
-    
   return (
     <div className='bookCardWrapper' key={book._id}>
       <span className='bookCard_more'>
@@ -90,15 +113,39 @@ const BookCard = (props: {
           <Icon icon='more' />
           <Menu>
             <MenuItem
-              icon={user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
-              text={`Mark ${user.readBooks.map(livre => livre._id).includes(book._id) ? 'unread' : 'as read'}`}
-              onClick={() => toggleUserBook(book._id, 'readBooks', user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add')}
+              icon={user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
+              text={`Mark ${user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'unread' : 'as read'}`}
+              onClick={() => toggleUserBook(book._id, 'readBooks', user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add')}
             />
             <MenuItem icon='lightbulb' text='Add Topic' />
             <Menu.Divider />
             <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
             <Menu.Divider />
-            <MenuItem icon='flag' text='Report' />
+            <MenuItem
+              icon='flag'
+              text='Report Book' 
+              onClick={() => {
+                updateReportingItem({
+                  parentId: book._id,
+                  parentType: acceptableTypes.book,
+                  author: user ? user._id : '',
+                  reportType: 'inappropriate'
+                })
+                updateAlertConfig({
+                  type: 'reportBook',
+                  text: `Are you sure you want to report '${book.title}' as Inappropriate?`
+                })
+                updateAlertProps({
+                  cancelButtonText: 'Nevermind',
+                  confirmButtonText: 'Report it',
+                  icon: 'flag',
+                  isOpen: true,
+                  intent: 'danger',
+                });
+              }}
+            />
+              
+            
           </Menu>
         </Popover> 
       </span>
@@ -130,9 +177,6 @@ const BookCard = (props: {
                 if (minimal && i > 0) {
                   return null;
                 }
-                // if (hasUserComment > 0 && comment.author._id !== user._id && minimal) {
-                //   return null
-                // }
                 return (
                   <li key={i}>
                     <Popover>
@@ -160,7 +204,29 @@ const BookCard = (props: {
                                 })
                               }}
                           />
-                          : <MenuItem icon='flag' text='Report comment' />
+                          : <MenuItem
+                              icon='flag'
+                              text='Report comment'
+                              onClick={() => {
+                                updateReportingItem({
+                                  parentId: comment._id,
+                                  parentType: acceptableTypes.comment,
+                                  author: user ? user._id : '',
+                                  reportType: 'inappropriate'
+                                })
+                                updateAlertConfig({
+                                  type: 'reportBook',
+                                  text: `Are you sure you want to report this comment as Inappropriate?`
+                                })
+                                updateAlertProps({
+                                  cancelButtonText: 'Nevermind',
+                                  confirmButtonText: 'Report it',
+                                  icon: 'flag',
+                                  isOpen: true,
+                                  intent: 'danger',
+                                });
+                              }}
+                          />
                         }
                       </Menu>
                     </Popover> 

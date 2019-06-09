@@ -26,6 +26,8 @@ export const userReducer = (state: IUserState = initialUserState, action: {
         loggedIn: action.payload.loggedIn,
         jwt: action.payload.jwt
       }
+    case types.userLogout:
+      return initialUserState;
     case types.updateSavedBook:
       return {
         ...state,

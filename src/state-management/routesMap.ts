@@ -21,8 +21,7 @@ const routesMap = {
   },
   FORGOTPASSWORD: {
     path: '/forgot',
-    thunk: (dispatch, getState) => {
-    }
+
   },
   REGISTER: {
     path: '/register',
@@ -32,6 +31,15 @@ const routesMap = {
   RESETPASSWORD: {
     path: '/pwReset/:token',
     thunk: (dispatch: Function, getState: Function) => {
+      const { location: { payload: { token }}} = getState();
+      if (!token) {
+        AppToaster.show({
+          message: 'You do not have a valid token. Please make sure you have clicked on a link from your email.',
+          intent: 'danger',
+          icon: 'error',
+          onDismiss: () => dispatch(redirect({ type: 'FORGOTPASSWORD' }))
+        });
+      }
     }
   },
   NEWTOPIC: {

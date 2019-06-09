@@ -5,6 +5,8 @@ const routes: {[key: string]: string } = {
   HOME: 'main/home',
   LOGIN: 'auth/login',
   REGISTER: 'auth/register',
+  FORGOTPASSWORD: 'auth/forgotPw/forgot',
+  RESETPASSWORD: 'auth/forgotPw/reset',
   NEWTOPIC: 'auth/topic',
   NEWBOOK: 'auth/newBook',
   NEWQUESTION: 'auth/question',

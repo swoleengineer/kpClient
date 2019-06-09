@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { IStore, IUserState } from 'src/state-management/models';
 import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 import Link from 'redux-first-router-link';
+import { logUserOut } from '../../state-management/thunks'
 
 const Header = (props: { user: IUserState }) => {
   const { loggedIn, user } = props.user;
@@ -24,7 +25,7 @@ const Header = (props: { user: IUserState }) => {
                       <Menu>
                         <MenuItem icon='user' text={'My Profile'} />
                         <Menu.Divider />
-                        <MenuItem icon='log-out' text={'Log out'} />
+                        <MenuItem icon='log-out' text={'Log out'} onClick={() => logUserOut()}/>
                       </Menu>
                   </Popover>
                   : <div className='loggedOutLinks'>
