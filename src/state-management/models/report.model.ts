@@ -1,7 +1,8 @@
 export enum acceptableTypes {
   book = 'Book',
   question = 'Question',
-  topic = 'Topic'
+  topic = 'Topic',
+  comment = 'Comment'
 }
 export interface IReportRequest {
   author: string;

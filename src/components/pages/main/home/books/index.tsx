@@ -5,8 +5,9 @@ import { IStore } from 'src/state-management/models';
 import Book from '../../../../book';
 import { Button, ButtonGroup, Divider } from '@blueprintjs/core';
 import Slider from 'react-slick';
+import { redirect } from 'redux-first-router';
 
-const BooksSection = ({ books }) => {
+const BooksSection = ({ books, toPage }) => {
   const [activeSlide, updateActiveSlide] = useState(0);
 
   let componentSlider;
@@ -21,7 +22,7 @@ const BooksSection = ({ books }) => {
             <div className='headerMenu'>
               <ButtonGroup>
                 <Button icon='add'>Add <span className='hidden-sm'>Book</span></Button>
-                <Button icon='arrow-right'>All <span className='hidden-sm'>Books</span></Button>
+                <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLBOOKS' })}>All <span className='hidden-sm'>Books</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>
               <ButtonGroup className='hidden-xs'>
@@ -68,7 +69,7 @@ const BooksSection = ({ books }) => {
                 }
               }]}
             >
-              {books.map((book, i) => <Book book={book} key={book._id}/>)}
+              {books.map((book, i) => <Book bookId={book._id} key={book._id}/>)}
             </Slider>
           </div>
         </div>
@@ -80,4 +81,8 @@ const BooksSection = ({ books }) => {
 const mapStateToProps = (state: IStore) => ({
   books: state.book.books
 })
-export default connect(mapStateToProps)(BooksSection)
+
+const mapDispatch = dispatch => ({
+  toPage: action => dispatch(redirect(action))
+})
+export default connect(mapStateToProps, mapDispatch)(BooksSection)

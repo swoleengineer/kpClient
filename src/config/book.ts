@@ -1,7 +1,9 @@
 import {  AxiosPromise } from 'axios';
-import { IBookRequest, IBookPicture } from '../state-management/models/';
+import { IBookRequest, IBookPicture, ITopic } from '../state-management/models/';
 import { bookGetOneUrl, bookGetManyByTopic, bookGetAllUrl, bookAddBeginUrl, bookEditUrl,
-  bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl } from './';
+  bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl,
+  bookAddTopicsUrl
+} from './';
 import API, {  config } from './api';
 
 export const getSingleBook = (id: string): AxiosPromise => API.get(bookGetOneUrl(id));
@@ -15,3 +17,4 @@ export const putToggleBookLike = (id: string): AxiosPromise => API.put(bookToggl
 export const postAddBookPicture = (id: string, body: IBookPicture): AxiosPromise => API.post(bookAddPicUrl(id), body, config());
 export const deleteBookPicture = (id: string, pictureId: string): AxiosPromise => API.delete(bookRmPicUrl(id, pictureId), config());
 export const putToggleTopicAgree = (id: string, topicId: string): AxiosPromise => API.put(bookToggleAgreeUrl(id, topicId), undefined, config());
+export const postAddTopicsToBook = (book: string, body: { topics: ITopic[] }): AxiosPromise => API.post(bookAddTopicsUrl(book), body, config());

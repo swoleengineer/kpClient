@@ -8,6 +8,8 @@ const routes: {[key: string]: string } = {
   NEWTOPIC: 'auth/topic',
   NEWBOOK: 'auth/newBook',
   NEWQUESTION: 'auth/question',
+  ALLBOOKS: 'main/books/all',
+  SINGLEBOOK: 'main/books/single',
   [NOT_FOUND]: 'notFound',
 }
 

@@ -9,6 +9,8 @@ export const userChangePassUrl = (id: string): string => `/user/changePass/${id}
 export const userUpdatePicUrl = (id: string): string => `/user/updatePic/${id}`;
 export const userUpdateUrl = (id: string): string => `/user/update/${id}`;
 export const userChangeNotificationsUrl = (id: string): string => `/user/notifications/${id}`;
+export const userSaveBookUrl = (bookId: string, list: 'readBooks' | 'savedBooks'): string => `/user/engage/saveBook/${list}/${bookId}`;
+export const userRmBookUrl = (bookId: string, list: 'readBooks' | 'savedBooks'): string => `/user/engage/rmBook/${list}/${bookId}`;
 
 
 // Author '/author
@@ -30,9 +32,11 @@ export const bookToggleLikeUrl = (id: string): string => `/book/toggleLike/${id}
 export const bookAddPicUrl = (id: string): string => `/book/addPic/${id}`;
 export const bookRmPicUrl = (book: string, pictureId: string): string => `/book/rmPic/${book}/${pictureId}`;
 export const bookToggleAgreeUrl = (book: string, topicId: string): string => `/book/toggleAgree/${book}/${topicId}`;
+export const bookAddTopicsUrl = (book: string): string => `/book/addTopics/${book}`;
 
 // Comment '/comment
 export const commentGetManyUrl: string = `/comment/getMany`;
+export const commentGetManyForManyUrl: string = `/comment/getManyForMany`;
 export const commentGetSingleUrl = (id: string): string => `/comment/single/${id}`;
 export const commentCreateUrl: string = `/comment/new`;
 export const commentUpdateUrl = (id: string): string => `/comment/update/${id}`;

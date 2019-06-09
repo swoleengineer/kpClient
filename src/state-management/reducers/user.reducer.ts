@@ -26,6 +26,16 @@ export const userReducer = (state: IUserState = initialUserState, action: {
         loggedIn: action.payload.loggedIn,
         jwt: action.payload.jwt
       }
+    case types.updateSavedBook:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          [action.payload.list]: action.payload.type === 'add'
+            ? state.user[action.payload.list].filter(book => book._id !== action.payload.book._id).concat(action.payload.book)
+            : state.user[action.payload.list].filter(book => book._id !== action.payload.book._id)
+        }
+      }
     default:
       return state;
   }

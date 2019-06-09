@@ -4,6 +4,7 @@ export interface ITopicBodyObj {
   topic: string | ITopic;
   agreed: Array<IUser | string>;
   created: Date;
+  _id: string;
 }
 
 export interface ITopicRequest {

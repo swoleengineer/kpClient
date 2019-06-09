@@ -1,3 +1,4 @@
+import { IBook } from './'
 export interface IUserProfile {
   first_name: string;
   last_name: string;
@@ -35,11 +36,13 @@ export interface IUser extends INewUserRequest {
   notification_question_comment: boolean;
   created: Date;
   username: string;
+  savedBooks: Array<IBook | string>;
+  readBooks: Array<IBook | string>;
 }
 
 
 export interface IUserState {
   jwt: string;
-  user:  IUser;
+  user:  IUser | null;
   loggedIn: boolean;
 }

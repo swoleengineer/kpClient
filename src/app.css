@@ -89,3 +89,8 @@ button:focus {
     width: 1170px;
   }
 }
+
+.sideSticky {
+  position: sticky !important;
+  top: 100px;
+}

@@ -44,7 +44,7 @@ const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[] 
               slidesPerRow={1}
               slidesToScroll={1}
               arrows={false}
-              variableWidth={true}
+              variableWidth={false}
               swipeToSlide={false}
               className='kidsInLove'
               afterChange={index => updateActiveSlide(index)}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputGroup, FormGroup, MenuItem, TextArea, Tag, Collapse, Button } from '@blueprintjs/core';
+import { InputGroup, FormGroup, MenuItem, Tag, Collapse, Button } from '@blueprintjs/core';
 import '../../auth/auth.css';
 import { keenToaster } from '../../../../containers/switcher';
 import { IBookRequest, IStore, IExpandedBook, IAuthor, ITopic, IBook  } from '../../../../state-management/models';
@@ -79,15 +79,10 @@ const NewBookPage = (props: {
       })
       return;
     }
-    updateFinal({
-      ...newBook,
-      author: {
-        name: 'Joram Clervius'
-      },
-      pictures: []
-    });
+    
     createBook(newBook, goToNext, nextPayload)
-    .then(() => {
+    .then((updatedBook) => {
+      updateFinal(updatedBook);
       updateStatus(true);
     })
     .catch(() => {
@@ -159,25 +154,13 @@ const NewBookPage = (props: {
           </div>
         </div>
         <div className='row'>
-          <div className='col-md-7'>
+          <div className='col-md-12'>
             <FormGroup
-              {...getProps('amazon_link', <span className='bp3-icon'><i className='fab fa-amazon'/></span>, 'Enter Amazon link', 'Amazon Link').formGroup}
+              {...getProps('amazon_link', <span className='bp3-icon'><i className='fab fa-amazon'/></span>, 'Paste Amazon link...', 'Amazon Link').formGroup}
             >
               <InputGroup
-                {...getProps('amazon_link', <span className='bp3-icon'><i className='fab fa-amazon' /></span>, 'Enter Amazon link', 'Amazon Link').inputGroup}
-              />
-            </FormGroup>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-12'>
-            <FormGroup
-              {...getProps('description', null, 'Enter description from Amazon.', 'Description').formGroup}
-            >
-              <TextArea
-                {...getProps('description', null, 'Enter description from Amazon.', 'Description').inputGroup}
-                fill={true}
-                growVertically={true}
+                {...getProps('amazon_link', <span className='bp3-icon'><i className='fab fa-amazon' /></span>, 'Paste Amazon link...', 'Amazon Link').inputGroup}
+                large={true}
               />
             </FormGroup>
           </div>

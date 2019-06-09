@@ -1,6 +1,6 @@
 import { store } from '../../store';
-import { IBookRequest } from '../models';
-import { postAddBook } from '../../config';
+import { IBookRequest, ITopic } from '../models';
+import { postAddBook, postAddTopicsToBook } from '../../config';
 import {  bookActionTypes as types } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
@@ -25,6 +25,7 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     })
+    return res.data
   },
   (err: any) => {
     let message;
@@ -33,6 +34,36 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
       message = mesaj
     } catch {
       message = 'Could not create this book. Please try again later'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
+
+export const addTopicsToBook = (book: string, topics: ITopic[]) => postAddTopicsToBook(book, { topics }).then(
+  (res: any) => {
+    if (!res || !res.data) {
+      throw { response: { data: {
+        message: 'Error updating topics for this book',
+        status: 400,
+        data: false
+      }}};
+      return;
+    }
+    store.dispatch({
+      type: types.updateSelected,
+      payload: res.data
+    });
+  },
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not update topics for this book.'
     }
     AppToaster.show({
       message,

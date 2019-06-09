@@ -63,9 +63,10 @@ const QuestionForm = (props: {
       });
       return;
     }
-    updateFinal(newQuestion);
+    
     createQuestion(newQuestion, goToNext, nextPayload)
-    .then(() => {
+    .then((final) => {
+      updateFinal(final);
       updateStatus(true);
       clearForm();
     })

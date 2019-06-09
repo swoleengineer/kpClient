@@ -4,5 +4,9 @@ export const bookActionTypes = {
   updateNewBook: 'BOOK_UPDATE_NEW',
   clearNewBook: 'BOOK_CLEAR_NEW',
   selectBook: 'BOOK_SELECT_ONE',
-  updateSelected: 'BOOK_UPDATE_SELECTED'
+  updateSelected: 'BOOK_UPDATE_SELECTED',
+  
+  addComments: 'BOOK_ADD_COMMENTS',
+  updateComment: 'BOOK_UPDATE_COMMENT',
+  updateBookLike: 'BOOK_UPDATE_LIKE'
 }

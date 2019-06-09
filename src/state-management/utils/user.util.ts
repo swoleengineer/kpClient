@@ -1,6 +1,6 @@
 import { IUserState, IUser } from '../models';
 
-const tempUser: IUser = {
+export const tempUser: IUser = {
   profile: {
     first_name: 'Joram',
     last_name: 'Clervius',
@@ -15,11 +15,13 @@ const tempUser: IUser = {
   notification_new_book: true,
   notification_new_question: true,
   notification_question_comment: true,
-  created: new Date()
+  created: new Date(),
+  savedBooks: [],
+  readBooks: []
 }
 
 export const initialUserState: IUserState = {
   jwt: '156156156',
-  user: tempUser,
-  loggedIn: true
+  user: null,
+  loggedIn: false
 };

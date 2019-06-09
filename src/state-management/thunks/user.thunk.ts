@@ -1,7 +1,9 @@
 import { store } from '../../store';
 import { INewUserRequest, IUserLoginRequest, IStore } from '../models';
-import { postNewUser, postUserLogin } from '../../config';
-import { userActionTypes as types } from '../actions';
+import { postNewUser, postUserLogin, postSaveBookToUser, postRmBookFrUser,
+  postUserAutoAuth
+} from '../../config';
+import { userActionTypes as types, bookActionTypes as bookTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core'
 import { redirect } from 'redux-first-router'
 
@@ -73,6 +75,80 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
   }
 )
 
+export const autoLogin = () => {
+  const token = localStorage.getItem('x-access-token');
+  if (!token) {
+    return;
+  }
+  postUserAutoAuth({ token }).then(
+    (res: any) => {
+      const { user, jwt } = res.data || { jwt: undefined, user: undefined };
+      store.dispatch({
+        type: types.setUser,
+        payload: user
+      });
+      store.dispatch({
+        type: types.updateLoggedIn,
+        payload: { loggedIn: true, jwt }
+      });
+      localStorage.setItem('x-access-token', jwt);
+      AppToaster.show({
+        message: `Welcome ${user.profile.first_name}`,
+        intent: 'success',
+        icon: 'tick',
+      });
+    },
+    (err: any) => {
+      localStorage.removeItem('x-access-token');
+    }
+  )
+}
+
+export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', type: 'add' | 'remove') => ({
+  add: postSaveBookToUser,
+  remove: postRmBookFrUser
+}[type])(id, list).then(
+  (res: any) => {
+    const { book, user } = res.data || { book: undefined, user: undefined};
+    if (!book || !user) {
+      throw { response: { data: { message: 'Could not manage this book in your account.'}}};
+      return;
+    }
+    store.dispatch({
+      type: types.updateSavedBook,
+      payload: { type, list, book }
+    });
+    if (list === 'savedBooks') {
+      store.dispatch({
+        type: bookTypes.updateBookLike,
+        payload: {
+          type,
+          like: user._id,
+          book: id
+        }
+      });
+    }
+    
+    
+    AppToaster.show({
+      message: `'${book.title}' ${type === 'add' ? 'saved to' : 'removed from'} your library.`,
+      intent: 'none',
+      icon: type === 'add' && user.savedBooks.includes(id)
+        ? 'book'
+        : list === 'savedBooks'
+          ? 'bookmark'
+          : 'book'
+    })
+  },
+  (err: any) => {
+    console.log(err.response.data);
+    AppToaster.show({
+      message: 'Could not update this book in your account.',
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+);
 
 export const isLoggedIn = () => {
   const { user: { loggedIn } } = store.getState() as IStore;

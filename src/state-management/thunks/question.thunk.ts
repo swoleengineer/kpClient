@@ -31,6 +31,7 @@ export const createQuestion = (params: IQuestionRequest, goToNext: boolean = fal
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     });
+    return payload;
   },
   (err: any) => {
     let message;

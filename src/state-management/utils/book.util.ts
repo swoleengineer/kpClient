@@ -224,7 +224,7 @@ export const filterBook: ItemPredicate<IExpandedBook> = (query, book, _index, ex
 };
 
 export const initialBookState: IBookState = {
-  books: mockBooks,
+  books: [],
   newBook: {
     title: '',
     writer: {

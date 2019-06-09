@@ -2,10 +2,12 @@ import React from 'react';
 import Logo from './logo';
 import { connect } from 'react-redux';
 import { IStore, IUserState } from 'src/state-management/models';
-import { Icon, Popover, Menu, MenuItem, Button } from '@blueprintjs/core';
+import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
+import Link from 'redux-first-router-link';
 
 const Header = (props: { user: IUserState }) => {
-  const { loggedIn, user: { username } } = props.user;
+  const { loggedIn, user } = props.user;
+  const { username } = user || { username: undefined };
   return (
     <header className='appHeader'>
       <div className='container headerWrapper'>
@@ -25,11 +27,12 @@ const Header = (props: { user: IUserState }) => {
                         <MenuItem icon='log-out' text={'Log out'} />
                       </Menu>
                   </Popover>
-                  : <div>
-                    I will put something in here to encourage you to create an account.
+                  : <div className='loggedOutLinks'>
+                    <span><Link to={{ type: 'LOGIN' }}>Login</Link></span> | <span><Link to={{ type: 'REGISTER' }}>Register</Link></span>
                   </div>}
               </div>
-              <Button icon='add' text={'Add Book'} />
+              <Link to={{ type: 'NEWBOOK'}} className='bp3-button'>&nbsp;<Icon icon='add' />&nbsp;&nbsp;&nbsp; Add Book</Link>
+              {/* <Button icon='add' text={'Add Book'} /> */}
             </div>
           </div>
         </div>

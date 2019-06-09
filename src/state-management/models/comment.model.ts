@@ -1,4 +1,4 @@
-import { IUser, acceptableTypes } from './';
+import { IUser, acceptableTypes, IBook  } from './';
 
 export interface ICommentRequest {
   author: string | IUser;
@@ -15,6 +15,12 @@ export interface ICommentSearch {
 export interface IComment {
   _id: string;
   created: Date;
+  author: IUser;
+  accepted: boolean;
+  suggested_book: string | IBook;
+  parentType: acceptableTypes;
+  parentId: string;
+  text: string;
 }
 
 

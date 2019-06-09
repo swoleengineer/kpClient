@@ -48,13 +48,22 @@
   float: right;
 }
 .menuArea .authStatusWrapper {
-  display: inline;
+  display: inline-block;
   margin-right: 15px;
   position: relative;
   top: 3px
 }
 .menuArea span {
   transition: all .10s ease;
+}
+.menuArea .loggedOutLinks {
+  display: block;
+}
+.menuArea .loggedOutLinks span {
+  display: inline-block
+}
+.menuArea .loggedOutLinks span a {
+  color: rgba(0,0,0,.6)
 }
 .menuArea .bp3-popover-wrapper:hover {
   cursor: pointer;

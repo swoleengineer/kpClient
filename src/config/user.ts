@@ -2,7 +2,7 @@ import {  AxiosPromise } from 'axios';
 import {  INewUserRequest, IUserLoginRequest, IUser } from '../state-management/models/';
 import {  userGetDetailsUrl, userRegisterUrl, userLoginUrl, userSearchUrl,
   userAutoAuthUrl, userForgotPassUrl, userUpdatePicUrl,
-  userUpdateUrl, userChangeNotificationsUrl } from './';
+  userUpdateUrl, userChangeNotificationsUrl, userSaveBookUrl, userRmBookUrl } from './';
 import API, {  config } from './api';
 
 export const postNewUser = (body: INewUserRequest): AxiosPromise<{ user: IUser; jwt: string}> => API.post(userRegisterUrl, body);
@@ -15,3 +15,5 @@ export const postUserForgotPass = (body: { email: string }): AxiosPromise => API
 export const postUserUpdatePic = (id: string, body: { public_id: string; link: string }): AxiosPromise => API.post(userUpdatePicUrl(id), body, config());
 export const postUserUpdate = (id: string, body: { [key: string]: any }): AxiosPromise => API.post(userUpdateUrl(id), body, config());
 export const postUserNotificationSettings = (id: string, body: { [key: string]: boolean }): AxiosPromise => API.post(userChangeNotificationsUrl(id), body, config());
+export const postSaveBookToUser = (bookId: string, list: 'readBooks' | 'savedBooks'): AxiosPromise => API.post(userSaveBookUrl(bookId, list), null, config());
+export const postRmBookFrUser = (bookId: string, list: 'readBooks' | 'savedBooks'): AxiosPromise => API.post(userRmBookUrl(bookId, list), null, config());

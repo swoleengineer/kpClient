@@ -1,23 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './book.css';
 import Link from 'redux-first-router-link';
+import { redirect } from 'redux-first-router';
 import { Icon, Tooltip, Menu, MenuItem, Popover, Tag } from '@blueprintjs/core';
-import { IAuthor, IExpandedBook, IBookRequest } from 'src/state-management/models';
+import { IAuthor, IExpandedBook, ITopicBodyObj, IUser, IStore } from 'src/state-management/models';
 import Slider from 'react-slick';
+import KPBOOK from '../../assets/kp_book.png';
+import { toggleUserBook } from '../../state-management/thunks';
+import { connect } from 'react-redux';
 
-const Book = ({ book }: { book: IExpandedBook | IBookRequest}) => {
-  const { title, author, pictures } = book;
+const Book = ({
+  bookId, 
+  books,
+  user,
+  linkTo
+}: {
+  bookId: string;
+  books: IExpandedBook[];
+  user: IUser;
+  linkTo: Function
+}) => {
+  const book = books.find(livre => livre._id === bookId);
+  if (!book) {
+    return null;
+  }
+  const { title, author, pictures, topics } = book;
   const { name: authorName } = author as IAuthor;
   const [ picture = { link: undefined}] = pictures
-  const [isRead, setRead] = useState(false);
-  const [isLiked, setLiked] = useState(false)
+  const isRead = user.readBooks.findIndex(livre => livre._id === book._id) > 0;
   return (
     <div className='singleBookWrapper'>
-      <div className='bookPicture' style={{backgroundImage: `url(${picture.link || 'http://inspiredwomenamazinglives.com/wp-content/uploads/2018/12/Becoming-Michelle-Obama.jpg'})`}}>
-        <Link className='bookLink' to={{ type: 'HOME' }} />
-        {isRead && <span className='bookMark'><Icon icon='bookmark' iconSize={40} /></span>}
+      <div className='bookPicture' style={{backgroundImage: `url(${picture.link || KPBOOK})`}}>
+        <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />
+        {isRead
+          ? <span className='bookMark'><Icon icon='bookmark' iconSize={40} intent='danger'/></span>
+          : <Tooltip content='Mark as read' className='unreadBookMark'>
+              <span className='unreadBookMark' onClick={() => toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}>
+                <Icon icon='bookmark' iconSize={40} />
+              </span>
+            </Tooltip>
+        }
         <div className='topicsMeta'>
-
             <Slider
               dots={false}
               infinite={true}
@@ -29,31 +52,31 @@ const Book = ({ book }: { book: IExpandedBook | IBookRequest}) => {
               autoplay={true}
               autoplaySpeed={1500}
             >
-              <Tag icon='lightbulb' minimal={false}>Entrepreneur</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Leadership</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Headphones</Tag>
-              <span> &nbsp;&nbsp;</span>
-              <Tag icon='lightbulb' minimal={false}>Programming</Tag>
-              <span> &nbsp;&nbsp;</span>
-              
+              {topics.reduce((acc, curr) => [...acc, curr, ``], [])
+              .map((topic: ITopicBodyObj, i) => topic
+                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
+                : <span key={i}>&nbsp;&nbsp;</span>)}
+
             </Slider>
 
         </div>
         <div className='bookMenu'>
-          <div className='bookMenu_item' onClick={() => setLiked(!isLiked)}>
-            <Tooltip content='Save Book'>
+          <div
+            className='bookMenu_item'
+            onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}
+            style={{ backgroundColor: book.likes.includes(user ? user._id : '') ? 'rgba(0,0,0,.5)' : 'transparent' }}
+          >
+            <Tooltip content={book.likes.includes(user ? user._id : '') ? 'Unlike Book' : 'Save Book'}>
               <span >
                 <Icon
                   icon='heart'
                   iconSize={12}
-                  style={{ color: isLiked ? 'white' : 'rgba(167, 182, 194, 0.85)' }}
+                  intent={book.likes.includes(user ? user._id : '') ? 'danger' : 'none'}
                 />
               </span>
             </Tooltip>
           </div>
-          <div className='bookMenu_item'>
+          <div className='bookMenu_item' onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id }})}>
             <Tooltip content='View book'>
               <span><Icon icon='share' iconSize={12} /></span>
             </Tooltip>
@@ -69,9 +92,13 @@ const Book = ({ book }: { book: IExpandedBook | IBookRequest}) => {
                   text='Share'
                   
                 />
-                <MenuItem icon='bookmark' text='Mark as read' onClick={() => setRead(!isRead)} />
+                <MenuItem
+                  icon={isRead ? 'remove-column' : 'bookmark'}
+                  text={`Mark ${isRead ? 'unread' : 'as read'}`}
+                  onClick={() => toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}
+                />
                 <Menu.Divider />
-                <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />}/>
+                <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
                 <Menu.Divider />
                 <MenuItem icon='flag' text='Report book' />
               </Menu>
@@ -86,4 +113,12 @@ const Book = ({ book }: { book: IExpandedBook | IBookRequest}) => {
   );
 }
 
-export default Book
+const mapStateToProps = (state: IStore) => ({
+  user: state.user.user,
+  books: state.book.books
+})
+
+const mapDispatch = dispatch => ({
+  linkTo: payload => dispatch(redirect(payload))
+})
+export default connect(mapStateToProps, mapDispatch)(Book);
