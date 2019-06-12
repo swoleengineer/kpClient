@@ -6,11 +6,11 @@ import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 import Link from 'redux-first-router-link';
 import { logUserOut } from '../../state-management/thunks'
 
-const Header = (props: { user: IUserState }) => {
+const Header = (props: { user: IUserState, style: any }) => {
   const { loggedIn, user } = props.user;
   const { username } = user || { username: undefined };
   return (
-    <header className='appHeader'>
+    <header className='appHeader' style={props.style}>
       <div className='container headerWrapper'>
         <div className='row'>
           <div className='col-12'>

@@ -1,6 +1,6 @@
 import { store } from '../../store';
-import { IBookRequest, ITopic } from '../models';
-import { postAddBook, postAddTopicsToBook, putToggleTopicAgree  } from '../../config';
+import { IBookRequest, ITopic, acceptableTypes } from '../models';
+import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort, postSearchManyForManyComments  } from '../../config';
 import {  bookActionTypes as types } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
@@ -36,6 +36,72 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
       message = mesaj
     } catch {
       message = 'Could not create this book. Please try again later'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
+
+export const queryMoreBooks = (sort: { [key: string]: any }, topics: string[] = [], already: string[] = []) => postQueryBookByTopicAndSort(sort, topics, already).then(
+  (res: any) => {
+    store.dispatch({
+      type: types.gotMoreBooks,
+      payload: res.data.data.map(book => ({
+        ...book,
+        comments: []
+      }))
+    })
+    return res.data.data.map(book => ({
+      parentType: acceptableTypes.book,
+      parentId: book._id
+    }))
+  },
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not get the books you requested.'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+).then(
+  (bookIds: any) => {
+    if (!bookIds.length) {
+      return;
+    }
+    return postSearchManyForManyComments({ allRequests: bookIds }).then(
+      (res: any) => store.dispatch({
+          type: types.addComments,
+          payload: res.data
+        }),
+    (err: any) => {
+      let message;
+      try {
+        message = err.response.data.message
+      } catch {
+        message = 'Could not get comments for your books.'
+      }
+      AppToaster.show({
+        message,
+        intent: 'danger',
+        icon: 'error'
+      })
+    })
+  },
+  err => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not get the books you requested.'
     }
     AppToaster.show({
       message,

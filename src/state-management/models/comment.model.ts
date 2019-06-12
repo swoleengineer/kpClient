@@ -5,6 +5,7 @@ export interface ICommentRequest {
   text: string;
   parentId: string;
   parentType: acceptableTypes;
+  created: Date
 }
 
 export interface ICommentSearch {

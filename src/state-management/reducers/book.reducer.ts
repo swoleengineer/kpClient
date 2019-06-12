@@ -16,6 +16,15 @@ export const bookReducer = (state: IBookState = initialBookState, action: {
           reports: []
         })).sort(sortBooksByViews)
       };
+    case types.gotMoreBooks:
+      return {
+        ...state,
+        books: state.books.concat(...action.payload.map(book => ({
+          ...book,
+          comments: [],
+          reports: []
+        }))).sort(sortBooksByViews)
+      };
     case types.updateSingleBook:
       return {
         ...state,

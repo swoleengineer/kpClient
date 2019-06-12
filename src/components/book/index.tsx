@@ -27,8 +27,9 @@ const Book = ({
   }
   const { title, author, pictures, topics } = book;
   const { name: authorName } = author as IAuthor;
-  const [ picture = { link: undefined}] = pictures
   const isRead = user && user.readBooks.findIndex(livre => livre._id === book._id) > 0;
+  const [ picture = { link: undefined}] = pictures
+  
   const [alertProps, updateAlertProps] = useState<IAlertProps>();
   const [alertConfig, updateAlertConfig] = useState<{
     type: 'deleteComment' | 'reportComment' | 'reportBook';
@@ -136,11 +137,6 @@ const Book = ({
                 <span><Icon icon='more' iconSize={12} /></span>
               </Tooltip>
               <Menu>
-                <MenuItem
-                  icon='social-media'
-                  text='Share'
-                  
-                />
                 <MenuItem
                   icon={isRead ? 'remove-column' : 'bookmark'}
                   text={`Mark ${isRead ? 'unread' : 'as read'}`}

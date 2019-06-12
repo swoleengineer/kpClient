@@ -64,7 +64,8 @@ const SingleBook = (props: {
         author: user._id,
         text,
         parentId: book._id,
-        parentType: acceptableTypes.book
+        parentType: acceptableTypes.book,
+        created: new Date()
       },
       false,
       {

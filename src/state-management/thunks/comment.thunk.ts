@@ -16,7 +16,7 @@ const AppToaster = Toaster.create({
 export const createComment = (params: ICommentRequest, goToNext: boolean = false, redirectPayload: {
   type: string;
   payload?: any
-} = { type: 'HOME' }) => postCreateComment(params).then(
+} = { type: 'HOME' }) => postCreateComment({ ...params }).then(
   (res: any) => {
     const { parentType } = params;
     const comment = res.data || undefined;

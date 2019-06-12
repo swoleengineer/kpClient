@@ -1,5 +1,6 @@
 .appHeader {
-  background-color: rgba(167, 182, 194, 0.13);
+  background-color: #f4f6f7;
+  z-index: 19
 }
 .headerWrapper {
   padding: 10px 15px;

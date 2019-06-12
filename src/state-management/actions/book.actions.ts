@@ -1,5 +1,6 @@
 export const bookActionTypes = {
   updateAllBooks: 'BOOK_UPDATE_ALL',
+  gotMoreBooks: 'BOOK_GOT_MORE',
   updateSingleBook: 'BOOK_UPDATE_ONE',
   updateNewBook: 'BOOK_UPDATE_NEW',
   clearNewBook: 'BOOK_CLEAR_NEW',

@@ -20,7 +20,10 @@ export class App extends React.Component<Props, {}> {
       (res: any) => {
         this.props.store.dispatch({
           type: bookActionTypes.updateAllBooks,
-          payload: res.data.data
+          payload: res.data.data.map(book => ({
+            ...book,
+            comments: []
+          }))
         })
         return res.data.data.map(book => ({
           parentType: acceptableTypes.book,

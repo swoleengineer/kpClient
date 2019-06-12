@@ -1,3 +1,23 @@
+.allPage_topSettings {
+  background-color: #f4f6f7;
+  margin-bottom: 20px;
+}
+.allPageCommentSort {
+  position: relative;
+  top: 7px;
+  border-right: 1px solid rgba(0,0,0,.1);
+  padding-right: 15px;
+  color: rgba(92, 112, 128, 0.5)
+}
+.allPageCommentSort .bp3-control-indicator {
+  margin-right: 15px !important;
+
+}
+.singleBookContainer {
+  display: block;
+  float: left;
+  margin: 0 15px 25px ;
+}
 .bookCardWrapper {
   background-color: white;
   width: 100%;
@@ -167,4 +187,24 @@
 .underBookMenu {
   list-style: none;
   padding: 0
+}
+.tagsHolder { }
+.tagsHolder .selectedTagsHolder {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  margin-bottom: 10px;
+}
+.sortHolder { }
+.sortHolder ul {
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(0,0,0,.1)
+}
+.sortHolder ul li {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  padding: 10px 0 0
+}
+.makeSticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 75px;
 }

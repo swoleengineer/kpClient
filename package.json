@@ -46,6 +46,7 @@
     "react-dom": "^16.8.6",
     "react-redux": "5.0.6",
     "react-slick": "^0.24.0",
+    "react-sticky": "^6.0.3",
     "react-toastify": "^4.2.3",
     "react-universal-component": "^3.0.0",
     "react-user-avatar": "^1.10.0",

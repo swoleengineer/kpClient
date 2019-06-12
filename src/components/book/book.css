@@ -127,3 +127,9 @@
     visibility: visible !important;
   }
 } 
+
+.icon-shift {
+  position: relative;
+  top: 3px;
+  margin-right: 15px;
+}
