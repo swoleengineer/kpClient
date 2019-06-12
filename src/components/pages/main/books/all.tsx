@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { IStore, IExpandedBook, ITopic } from '../../../../state-management/models';
 import './books.css';
 import BookCard from './bookCard';
-import { Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner } from '@blueprintjs/core';
+import { Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
 import { queryMoreBooks } from '../../../../state-management/thunks';
@@ -23,6 +23,7 @@ const Allbooks = (props: {
   }
   const [selectedTags, updateTags] = useState([]);
   const [commentsFirst, updateCommentSort] = useState<boolean>(false)
+  const [searchOpen, updateSearchOpen] = useState(false);
   const [sortOptions, updateSorts] = useState<any>([{
     sort: { 'topicsLength': 1 },
     selected: true,
@@ -154,30 +155,38 @@ const Allbooks = (props: {
       </div>
       <div className='col-md-8'>
         <div className='row allPage_topSettings'>
-
-            <div className='col-7'>
-              <Switch
-                className='allPageCommentSort'
-                checked={commentsFirst}
-                label='Most comments first'
-                onChange={() => updateCommentSort(!commentsFirst)}
-                alignIndicator='right'
-              />
-            </div>
-            <div className='col-5 text-right'>
-                <ButtonGroup>
-                  <Button disabled={true} minimal={true} text={`View: ${viewCards ? 'Detailed' : 'Books'}`} />
-                  <Tooltip content='View as books'>
-                    <Button icon='book' minimal={true} onClick={() => updateView(false)} intent={viewCards ? 'none' : 'primary'} />
-                  </Tooltip>
-                  <Tooltip content='View detailed'>
-                    <Button icon='list' minimal={true} onClick={() => updateView(true)} intent={!viewCards ? 'none' : 'primary'} />
-                  </Tooltip>
-                </ButtonGroup>
-            </div>
-
-          
+          <div className='col-md-6'>
+            <Switch
+              className='allPageCommentSort'
+              checked={commentsFirst}
+              label='Most comments'
+              onChange={() => updateCommentSort(!commentsFirst)}
+              alignIndicator='right'
+            />
+          </div>
+          <div className='col-md-6 text-right'>
+            <ButtonGroup>
+              <Button disabled={true} minimal={true} text={`${viewCards ? 'Detailed' : 'Books'}`} />
+                <Tooltip content='View as books'>
+                  <Button icon='book' minimal={true} onClick={() => updateView(false)} intent={viewCards ? 'none' : 'primary'} />
+                </Tooltip>
+                <Tooltip content='View detailed'>
+                  <Button icon='list' minimal={true} onClick={() => updateView(true)} intent={!viewCards ? 'none' : 'primary'} />
+                </Tooltip>
+                <Divider />
+                <Button icon={searchOpen ? 'chevron-up' : 'search'} minimal={true} onClick={() => updateSearchOpen(!searchOpen)}/>
+              </ButtonGroup>
+          </div>
         </div>
+        <Collapse isOpen={searchOpen}>
+          <div className='row allBookSearchInput'>
+            <div className='col-12'>
+              <ControlGroup fill={true} vertical={false}>
+                <InputGroup placeholder='Search for a book...' rightElement={<Button icon='search' minimal={true} />} large={true}/>
+              </ControlGroup>
+            </div>
+          </div>
+        </Collapse>
         {isLoading && <Spinner />}
         {!isLoading && books
           .filter(livre => !selectedTags.length ? true : selectedTags.map(tag => tag._id).every(tag => livre.topics.map(topic => topic.topic._id).includes(tag)))

@@ -13,10 +13,14 @@
   margin-right: 15px !important;
 
 }
+.allBookSearchInput {
+  margin: -10px -15px 20px;
+}
 .singleBookContainer {
   display: block;
   float: left;
   margin: 0 15px 25px ;
+  height: 285px;
 }
 .bookCardWrapper {
   background-color: white;
