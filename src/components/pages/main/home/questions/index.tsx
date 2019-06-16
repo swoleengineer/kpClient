@@ -5,11 +5,12 @@ import { IStore, IExpandedBook, IQuestion } from 'src/state-management/models';
 import QuestionCard from '../../../../question';
 import Slider from 'react-slick';
 import { ButtonGroup, Button, Divider } from '@blueprintjs/core';
+import { redirect } from 'redux-first-router'
 
 
-const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[] }) => {
+const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[]; toPage: Function }) => {
   const [activeSlide, updateActiveSlide] = useState(0);
-  const { books, questions } = props;
+  const { books, questions, toPage } = props;
 
   let componentSlider;
   return (
@@ -22,8 +23,8 @@ const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[] 
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='add'>Ask <span className='hidden-sm'>Question</span></Button>
-                <Button icon='arrow-right'>All <span className='hidden-sm'>Questions</span></Button>
+                <Button icon='add' onClick={() => toPage({ type: 'NEWQUESTION' })}>Ask <span className='hidden-sm'>Question</span></Button>
+                <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLQUESTIONS' })}>All <span className='hidden-sm'>Questions</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>
               <ButtonGroup className='hidden-xs'>
@@ -85,4 +86,7 @@ const mapStateToProps = (state: IStore) => ({
   questions: state.question.questions
 })
 
-export default connect(mapStateToProps)(Questions);
+const mapDispatch = dispatch => ({
+  toPage: action => dispatch(redirect(action))
+})
+export default connect(mapStateToProps, mapDispatch)(Questions);

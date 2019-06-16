@@ -1,3 +1,10 @@
 .newBookSearch {
   width: 100%
 }
+.newBookPanelWrapper {
+  height: 500px;
+}
+.bookSearchList {
+  padding: 0;
+  list-style: none;
+}

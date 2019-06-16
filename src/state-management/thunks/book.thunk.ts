@@ -1,6 +1,7 @@
 import { store } from '../../store';
 import { IBookRequest, ITopic, acceptableTypes } from '../models';
-import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort, postSearchManyForManyComments  } from '../../config';
+import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort,
+  postSearchManyForManyComments, getSearchGoogleBooks  } from '../../config';
 import {  bookActionTypes as types } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
@@ -9,7 +10,30 @@ const AppToaster = Toaster.create({
   className: 'keenpagesToaster',
 })
 
-
+export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
+  (response: any) => {
+    const { data: { items: payload } = { items: []} } = response;
+    store.dispatch({
+      type: types.setBooksFromGoogle,
+      payload: payload.map((book, i) => ({
+        ...book.volumeInfo,
+        _id: `000${i}`,
+        likes: [],
+        topics: book.categories && book.categories.length 
+          ? book.categories.map((category, index) => ({
+              _id: `${index}`,
+              name: category
+            }))
+          : []
+      }))
+    });
+  },
+  err => AppToaster.show({
+    intent: 'danger',
+    message: 'Could not get search results.',
+    icon: 'error'
+  })
+)
 
 export const createBook = (params: IBookRequest, goToNext: boolean = false, redirectPayload: {
   type: string;

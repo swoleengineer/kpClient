@@ -12,6 +12,10 @@ const routes: {[key: string]: string } = {
   NEWQUESTION: 'auth/question',
   ALLBOOKS: 'main/books/all',
   SINGLEBOOK: 'main/books/single',
+  ALLQUESTIONS: 'main/questions/all',
+  SINGLEQUESTION: 'main/questions/single',
+  PROFILE: 'main/profile',
+  MYPAGE: 'main/profile',
   [NOT_FOUND]: 'notFound',
 }
 

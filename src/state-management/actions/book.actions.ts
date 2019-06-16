@@ -9,5 +9,6 @@ export const bookActionTypes = {
   
   addComments: 'BOOK_ADD_COMMENTS',
   updateComment: 'BOOK_UPDATE_COMMENT',
-  updateBookLike: 'BOOK_UPDATE_LIKE'
+  updateBookLike: 'BOOK_UPDATE_LIKE',
+  setBooksFromGoogle: 'BOOK_UPDATE_GOOGLE_RESULTS'
 }

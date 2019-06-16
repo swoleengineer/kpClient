@@ -7,7 +7,9 @@
 /* @import "./assets/css/bootstrap.min.css";
 @import "./assets/css/bootstrap-theme.min.css"; */
 
-
+:focus {
+  outline: none !important
+}
 body {
   font-family: ministry, sans-serif;
 }
@@ -93,4 +95,10 @@ button:focus {
 .sideSticky {
   position: sticky !important;
   top: 100px;
+}
+.pull-right {
+  float: right
+}
+.bp3-control-indicator, .bp3-control-indicator:before, .bp3-switch input, .bp3-switch span, .bp3-switch label {
+  outline: none;
 }

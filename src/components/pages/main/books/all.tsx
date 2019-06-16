@@ -7,6 +7,7 @@ import { Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, 
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
 import { queryMoreBooks } from '../../../../state-management/thunks';
+import { allBooksSearchOpen } from '../../../../config/appSettings';
 
 
 const tagStyle = {
@@ -23,7 +24,7 @@ const Allbooks = (props: {
   }
   const [selectedTags, updateTags] = useState([]);
   const [commentsFirst, updateCommentSort] = useState<boolean>(false)
-  const [searchOpen, updateSearchOpen] = useState(false);
+  const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
   const [sortOptions, updateSorts] = useState<any>([{
     sort: { 'topicsLength': 1 },
     selected: true,
@@ -154,39 +155,49 @@ const Allbooks = (props: {
         
       </div>
       <div className='col-md-8'>
-        <div className='row allPage_topSettings'>
-          <div className='col-md-6'>
-            <Switch
-              className='allPageCommentSort'
-              checked={commentsFirst}
-              label='Most comments'
-              onChange={() => updateCommentSort(!commentsFirst)}
-              alignIndicator='right'
-            />
-          </div>
-          <div className='col-md-6 text-right'>
-            <ButtonGroup>
-              <Button disabled={true} minimal={true} text={`${viewCards ? 'Detailed' : 'Books'}`} />
-                <Tooltip content='View as books'>
-                  <Button icon='book' minimal={true} onClick={() => updateView(false)} intent={viewCards ? 'none' : 'primary'} />
-                </Tooltip>
-                <Tooltip content='View detailed'>
-                  <Button icon='list' minimal={true} onClick={() => updateView(true)} intent={!viewCards ? 'none' : 'primary'} />
-                </Tooltip>
-                <Divider />
-                <Button icon={searchOpen ? 'chevron-up' : 'search'} minimal={true} onClick={() => updateSearchOpen(!searchOpen)}/>
-              </ButtonGroup>
-          </div>
-        </div>
-        <Collapse isOpen={searchOpen}>
-          <div className='row allBookSearchInput'>
-            <div className='col-12'>
-              <ControlGroup fill={true} vertical={false}>
-                <InputGroup placeholder='Search for a book...' rightElement={<Button icon='search' minimal={true} />} large={true}/>
-              </ControlGroup>
+        <div className={searchOpen ? 'allPage_topSettings_wrapper transitionEverything' : 'transitionEverything'}>
+          <div className='row allPage_topSettings'>
+            <div className='col-md-6'>
+              <Switch
+                className='allPageCommentSort'
+                checked={commentsFirst}
+                label='Most comments'
+                onChange={() => updateCommentSort(!commentsFirst)}
+                alignIndicator='right'
+              />
+            </div>
+            <div className='col-md-6 text-right'>
+              <ButtonGroup>
+                <Button disabled={true} minimal={true} text={`${viewCards ? 'Detailed' : 'Books'}`} />
+                  <Tooltip content='View as books'>
+                    <Button icon='book' minimal={true} onClick={() => updateView(false)} intent={viewCards ? 'none' : 'primary'} />
+                  </Tooltip>
+                  <Tooltip content='View detailed'>
+                    <Button icon='list' minimal={true} onClick={() => updateView(true)} intent={!viewCards ? 'none' : 'primary'} />
+                  </Tooltip>
+                  <Divider />
+                  <Button 
+                    icon={searchOpen ? 'cross' : 'search'}
+                    intent={searchOpen ? 'danger' : 'none'}
+                    minimal={true}
+                    onClick={() => {
+                      updateSearchOpen(!searchOpen)
+                      allBooksSearchOpen.set(!searchOpen);
+                    }}
+                  />
+                </ButtonGroup>
             </div>
           </div>
-        </Collapse>
+          <Collapse isOpen={searchOpen} transitionDuration={85}>
+            <div className='row allBookSearchInput'>
+              <div className='col-12'>
+                <ControlGroup fill={true} vertical={false}>
+                  <InputGroup placeholder='Search for a book...' rightElement={<Button icon='search' minimal={true} />} large={true}/>
+                </ControlGroup>
+              </div>
+            </div>
+          </Collapse>
+        </div>
         {isLoading && <Spinner />}
         {!isLoading && books
           .filter(livre => !selectedTags.length ? true : selectedTags.map(tag => tag._id).every(tag => livre.topics.map(topic => topic.topic._id).includes(tag)))

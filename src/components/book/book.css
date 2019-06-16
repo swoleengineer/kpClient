@@ -63,6 +63,7 @@
   background-color: rgba(167, 182, 194, 0.85);
   text-transform: uppercase;
   display: block;
+  width: 100%;
 }
 .topicsMeta .topicsHolder {
   padding: 5px;

@@ -1,0 +1,175 @@
+.userProfileCard {}
+.userProfileCard h6 {
+  margin: 0 0 0 -15px
+}
+.userProfileCard h6 strong {
+  color: rgba(0,0,0,.7)
+}
+.userProfileCard h6 small {
+  display: block;
+  color: rgba(0,0,0,.7);
+  margin-top: 3px;
+}
+.userProfileCard h6 small:last-child {
+  font-weight: 200;
+  font-size: 11px;
+  
+}
+.profile_tabs_wrapper {
+  /* margin: 25px -15px; */
+}
+.bp3-tab {
+  outline: none !important;
+}
+.profile_tabs_wrapper .bp3-tab {
+  color: rgba(167, 182, 194, 0.85)
+}
+.profile_tabs_wrapper .bp3-tab-indicator {
+  background-color: #5c7080;
+}
+.profile_tabs_wrapper .bp3-tab[aria-selected=true], .profile_tabs_wrapper .bp3-tab:hover {
+  color: #5c7080;
+}
+.profileHeader {
+  background: rgb(138,155,168);
+  background: linear-gradient(0deg, rgba(138,155,168,.2) 10%, rgba(244,246,247,1) 100%);
+  height: 150px;
+  position: relative;
+}
+.profile_picture_name {
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  z-index: 10;
+}
+.profile_picture_name .profile_picture_img {
+  display: block;
+  float: left;
+  margin: 0 0 0 15px;
+  width: 72px;
+  height: 72px;
+  transition: all 0.28s ease;
+  position: relative
+}
+.profile_picture_name .profile_picture_img:hover {
+  cursor: pointer;
+}
+.profile_picture_name .profile_picture_img span {
+  background-color: white;
+  border-radius: 50%;
+  border: 7px solid #5c7080
+}
+
+.profile_picture_nm {
+  margin: 0 0 0 10px;
+  display: block;
+  float: left;
+  position: absolute;
+  bottom: 30px;
+  left: 90px;
+  font-weight: 600;
+  color: #5c7080;
+  font-size: 18px;
+}
+.profile_header_meta {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: #5c7080;
+  color: rgba(255,255,255,.9);
+  padding: 5px 0 5px 100px;
+  font-size: 12px;
+  font-weight: 200
+}
+.profile_header_meta span {
+  display: block;
+  float: left;
+  margin-right: 15px
+}
+.profile_tab_title {
+  padding: 2px 8px 2px 5px;
+}
+.profile_tab_title span {
+  margin-right: 5px;
+}
+.profile_tab_title small {
+  position: relative;
+  top: -1px;
+  padding: 3px;
+  border: 1px solid rgba(1,1,1,.08);
+  font-weight: 200;
+  margin: 0 5px 
+}
+
+.user_profile_wrapper {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 7px solid #5c7080;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.profile_picture_name .profile_picture_img:hover .user_profile_wrapper {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-size: 105% 105%;
+}
+.profile_edit_card {
+  position: relative;
+}
+.profile_edit_card_cancel {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  z-index: 18;
+}
+.listPage_header h4 {
+}
+.listPage_header h4 strong, .listPage_header h4 small {
+  display: block;
+}
+.listPage_topics_wrapper {
+  margin: 25px 0;
+}
+.listPage_topics_wrapper .listPage_topics_meta {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  margin: 0 0 15px;
+}
+.listPage_topics_wrapper .listPage_topics_meta > div {
+  padding: 0 0;
+  margin-bottom: 10px;
+}
+.listPage_topics_wrapper .listPage_topics_meta strong {
+  font-size: 17px;
+  position: relative;
+  top: 5px;
+}
+.listPage_books_wrapper {}
+.listPage_books_single {
+  display: block;
+  float: left;
+  margin: 0 15px 15px;
+  height: 285px
+}
+.settings_list_wrapper {
+  list-style: none;
+  padding: 0
+}
+.settings_list_wrapper li {
+  padding: 10px 0;
+  display: block;
+}
+.settings_list_wrapper li label {
+  margin: 0
+}
+.settings_list_wrapper li:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.settings_list_header {
+  font-size: 17px;
+  font-weight: 500;
+  border-bottom: none !important;
+}

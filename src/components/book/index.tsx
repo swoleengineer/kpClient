@@ -3,7 +3,7 @@ import './book.css';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { Icon, Tooltip, Menu, MenuItem, Popover, Tag, IAlertProps, Alert } from '@blueprintjs/core';
-import { IAuthor, IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
+import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
 import { toggleUserBook, createReport } from '../../state-management/thunks';
@@ -14,21 +14,28 @@ const Book = ({
   bookId, 
   books,
   user,
-  linkTo
+  linkTo,
+  liv = undefined,
+  searchResult = false
 }: {
   bookId: string;
+  liv?: any;
+  searchResult: boolean;
   books: IExpandedBook[];
   user: IUser;
   linkTo: Function
 }) => {
-  const book = books.find(livre => livre._id === bookId);
+  const book = liv || books.find(livre => livre._id === bookId);
   if (!book) {
     return null;
   }
-  const { title, author, pictures, topics } = book;
-  const { name: authorName } = author as IAuthor;
+  console.log(book)
+  const { title, author = { name: ''}, pictures, topics = [], authors = [] } = book;
+  const authorName = authors.length ? authors.join(',') : author.name
   const isRead = user && user.readBooks.findIndex(livre => livre._id === book._id) > 0;
-  const [ picture = { link: undefined}] = pictures
+  const [ picture = { link: undefined}] = book.imageLinks
+    ? [{ link: book.imageLinks.thumbnail }]
+    : pictures
   
   const [alertProps, updateAlertProps] = useState<IAlertProps>();
   const [alertConfig, updateAlertConfig] = useState<{
@@ -81,39 +88,43 @@ const Book = ({
         >
           {alertConfig.text}
         </Alert>
-        <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />
+        {!searchResult && <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />}
         {isRead
           ? <span className='bookMark'><Icon icon='bookmark' iconSize={40} intent='danger'/></span>
           : <Tooltip content='Mark as read' className='unreadBookMark'>
-              <span className='unreadBookMark' onClick={() => toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}>
+              <span className='unreadBookMark' onClick={() => searchResult ? null : toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}>
                 <Icon icon='bookmark' iconSize={40} />
               </span>
             </Tooltip>
         }
         <div className='topicsMeta'>
-            <Slider
-              dots={false}
-              infinite={true}
-              speed={500}
-              slidesToShow={3}
-              slidesToScroll={2}
-              arrows={false}
-              variableWidth={true}
-              autoplay={true}
-              autoplaySpeed={1500}
-            >
-              {topics.reduce((acc, curr) => [...acc, curr, ``], [])
-              .map((topic: ITopicBodyObj, i) => topic
-                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
-                : <span key={i}>&nbsp;&nbsp;</span>)}
+            {topics.length > 0 && !searchResult
+              ? <Slider
+                  dots={false}
+                  infinite={true}
+                  speed={500}
+                  slidesToShow={3}
+                  slidesToScroll={2}
+                  arrows={false}
+                  variableWidth={true}
+                  autoplay={true}
+                  autoplaySpeed={1500}
+              >
+                  {topics.reduce((acc, curr) => [...acc, curr, ``], [])
+                  .map((topic: ITopicBodyObj, i) => topic
+                    ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
+                    : <span key={i}>&nbsp;&nbsp;</span>)}
 
-            </Slider>
+              </Slider>
+              : 'No topics'
+            }
+            
 
         </div>
         <div className='bookMenu'>
           <div
             className='bookMenu_item'
-            onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}
+            onClick={() => searchResult ? null : toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}
             style={{ backgroundColor: book.likes.includes(user ? user._id : '') ? 'rgba(0,0,0,.5)' : 'transparent' }}
           >
             <Tooltip content={book.likes.includes(user ? user._id : '') ? 'Unlike Book' : 'Save Book'}>
@@ -126,7 +137,7 @@ const Book = ({
               </span>
             </Tooltip>
           </div>
-          <div className='bookMenu_item' onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id }})}>
+          <div className='bookMenu_item' onClick={() => searchResult ? null : linkTo({ type: 'SINGLEBOOK', payload: { id: book._id }})}>
             <Tooltip content='View book'>
               <span><Icon icon='share' iconSize={12} /></span>
             </Tooltip>
@@ -140,7 +151,7 @@ const Book = ({
                 <MenuItem
                   icon={isRead ? 'remove-column' : 'bookmark'}
                   text={`Mark ${isRead ? 'unread' : 'as read'}`}
-                  onClick={() => toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}
+                  onClick={() => searchResult ? null : toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}
                 />
                 <Menu.Divider />
                 <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
@@ -149,6 +160,9 @@ const Book = ({
                   icon='flag'
                   text='Report Book' 
                   onClick={() => {
+                    if (searchResult) {
+                      return;
+                    }
                     updateReportingItem({
                       parentId: book._id,
                       parentType: acceptableTypes.book,

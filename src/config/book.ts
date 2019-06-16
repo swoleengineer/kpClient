@@ -2,9 +2,10 @@ import {  AxiosPromise } from 'axios';
 import { IBookRequest, IBookPicture, ITopic } from '../state-management/models/';
 import { bookGetOneUrl, bookGetManyByTopic, bookGetAllUrl, bookAddBeginUrl, bookEditUrl,
   bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl,
-  bookAddTopicsUrl, bookQueryTopicSortUrl
+  bookAddTopicsUrl, bookQueryTopicSortUrl, searchGoogleBooksUrl
 } from './';
-import API, {  config } from './api';
+import API, {  config, gAPI } from './api';
+import axios from 'axios';
 
 export const getSingleBook = (id: string): AxiosPromise => API.get(bookGetOneUrl(id));
 export const getManyBooksByTopic = (topicId: string): AxiosPromise => API.get(bookGetManyByTopic(topicId));
@@ -19,3 +20,4 @@ export const deleteBookPicture = (id: string, pictureId: string): AxiosPromise =
 export const putToggleTopicAgree = (id: string, topicId: string): AxiosPromise => API.put(bookToggleAgreeUrl(id, topicId), undefined, config());
 export const postAddTopicsToBook = (book: string, body: { topics: ITopic[] }): AxiosPromise => API.post(bookAddTopicsUrl(book), body, config());
 export const postQueryBookByTopicAndSort = (sort: { [key: string]: any }, topics: string[] = [], already: string[] = []): AxiosPromise => API.post(bookQueryTopicSortUrl, { sort, topics, already });
+export const getSearchGoogleBooks = (bookTitleText: string): AxiosPromise => axios.get(searchGoogleBooksUrl(bookTitleText, gAPI));

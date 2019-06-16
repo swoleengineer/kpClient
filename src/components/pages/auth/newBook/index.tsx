@@ -9,7 +9,7 @@ import { Suggest, ItemRenderer } from '@blueprintjs/select';
 import { authorSettings } from './dropdownSettings';
 import TopicBrowse from '../topic/topicBrowse';
 import Book from '../../../book';
-import { createBook } from '../../../../state-management/thunks'
+import { createBook } from '../../../../state-management/thunks';
 
 
 const AuthorSuggest = Suggest.ofType<IAuthor>();

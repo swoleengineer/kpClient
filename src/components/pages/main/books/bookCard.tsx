@@ -174,7 +174,7 @@ const BookCard = (props: {
           </ul>
           <div className='bookCard_commentsContainer'>
             <ul className='keen_comments_wrapper'>
-              {comments.map((comment, i, arr) => {
+              {comments.sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0).map((comment, i, arr) => {
                 if (minimal && i > 0) {
                   return null;
                 }

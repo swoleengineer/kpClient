@@ -21,7 +21,7 @@ const BooksSection = ({ books, toPage }) => {
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='add'>Add <span className='hidden-sm'>Book</span></Button>
+                <Button icon='add' onClick={() => toPage({ type: 'NEWBOOK' })}>Add <span className='hidden-sm'>Book</span></Button>
                 <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLBOOKS' })}>All <span className='hidden-sm'>Books</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>

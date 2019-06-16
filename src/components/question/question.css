@@ -49,6 +49,7 @@
   line-height: 20px;
   display: block;
   max-height: 40px;
+  color: rgba(0,0,0,.7)
 }
 .questionCardWrapper .questionCard_content .questionCard_details .questionCard_details_description {
   color: rgba(0,0,0,.5)

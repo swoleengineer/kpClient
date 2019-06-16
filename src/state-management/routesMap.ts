@@ -1,6 +1,6 @@
-import { getSingleBook, postSearchManyComments } from '../config'
-import { IBook, acceptableTypes } from './models';
-import { bookActionTypes as bookTypes } from './actions';
+import { getSingleBook, postSearchManyComments, getSingleQuestion } from '../config'
+import { IBook, acceptableTypes, IQuestion, IUserPages, IStore } from './models';
+import { bookActionTypes as bookTypes, questionActionTypes as questionTypes } from './actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router';
 // const wait = (seconds: number) => new Promise((resolve) => setTimeout(() => resolve(), seconds * 1000));
@@ -51,17 +51,67 @@ const routesMap = {
   NEWQUESTION: {
     path: '/newQuestion'
   },
+  ALLQUESTIONS: {
+    path: '/questions'
+  },
+  SINGLEQUESTION: {
+    path: '/question/:id',
+    thunk: (dispatch, getState) => {
+      const { location: { payload: { id }}} = getState();
+      getSingleQuestion(id).then(
+        ({ data }: { data: IQuestion }) => {
+          dispatch({
+            type: questionTypes.setSelected,
+            payload: {
+              ...data,
+              comments: [],
+              reports: []
+            }
+          });
+          return data;
+        },
+        (err) => {
+          AppToaster.show({
+            message: 'Could not load question details. Please try again later.',
+            intent: 'danger',
+            icon: 'error'
+          })
+        }
+      ).then((question) => postSearchManyComments({ parentId: question._id, parentType: acceptableTypes.question }).then(
+        (res: any) => {
+          dispatch({
+            type: questionTypes.updateSelected,
+            payload: {
+              comments: res.data.data
+            }
+          })
+        },
+        (err: any) => {
+          let message;
+          try {
+            message = err.response.data.message
+          } catch {
+            message = 'Could not get comments for this question.'
+          };
+          console.log(message, err);
+        }
+      )).catch(() => AppToaster.show({
+        message: 'Error getting the details for this question',
+        intent: 'danger',
+        icon: 'error',
+        onDismiss: () => dispatch(redirect({ type: 'HOME' }))
+      }))
+    }
+  },
   ALLBOOKS: {
     path: '/books'
   },
   SINGLEBOOK: {
     path: '/book/:id',
     thunk: (dispatch, getState) => {
-      console.log('In the single book thunjk')
       const { location: { payload: { id }}} = getState();
       getSingleBook(id).then(
         ({ data }: { data: IBook }) => {
-          console.log('got the book data')
           dispatch({
             type: bookTypes.selectBook,
             payload: { ...data, comments: [] }
@@ -103,10 +153,28 @@ const routesMap = {
     }
   },
   PROFILE: {
-    path: '/profile',
+    path: '/account',
     thunk: (dispatch, getState) => {
+      const { user } = getState() as IStore;
+      if (!user.loggedIn && !user.jwt && !Object.keys(user.user || {}).length) {
+        AppToaster.show({
+          message: 'You must be logged in to access this page.',
+          icon: 'lock',
+          intent: 'danger'
+        })
+      }
     }
   },
+  MYPAGE: {
+    path: '/account/:page',
+    thunk: (dispatch, getState) => {
+      const { location: { payload: { page }}} = getState();
+      if (!IUserPages.includes(page)) {
+        dispatch(redirect({ type: 'PROFILE' }));
+        return;
+      }
+    }
+  }
 }
 
 export { routesMap }

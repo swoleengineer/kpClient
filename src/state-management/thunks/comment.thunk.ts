@@ -1,12 +1,13 @@
 import { store } from '../../store';
 import { ICommentRequest, acceptableTypes, IComment } from '../models';
 import { postCreateComment, deleteComment } from '../../config';
-import { bookActionTypes as bookTypes } from '../actions';
+import { bookActionTypes as bookTypes, questionActionTypes as questionTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router';
 
 const actionTypes = {
   [acceptableTypes.book]: bookTypes,
+  [acceptableTypes.question]: questionTypes
 }
 
 const AppToaster = Toaster.create({

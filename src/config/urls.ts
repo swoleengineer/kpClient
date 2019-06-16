@@ -9,9 +9,10 @@ export const userResetPassUrl: string = `/user/resetPassword`;
 export const userChangePassUrl = (id: string): string => `/user/changePass/${id}`;
 export const userUpdatePicUrl = (id: string): string => `/user/updatePic/${id}`;
 export const userUpdateUrl = (id: string): string => `/user/update/${id}`;
-export const userChangeNotificationsUrl = (id: string): string => `/user/notifications/${id}`;
+export const userChangeNotificationsUrl = (id: string): string => `/user/editNotifications/${id}`;
 export const userSaveBookUrl = (bookId: string, list: 'readBooks' | 'savedBooks'): string => `/user/engage/saveBook/${list}/${bookId}`;
 export const userRmBookUrl = (bookId: string, list: 'readBooks' | 'savedBooks'): string => `/user/engage/rmBook/${list}/${bookId}`;
+
 
 
 // Author '/author
@@ -66,3 +67,5 @@ export const topicGetAllUrl: string = `/topic/getAll`;
 export const topicCreateNewUrl: string = `/topic/new`;
 export const topicDeleteUrl = (id: string): string => `/topic/single/${id}`;
 export const topicSearchUrl = (text: string): string =>  `/topic/search?text=${text}`;
+
+export const searchGoogleBooksUrl = (text: string, key: string): string => `https://www.googleapis.com/books/v1/volumes?q=intitle:${text.split(' ').join('+')}&key=${key}`;

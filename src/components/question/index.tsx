@@ -6,6 +6,7 @@ import { Select, ItemRenderer } from '@blueprintjs/select';
 import { filterBook } from '../../state-management/utils/book.util';
 import { IExpandedBook, IQuestion, ITopic, IQuestionRequest } from 'src/state-management/models';
 import moment from 'moment';
+import Link from 'redux-first-router-link';
 
 
 const BookSelect = Select.ofType<IExpandedBook>();
@@ -56,7 +57,7 @@ const QuestionCard = (props: { question: IQuestion | IQuestionRequest; books: IE
               <Popover>
                 <Icon icon='more' />
                 <Menu>
-                  <MenuItem icon='lightbulb' text='Add Topic' />
+                  <MenuItem icon='lightbulb' text='Add Topic'/>
                   <Menu.Divider />
                   <MenuItem icon='flag' text='Report' />
                 </Menu>
@@ -64,8 +65,11 @@ const QuestionCard = (props: { question: IQuestion | IQuestionRequest; books: IE
             </span>
           </div>
           <div className='questionCard_details'>
-            <span className='questionCard_details_title'>{title}</span>
-            <span className='questionCard_details_description'><Text ellipsize={true}>{text}</Text></span>
+            <Link to={{ type: 'SINGLEQUESTION', payload: { id: question._id}}}>
+              <span className='questionCard_details_title'>{title}</span>
+              <span className='questionCard_details_description'><Text ellipsize={true}>{text}</Text></span>
+            </Link>
+
           </div>
           <div className='questionCard_topics'>
             {topics.length > 0 && <Slider

@@ -5,6 +5,7 @@ export * from './question.util';
 export * from './report.util';
 export * from './topic.util';
 export * from './user.util';
+export * from './store.util';
 
 import { LocationState, Location } from 'redux-first-router';
 import { IStore } from '../models';

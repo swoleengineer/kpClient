@@ -10,11 +10,12 @@ import { StickyContainer, Sticky } from 'react-sticky';
 const PageWrapper = ({ page }: { page: string }) => {
   const Display = pageMap[page];
   const homePage: boolean = page.endsWith('home');
+  const profilePage: boolean = page.includes('/profile');
   return (
     <Fragment>
       <StickyContainer>
         <Sticky>{({ style }) => (<Header style={style}/>)}</Sticky>
-        {homePage
+        {homePage || profilePage
           ? <div> <Display /> </div>
           : <section className='section_gray section_padding'>
             <div className='container'>

@@ -70,6 +70,11 @@ export const bookReducer = (state: IBookState = initialBookState, action: {
           comments: action.payload[book._id]
         }))
       };
+    case types.setBooksFromGoogle:
+      return {
+        ...state,
+        googleBooks: action.payload
+      };
     case types.updateComment:
       return {
         ...state,

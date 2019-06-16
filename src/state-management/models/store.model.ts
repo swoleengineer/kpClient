@@ -13,3 +13,5 @@ export interface IStore {
   book: IBookState;
   author: IAuthorState;
 }
+
+export const IUserPages = ['notifications', 'likedBooks', 'readBooks'];

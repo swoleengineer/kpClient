@@ -1,7 +1,8 @@
 import { store } from '../../store';
 import { INewUserRequest, IUserLoginRequest, IStore } from '../models';
 import { postNewUser, postUserLogin, postSaveBookToUser, postRmBookFrUser,
-  postUserAutoAuth, postUserForgotPass, postUserResetPassword
+  postUserAutoAuth, postUserForgotPass, postUserResetPassword, postUserUpdatePic,
+  postUserUpdate, postUserChangePassword, postUserNotificationSettings
 } from '../../config';
 import { userActionTypes as types, bookActionTypes as bookTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core'
@@ -42,6 +43,8 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
     })
   }
 )
+
+
 
 export const login = (params: IUserLoginRequest, goToNext: boolean = false, redirectPayload: {
   type: string;
@@ -103,6 +106,84 @@ export const autoLogin = () => {
     }
   )
 }
+
+export const updateProfilePicture = (id: string, body: { public_id: string; link: string }) => postUserUpdatePic(id, body).then(
+  (res: any) => {
+    store.dispatch({
+      type: types.updateUser,
+      payload: res.data
+    })
+  },
+  (err: any) => {
+    console.log(err.response.data);
+    AppToaster.show({
+      message: 'Could not update your profile picture.',
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
+
+export const editNotificationSettings = (id: string, params: { [key: string]: boolean }) => postUserNotificationSettings(id, params).then(
+  (res: any) => {
+    store.dispatch({
+      type: types.updateUser,
+      payload: res.data
+    })
+  },
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not generate and send token to reset your password. Please try again later.'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
+
+export const updateAccount = (id: string, body: { [key: string]: any }) => postUserUpdate(id, body).then(
+  (res: any) => {
+    store.dispatch({
+      type: types.updateUser,
+      payload: res.data
+    })
+  },
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not generate and send token to reset your password. Please try again later.'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
+
+export const ChangeUserPassword = (id: string, params: { oldPassword: string; password: string}) => postUserChangePassword(id, params).then(
+  (res: any) => AppToaster.show({ message: 'Password updated'}),
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not generate and send token to reset your password. Please try again later.'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
 
 export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', type: 'add' | 'remove') => ({
   add: postSaveBookToUser,

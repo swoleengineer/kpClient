@@ -11,6 +11,7 @@ export interface IQuestion extends IQuestionRequest {
   _id: string;
   author: IUser | string;
   created: Date;
+  
 }
 
 export interface IExpandedQuestion extends IQuestion {

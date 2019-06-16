@@ -8,6 +8,7 @@ export const getApiUrl = () => {
   return 'https://api.keenpages.com';
 };
 
+export const gAPI = 'AIzaSyB8Z-fRItUJSUltWt3UXAkyvl15Dd6yfqM';
 
 const token = (): string | null => localStorage.getItem('x-access-token');
 

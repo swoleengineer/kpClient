@@ -1,4 +1,4 @@
-export const getFormProps = (getErr, processField) => (id, icon, placeholder, label) => ({
+export const getFormProps = (getErr, processField, change = false) => (id, icon, placeholder, label) => ({
   formGroup: {
     helperText: getErr(id).message,
     label,
@@ -10,6 +10,9 @@ export const getFormProps = (getErr, processField) => (id, icon, placeholder, la
     placeholder,
     id,
     intent: getErr(id).intent,
-    onBlur: processField
+    onBlur: processField,
+    ...(change ? {
+      onChange: processField
+    } : {})
   }
 })

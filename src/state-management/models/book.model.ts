@@ -36,6 +36,7 @@ export interface IExpandedBook extends IBook {
 }
 export interface IBookState {
   books: IExpandedBook[];
+  googleBooks: any[];
   newBook: IBookRequest;
   selectedBook: IExpandedBook | {};
 }

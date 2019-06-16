@@ -34,15 +34,18 @@ export interface IUser extends INewUserRequest {
   notification_new_question: boolean;
   notification_book_comment: boolean;
   notification_question_comment: boolean;
+  notification_book_suggested: boolean;
+  notification_topic_added: boolean;
+  notification_suggestion_accepted: boolean;
   created: Date;
   username: string;
-  savedBooks: Array<IBook | string>;
-  readBooks: Array<IBook | string>;
+  savedBooks: Array<IBook>;
+  readBooks: Array<IBook>;
 }
 
 
 export interface IUserState {
   jwt: string;
-  user:  IUser | null;
+  user:  IUser;
   loggedIn: boolean;
 }

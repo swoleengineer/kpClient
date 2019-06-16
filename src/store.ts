@@ -5,14 +5,27 @@ import { routesMap } from './state-management/routesMap';
 import * as reducers from './state-management/reducers';
 import { IStore } from './state-management/models';
 import querySerializer from 'query-string';
-import { initialAppState } from './state-management/utils';
+import { initialAppState, siteName, pageTitleMap } from './state-management/utils';
 
 
 const development = process.env.NODE_ENV === 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   querySerializer,
-  // title: state => state.appData.pageTitle,
+  title: (state: IStore ) => {
+    const { location: { type }, book: { selectedBook }, question: { selectedQuestion }} = state;
+    if (pageTitleMap[type] === 'string') {
+      return `${pageTitleMap[type]} ${siteName}`;
+    }
+    if (type === 'SINGLEQUESTION') {
+      return `${pageTitleMap[type](selectedQuestion)}`;
+    }
+    if (type === 'SINGLEBOOK') {
+      console.log(selectedBook.title, 'from store page')
+      return `${pageTitleMap[type](selectedBook)}`;
+    }
+    return 'Keen Pages';
+  },
   onAfterChange: (dispatch, getState) => {
     const { page, location: { prev: { type } } } = getState() as IStore;
     console.log(page, type);
