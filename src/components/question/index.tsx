@@ -3,7 +3,7 @@ import './question.css';
 import { Text, Tag, Button, ButtonGroup, ControlGroup, InputGroup, Popover, Menu, MenuItem, Collapse, Icon } from '@blueprintjs/core';
 import Slider from 'react-slick';
 import { Select, ItemRenderer } from '@blueprintjs/select';
-import { filterBook } from '../../state-management/utils/book.util';
+import { filterBook, getAuthorName } from '../../state-management/utils/book.util';
 import { IExpandedBook, IQuestion, ITopic, IQuestionRequest } from 'src/state-management/models';
 import moment from 'moment';
 import Link from 'redux-first-router-link';
@@ -24,7 +24,7 @@ const QuestionCard = (props: { question: IQuestion | IQuestionRequest; books: IE
             disabled={modifiers.disabled}
             key={book._id}
             icon='book'
-            text={<div><strong>{book.title}</strong><br /><small>{book.author.name}</small></div>}
+            text={<div><strong>{book.title}</strong><br /><small>{getAuthorName(book)}</small></div>}
             onClick={() => {
               setAddingBook(book);
               setCommentState(true);

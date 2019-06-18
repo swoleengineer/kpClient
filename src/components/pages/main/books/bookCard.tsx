@@ -10,13 +10,14 @@ import { createComment, toggleUserBook, removeComment, createReport } from '../.
 import { keenToaster } from '../../../../containers/switcher';
 
 const BookCard = (props: {
-  book: IExpandedBook;
+  liv: IExpandedBook;
   minimal: boolean;
+  books: IExpandedBook[];
   user: IUser;
   linkTo: Function
 }) => {
-  const { book = undefined, minimal, user, linkTo } = props;
-  if (!book) {
+  const { liv = undefined, user, linkTo, books } = props;
+  if (!liv || !books.length) {
     return null;
   }
   const [newComment, updateComment] = useState({
@@ -41,6 +42,7 @@ const BookCard = (props: {
     type: 'deleteComment',
     text: ''
   });
+  const book = books.find(livre => livre.gId === liv.gId)
   const submitNewComment = () => {
     const { text } = newComment;
     if (!text || !text.length) {
@@ -54,7 +56,7 @@ const BookCard = (props: {
         parentType: acceptableTypes.book,
         created: new Date()
       },
-      !minimal,
+      false,
       {
         type: 'SINGLEBOOK',
         payload: {
@@ -106,9 +108,8 @@ const BookCard = (props: {
     ).catch() : null,
     reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
-  const { comments = [], likes = [], topics = [] } = book;
   return (
-    <div className='bookCardWrapper' key={book._id}>
+    <div className='bookCardWrapper'>
       <span className='bookCard_more'>
         <Popover>
           <Icon icon='more' />
@@ -167,15 +168,15 @@ const BookCard = (props: {
               <Icon
                 icon='heart'
                 intent={book.likes.includes(user ? user._id : '') ? 'danger' : 'none'}
-              /> {likes.length}
+              /> {book.likes.length}
             </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {comments.length} </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {topics.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {book.comments.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {book.topics.length} </li>
           </ul>
           <div className='bookCard_commentsContainer'>
             <ul className='keen_comments_wrapper'>
-              {comments.sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0).map((comment, i, arr) => {
-                if (minimal && i > 0) {
+              {book.comments.sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0).map((comment, i, arr) => {
+                if (i > 0) {
                   return null;
                 }
                 return (
@@ -234,7 +235,7 @@ const BookCard = (props: {
                   </li>
                 )
               })}
-              {comments.length === 0 && <li>
+              {book.comments.length === 0 && <li>
                 <p className='bookCard_noComments'>
                   No comments
                   <br />
@@ -251,7 +252,7 @@ const BookCard = (props: {
               </Collapse>
             </ul>
             <div className='keen_comments_meta'>
-              <small><Icon iconSize={11} icon='comment' /> {comments.length}</small>
+              <small><Icon iconSize={11} icon='comment' /> {book.comments.length}</small>
               <small><Link to={{ type: 'SINGLEBOOK', payload: { id: book._id }}}>View All</Link></small>
             </div>
             <div className='keen_comments_Input'>
@@ -284,7 +285,8 @@ const BookCard = (props: {
 }
 
 const mapStateToProps = (state: IStore) => ({
-  user: state.user.user
+  user: state.user.user,
+  books: state.book.books
 })
 
 const mapDispatch = dispatch => ({

@@ -1,14 +1,41 @@
 import { store } from '../../store';
-import { IBookRequest, ITopic, acceptableTypes } from '../models';
+import { IBookRequest, ITopic, acceptableTypes, IBook, IExpandedBook, IStore } from '../models';
 import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort,
-  postSearchManyForManyComments, getSearchGoogleBooks  } from '../../config';
-import {  bookActionTypes as types } from '../actions';
+  postSearchManyForManyComments, getSearchGoogleBooks, getBookSearch, postCreateBookFromInt  } from '../../config';
+import {  bookActionTypes as types, userActionTypes as userTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
 
 const AppToaster = Toaster.create({
   className: 'keenpagesToaster',
 })
+
+
+export const engagePrecheck = (book: IBook | IExpandedBook, auth: boolean = true, cb) => {
+  const { user: { loggedIn, user }} = store.getState() as IStore;
+  const { active = false } = book || {};
+  console.log('precheck called')
+  if (auth && (!loggedIn || !user || !user.profile)) {
+    // not logged in, show popup
+    store.dispatch({
+      type: userTypes.toggleAuthModal,
+      payload: true
+    });
+    cb({
+      type: 'auth',
+      message: 'You must be logged in to perform this action'
+    }, null);
+    if (active) {
+      return;
+    }
+  }
+  if (!active) {
+    postCreateBookFromInt(book).then(
+      (res: any) => cb(null, res.data),
+      (err: any) => cb(err, null)
+    )
+  }
+}
 
 export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
   (response: any) => {
@@ -35,6 +62,28 @@ export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
   })
 )
 
+export const searchBooks = (text) => getBookSearch(text).then(
+  (response: any) => {
+    store.dispatch({
+      type: types.gotMoreBooks,
+      payload: response.data.data
+    })
+  },
+  (err: any) => {
+    let message;
+    try {
+      const { message: mesaj =  '' } = { ...err.response.data, ...(err.response.data.data || {}) }
+      message = mesaj
+    } catch {
+      message = 'Could not create this book. Please try again later'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+)
 export const createBook = (params: IBookRequest, goToNext: boolean = false, redirectPayload: {
   type: string;
   payload?: any
@@ -69,6 +118,18 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
   }
 )
 
+export const addBookFromInt = (book) => postCreateBookFromInt(book).then(
+  (res: any) => {
+    store.dispatch({
+      type: types.gotMoreBooks,
+      payload: [res.data]
+    });
+    return res.data;
+  },
+  (err: any) => {
+    return Promise.reject(err);
+  }
+)
 export const queryMoreBooks = (sort: { [key: string]: any }, topics: string[] = [], already: string[] = []) => postQueryBookByTopicAndSort(sort, topics, already).then(
   (res: any) => {
     store.dispatch({

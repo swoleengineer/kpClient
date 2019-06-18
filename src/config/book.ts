@@ -2,7 +2,7 @@ import {  AxiosPromise } from 'axios';
 import { IBookRequest, IBookPicture, ITopic } from '../state-management/models/';
 import { bookGetOneUrl, bookGetManyByTopic, bookGetAllUrl, bookAddBeginUrl, bookEditUrl,
   bookDeleteUrl, bookSearchUrl, bookToggleLikeUrl, bookAddPicUrl, bookRmPicUrl, bookToggleAgreeUrl,
-  bookAddTopicsUrl, bookQueryTopicSortUrl, searchGoogleBooksUrl
+  bookAddTopicsUrl, bookQueryTopicSortUrl, searchGoogleBooksUrl, bookCreateFromInternetUrl
 } from './';
 import API, {  config, gAPI } from './api';
 import axios from 'axios';
@@ -21,3 +21,4 @@ export const putToggleTopicAgree = (id: string, topicId: string): AxiosPromise =
 export const postAddTopicsToBook = (book: string, body: { topics: ITopic[] }): AxiosPromise => API.post(bookAddTopicsUrl(book), body, config());
 export const postQueryBookByTopicAndSort = (sort: { [key: string]: any }, topics: string[] = [], already: string[] = []): AxiosPromise => API.post(bookQueryTopicSortUrl, { sort, topics, already });
 export const getSearchGoogleBooks = (bookTitleText: string): AxiosPromise => axios.get(searchGoogleBooksUrl(bookTitleText, gAPI));
+export const postCreateBookFromInt = (params: any): AxiosPromise => API.post(bookCreateFromInternetUrl, params);

@@ -48,4 +48,6 @@ export interface IUserState {
   jwt: string;
   user:  IUser;
   loggedIn: boolean;
+  showAuthModal: boolean;
+  authModalActivePage: 'auth/login' | 'auth/register' | 'auth/forgotPw/forgot'
 }

@@ -11,9 +11,10 @@ const RegisterPage = (props: {
   nextPayload?: {
     type: string;
     payload?: any;
-  }
+  };
+  callBack?: Function;
 }) => {
-  const { goToNext, nextPayload = undefined } = props;
+  const { goToNext, nextPayload = undefined, callBack = undefined } = props;
   const [formData, formUpdate] = useState({
     profile: {
       first_name: '',
@@ -82,7 +83,13 @@ const RegisterPage = (props: {
       });
       return;
     };
-    register(formData, goToNext, nextPayload).catch(() => keenToaster.show({
+    register(formData, goToNext, nextPayload)
+    .then(() => {
+      if (callBack && typeof callBack === 'function') {
+        callBack();
+      }
+    })
+    .catch(() => keenToaster.show({
       message: 'An error has occured',
       intent: 'danger',
       icon: 'error'

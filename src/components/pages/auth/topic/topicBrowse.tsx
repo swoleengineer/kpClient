@@ -13,8 +13,9 @@ const TopicBrowse = (props: {
 }) => {
   const { topics, processNewItem, processRemove } = props;
   const filterTopic: ItemPredicate<ITopic> = (query, topic, _index, exactMatch) => {
-    const normalizedTitle = topic.name.toLowerCase();
-    const normalizedDesc = topic.description.toLowerCase();
+    const { name = '', description = '' } = topic
+    const normalizedTitle = name.toLowerCase();
+    const normalizedDesc = description.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;

@@ -6,8 +6,9 @@ import BookCard from './bookCard';
 import { Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
-import { queryMoreBooks } from '../../../../state-management/thunks';
-import { allBooksSearchOpen } from '../../../../config/appSettings';
+import { queryMoreBooks, searchBooks } from '../../../../state-management/thunks';
+import { allBooksSearchOpen, allBooksViewBooks } from '../../../../config/appSettings';
+import { bookFilter } from '../../../../state-management/utils/book.util';
 
 
 const tagStyle = {
@@ -18,12 +19,13 @@ const Allbooks = (props: {
   books: IExpandedBook[];
   topics: ITopic[]
 }) => {
-  const { books, topics } = props;
-  if (!books.length) {
-    return null
+  const { topics } = props;
+  if (props.books.length) {
+    // return null
   }
   const [selectedTags, updateTags] = useState([]);
-  const [commentsFirst, updateCommentSort] = useState<boolean>(false)
+  const [commentsFirst, updateCommentSort] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>('');
   const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
   const [sortOptions, updateSorts] = useState<any>([{
     sort: { 'topicsLength': 1 },
@@ -46,8 +48,9 @@ const Allbooks = (props: {
     sortName: 'Lowest likes',
     sortFn: (a, b) => a.likes.length < b.likes.length ? -1 : a.likes.length > b.likes.length ? 1 : 0
   }])
-  const [viewCards, updateView] = useState(true);
+  const [viewCards, updateView] = useState(!allBooksViewBooks.get());
   const [isLoading, updateLoading] = useState(false);
+  const books = props.books
   const refreshBooks = () => {
     updateLoading(true);
     const currentsort = sortOptions.find(opt => opt.selected) || undefined;
@@ -64,6 +67,7 @@ const Allbooks = (props: {
       }
     )
   }
+  
   return (
     <div className='row'>
       <div className='col-md-4'>
@@ -170,10 +174,26 @@ const Allbooks = (props: {
               <ButtonGroup>
                 <Button disabled={true} minimal={true} text={`${viewCards ? 'Detailed' : 'Books'}`} />
                   <Tooltip content='View as books'>
-                    <Button icon='book' minimal={true} onClick={() => updateView(false)} intent={viewCards ? 'none' : 'primary'} />
+                    <Button 
+                      icon='book'
+                      minimal={true}
+                      onClick={() => {
+                        updateView(false);
+                        allBooksViewBooks.set(true);
+                      }} 
+                      intent={viewCards ? 'none' : 'primary'}
+                    />
                   </Tooltip>
                   <Tooltip content='View detailed'>
-                    <Button icon='list' minimal={true} onClick={() => updateView(true)} intent={!viewCards ? 'none' : 'primary'} />
+                    <Button 
+                      icon='list'
+                      minimal={true}
+                      onClick={() => {
+                        updateView(true);
+                        allBooksViewBooks.set(false);
+                      }} 
+                      intent={!viewCards ? 'none' : 'primary'}
+                    />
                   </Tooltip>
                   <Divider />
                   <Button 
@@ -192,7 +212,35 @@ const Allbooks = (props: {
             <div className='row allBookSearchInput'>
               <div className='col-12'>
                 <ControlGroup fill={true} vertical={false}>
-                  <InputGroup placeholder='Search for a book...' rightElement={<Button icon='search' minimal={true} />} large={true}/>
+                  <InputGroup
+                    value={searchText}
+                    onChange={e => {
+                      const value = e.target.value;
+                      setSearchText(value);
+                    }}
+                    onKeyUp={$event => {
+                      if ($event.keyCode === 13) {
+                        updateLoading(true);
+                        searchBooks(searchText).then(
+                          () => updateLoading(false)
+                        ).catch(() => console.log('error with request'))
+                      }
+                    }}
+                    placeholder='Search for a book...'
+                    rightElement={
+                      <Button
+                        icon='search'
+                        minimal={true}
+                        onClick={() => {
+                          updateLoading(true);
+                          searchBooks(searchText).then(
+                            () => updateLoading(false)
+                          ).catch(() => console.log('error with request'))
+                        }}
+                      />
+                    }
+                    large={true}
+                  />
                 </ControlGroup>
               </div>
             </div>
@@ -200,25 +248,26 @@ const Allbooks = (props: {
         </div>
         {isLoading && <Spinner />}
         {!isLoading && books
-          .filter(livre => !selectedTags.length ? true : selectedTags.map(tag => tag._id).every(tag => livre.topics.map(topic => topic.topic._id).includes(tag)))
-          .sort(sortOptions.find(opt => opt.selected).sortFn)
-          .sort((a, b) => {
-            if (!commentsFirst) {
-              return a.comments.length > b.comments.length
-              ? 1
-              : a.comments.length < b.comments.length
-                ? -1
-                : 0
-            }
-            return a.comments.length > b.comments.length
-              ? -1
-              : a.comments.length < b.comments.length
-                ? 1
-                : 0
-          })
+          .filter(bookFilter(searchText))
+          // .filter(livre => !selectedTags.length ? true : selectedTags.map(tag => tag._id).every(tag => livre.topics.map(topic => topic.topic._id).includes(tag)))
+          // .sort(sortOptions.find(opt => opt.selected).sortFn)
+          // .sort((a, b) => {
+          //   if (!commentsFirst) {
+          //     return a.comments.length > b.comments.length
+          //     ? 1
+          //     : a.comments.length < b.comments.length
+          //       ? -1
+          //       : 0
+          //   }
+          //   return a.comments.length > b.comments.length
+          //     ? -1
+          //     : a.comments.length < b.comments.length
+          //       ? 1
+          //       : 0
+          // })
           .map((book, i) => viewCards
-            ? <BookCard book={book} minimal={true} key={i}/>
-            : <div className='singleBookContainer' key={i}><Book bookId={book._id}  /></div>
+            ? <div key={`${i}`}><BookCard minimal={false} liv={book}  /></div>
+            : <div className='singleBookContainer' key={i}><Book liv={book}  /></div>
             )}
       </div>
     </div>

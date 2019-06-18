@@ -10,7 +10,8 @@ const Forgot = (props: {
   nextPayload?: {
     type: string;
     payload?: any;
-  }
+  };
+  callBack?: Function
 }) => {
   const [formErrors, updateErrors] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' }>>([]);
   const [formData, updateField] = useState<{ email: string}>({
@@ -56,7 +57,12 @@ const Forgot = (props: {
       return;
     }
     submitForgotPass(formData).then(
-      result => updateMessage(result),
+      result => {
+        updateMessage(result);
+        if (props.callBack && typeof props.callBack === 'function') {
+          props.callBack();
+        }
+      },
       err => updateMessage(err)
     ).then(() => updateStatus(true))
     .catch(() => updateMessage('Error submitting this form. please try again later.'))

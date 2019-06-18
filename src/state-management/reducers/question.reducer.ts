@@ -67,14 +67,6 @@ export const questionReducer = (state: IQuestionState = initialQuestionState, ac
     case types.updateComment:
       return {
         ...state,
-        questions: state.questions.map(question => ({
-          ...question,
-          comments: question._id === action.payload.data.parentId
-            ? action.payload.type === 'add'
-              ? question.comments.concat(action.payload.data)
-              : question.comments.filter(comment => comment._id !== action.payload._id)
-            : question.comments
-        })),
         selectedQuestion: state.selectedQuestion && Object.keys(state.selectedQuestion).length && state.selectedQuestion._id === action.payload._id
           ? {
             ...state.selectedQuestion,

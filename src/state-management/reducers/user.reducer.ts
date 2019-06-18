@@ -38,6 +38,16 @@ export const userReducer = (state: IUserState = initialUserState, action: {
             : state.user[action.payload.list].filter(book => book._id !== action.payload.book._id)
         }
       }
+    case types.toggleAuthModal:
+      return {
+        ...state,
+        showAuthModal: action.payload
+      };
+    case types.setAuthModalPage:
+      return {
+        ...state,
+        authModalActivePage: action.payload
+      }
     default:
       return state;
   }

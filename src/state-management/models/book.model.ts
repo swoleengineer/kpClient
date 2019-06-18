@@ -19,15 +19,25 @@ export interface IBookPicture {
   public_id: string;
 }
 
-export interface IBook extends IBookRequest {
+export interface IBook {
   _id: string;
-  author: string | IAuthor;
-  views: number;
-  pictures: IBookPicture[];
-  affiliate_link: string;
   active: boolean;
-  likes: string[];
+  authors: IAuthor[];
   created: Date;
+  description: string;
+  gId: string;
+  gTag: string;
+  isbn10: string;
+  isbn13: string;
+  likes: string[]
+  pictures: IBookPicture[];
+  publish_date: string;
+  publisher: string;
+  subtitle: string;
+  title: string;
+  topics: ITopicBodyObj[];
+  views: number;
+  affiliate_link: string;
 }
 
 export interface IExpandedBook extends IBook {

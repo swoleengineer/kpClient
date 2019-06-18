@@ -102,3 +102,20 @@ button:focus {
 .bp3-control-indicator, .bp3-control-indicator:before, .bp3-switch input, .bp3-switch span, .bp3-switch label {
   outline: none;
 }
+.authModalWrapper .authModalCard {
+  top: 15%;
+  left: 40%;
+}
+.authModalWrapper .authModalCard h6 {
+  color: #5c7080;
+  margin: 15px 0
+}
+.authModalCard header.authModalHeader {
+  display: block;
+  position: relative;
+}
+.authModalCard header.authModalHeader .authModalDismissBtn {
+  position: absolute;
+  top: -10px;
+  right: -5px
+}

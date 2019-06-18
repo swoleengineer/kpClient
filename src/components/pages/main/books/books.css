@@ -154,6 +154,9 @@
   margin-bottom: 25px;
   padding-bottom: 25px;
 }
+.singleBookPage header strong, .singleBookPage header small {
+  display: block;
+}
 .singleBook_bcrumb {
   color: #5c7080;
   transition: all .2s ease;
@@ -227,4 +230,11 @@
   position: -webkit-sticky;
   position: sticky;
   top: 75px;
+}
+.metaListItem {
+  display: block;
+  font-size: 13px;
+}
+.metaListItem:first-child {
+  margin-top: 25px;
 }

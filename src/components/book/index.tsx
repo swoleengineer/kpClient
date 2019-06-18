@@ -6,21 +6,20 @@ import { Icon, Tooltip, Menu, MenuItem, Popover, Tag, IAlertProps, Alert } from 
 import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
-import { toggleUserBook, createReport } from '../../state-management/thunks';
+import { toggleUserBook, createReport, engagePrecheck } from '../../state-management/thunks';
 import { connect } from 'react-redux';
 import { keenToaster } from '../../containers/switcher'
+import { getAuthorName } from '../../state-management/utils/book.util';
 
 const Book = ({
   bookId, 
   books,
   user,
   linkTo,
-  liv = undefined,
-  searchResult = false
+  liv = undefined
 }: {
   bookId: string;
   liv?: any;
-  searchResult: boolean;
   books: IExpandedBook[];
   user: IUser;
   linkTo: Function
@@ -28,10 +27,8 @@ const Book = ({
   const book = liv || books.find(livre => livre._id === bookId);
   if (!book) {
     return null;
-  }
-  console.log(book)
-  const { title, author = { name: ''}, pictures, topics = [], authors = [] } = book;
-  const authorName = authors.length ? authors.join(',') : author.name
+  }  
+  const { title, pictures, topics = [] } = book;
   const isRead = user && user.readBooks.findIndex(livre => livre._id === book._id) > 0;
   const [ picture = { link: undefined}] = book.imageLinks
     ? [{ link: book.imageLinks.thumbnail }]
@@ -50,7 +47,8 @@ const Book = ({
     parentType: acceptableTypes.comment,
     author: user ? user._id : '',
     reportType: 'inappropriate'
-  })
+  });
+  // const [isLoading, setLoading] = useState<boolean>(false)
   const submitNewReport = () => {
     if (!itemToReport.parentId || !itemToReport.author) {
       keenToaster.show({
@@ -88,17 +86,32 @@ const Book = ({
         >
           {alertConfig.text}
         </Alert>
-        {!searchResult && <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />}
+        <Link className='bookLink' to={{ type: 'SINGLEBOOK', payload: { id: book._id } }} />
         {isRead
           ? <span className='bookMark'><Icon icon='bookmark' iconSize={40} intent='danger'/></span>
           : <Tooltip content='Mark as read' className='unreadBookMark'>
-              <span className='unreadBookMark' onClick={() => searchResult ? null : toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}>
+              <span
+                className='unreadBookMark'
+                onClick={() => {
+                  engagePrecheck(book, true, (err, newBook) => {
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+                    return book.active
+                      ? toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')
+                      : newBook
+                        ? toggleUserBook(newBook._id, 'readBooks', 'add')
+                        : null;
+                  }) 
+                }}
+              >
                 <Icon icon='bookmark' iconSize={40} />
               </span>
             </Tooltip>
         }
         <div className='topicsMeta'>
-            {topics.length > 0 && !searchResult
+            {topics.length > 0 
               ? <Slider
                   dots={false}
                   infinite={true}
@@ -111,7 +124,7 @@ const Book = ({
                   autoplaySpeed={1500}
               >
                   {topics.reduce((acc, curr) => [...acc, curr, ``], [])
-                  .map((topic: ITopicBodyObj, i) => topic
+                  .map((topic: ITopicBodyObj, i) => topic && topic.topic && topic.topic.name
                     ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
                     : <span key={i}>&nbsp;&nbsp;</span>)}
 
@@ -124,7 +137,7 @@ const Book = ({
         <div className='bookMenu'>
           <div
             className='bookMenu_item'
-            onClick={() => searchResult ? null : toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}
+            onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}
             style={{ backgroundColor: book.likes.includes(user ? user._id : '') ? 'rgba(0,0,0,.5)' : 'transparent' }}
           >
             <Tooltip content={book.likes.includes(user ? user._id : '') ? 'Unlike Book' : 'Save Book'}>
@@ -137,7 +150,7 @@ const Book = ({
               </span>
             </Tooltip>
           </div>
-          <div className='bookMenu_item' onClick={() => searchResult ? null : linkTo({ type: 'SINGLEBOOK', payload: { id: book._id }})}>
+          <div className='bookMenu_item' onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id }})}>
             <Tooltip content='View book'>
               <span><Icon icon='share' iconSize={12} /></span>
             </Tooltip>
@@ -151,7 +164,7 @@ const Book = ({
                 <MenuItem
                   icon={isRead ? 'remove-column' : 'bookmark'}
                   text={`Mark ${isRead ? 'unread' : 'as read'}`}
-                  onClick={() => searchResult ? null : toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}
+                  onClick={() => toggleUserBook(book._id, 'readBooks', isRead ? 'remove' : 'add')}
                 />
                 <Menu.Divider />
                 <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
@@ -189,7 +202,7 @@ const Book = ({
         </div>
       </div>
       <span className='bookTitle'>{title}</span>
-      <span className='bookAuthor'>{authorName}</span>
+      <span className='bookAuthor'>{getAuthorName(book)}</span>
     </div>
   );
 }

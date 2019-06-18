@@ -78,7 +78,7 @@ export const sortTopicsByName = (a: ITopic, b: ITopic) => a.name < b.name
     : 0;
 
 export const filterTopic: ItemPredicate<ITopic> = (query, topic, _index, exactMatch) => {
-  const { name, description } = topic
+  const { name = '', description = '' } = topic
   const normalizedName = name.toLowerCase();
   const normalizedQuery = query.toLowerCase();
   console.log('filtering', normalizedName, normalizedQuery)

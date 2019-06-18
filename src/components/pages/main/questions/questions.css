@@ -5,3 +5,17 @@
 .singleQuestion_addComment {
   padding: 10px 0 0
 }
+.bookSearchResults {
+  max-height: 200px;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.singleQuestion_finishComment {
+  margin: 10px 0
+}
+.singleQuestion_finishComment strong, .singleQuestion_finishComment small, .singleQuestion_finishComment span.sq_booksubtitle {
+  display: block;
+}

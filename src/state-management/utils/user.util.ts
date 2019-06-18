@@ -23,5 +23,7 @@ export const tempUser: IUser = {
 export const initialUserState: IUserState = {
   jwt: '156156156',
   user: null,
-  loggedIn: false
+  loggedIn: false,
+  showAuthModal: false,
+  authModalActivePage: 'auth/login'
 };

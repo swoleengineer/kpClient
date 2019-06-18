@@ -10,6 +10,7 @@ import { redirect } from 'redux-first-router'
 import TopicBrowse from '../../auth/topic/topicBrowse';
 import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
+import { getAuthorName } from '../../../../state-management/utils/book.util'
 
 
 const SingleBook = (props: {
@@ -129,8 +130,11 @@ const SingleBook = (props: {
         breadcrumbRenderer={crumb => <Link to={{ type: crumb.type, payload: crumb.payload }} className='singleBook_bcrumb'><Icon icon={crumb.icon} iconSize={12} /> {crumb.text}</Link>}
       />
       <header>
-        <h2><strong>{book.title}</strong></h2>
-        <p className='description'>By {book.author && book.author.name}<br />ISBN: {book.isbn}</p>
+        <h2>
+          <strong>{book.title}</strong>
+          {book.subtitle && <small>{book.subtitle}</small>}
+        </h2>
+        {getAuthorName(book) && <p className='description'>By {getAuthorName(book)}</p>}
         {userBook && <Tag round={true} icon={userBook === 'readBooks' ? 'bookmark' : 'book'} intent='danger'>
           {`${userBook === 'readBooks' ? 'You have read this book' : 'In your saved library'}`}
         </Tag>}
@@ -174,6 +178,16 @@ const SingleBook = (props: {
           </ul>
         </div>
         <div className='col-md-8 singleBook_top_topics_wrapper'>
+          {book.description && <>
+            <h5>Description</h5>
+            <p>{book.description}</p>
+          </>}
+          {(book.isbn10 || book.isbn13 || book.publisher || book.publish_date) && <p>
+            {book.publisher && <span className='metaListItem'><strong>Publisher:</strong> {book.publisher}</span>}
+            {book.publish_date && <span className='metaListItem'><strong>Published:</strong> {book.publish_date}</span>}
+            {book.isbn10 && <span className='metaListItem'><strong>ISBN 10:</strong> {book.isbn10}</span>}
+            {book.isbn13 && <span className='metaListItem'><strong>ISBN 13:</strong> {book.isbn13}</span>}
+          </p>}
           <h5>Topics ({book.topics.length})</h5>
           <p>Thumbs up only if you agree a topic is covered in this book.</p>
           <div className='singleBookAddTopics'>
@@ -209,7 +223,7 @@ const SingleBook = (props: {
             </Collapse>
             <TopicBrowse
               processNewItem={(topic, event) => {
-                if (book.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
+                if (book.topics.filter(tpc => tpc.topic && tpc.topic.name).map(tpc => tpc.topic._id).includes(topic._id)) {
                   keenToaster.show({
                     message: `${topic.name} already in this book.`,
                     intent: 'warning',
@@ -223,7 +237,7 @@ const SingleBook = (props: {
             />
           </div>
           {(book.topics && book.topics.length > 0) && <div>{book.topics.map((topic, i) => {
-            return (
+            return (!topic || !topic.topic || !topic.topic.name) ? null : (
               <Tag
                 icon='lightbulb'
                 rightIcon={<span>| <Icon icon='thumbs-up' /> {topic.agreed.length}</span>}

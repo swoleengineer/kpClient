@@ -10,9 +10,10 @@ const LoginPage = (props: {
   nextPayload?: {
     type: string;
     payload?: any;
-  }
+  };
+  callBack?: Function
 }) => {
-  const { goToNext, nextPayload = undefined } = props;
+  const { goToNext, nextPayload = undefined, callBack = undefined } = props;
   const [formData, formUpdate] = useState<IUserLoginRequest>({
     account: '',
     password: ''
@@ -59,7 +60,13 @@ const LoginPage = (props: {
       });
       return;
     }
-    login(formData, goToNext, nextPayload).catch(() => keenToaster.show({
+    login(formData, goToNext, nextPayload)
+    .then(() => {
+      if (callBack && typeof callBack === 'function') {
+        callBack();
+      }
+    })
+    .catch(() => keenToaster.show({
       message: 'An error has occured.',
       intent: 'danger',
       icon: 'error'
@@ -79,6 +86,22 @@ const LoginPage = (props: {
             placeholder='Email or Username'
             leftIcon={formErrors.account ? 'error' : 'user'}
             intent={formErrors.account ? 'danger' : 'none'}
+            onKeyUp={$event => {
+              if ($event.keyCode === 13) {
+                submitForm()
+              }
+            }}
+            large={true}
+            onChange={e => {
+              const value = e.target.value;
+              if (!value) {
+                updateData({
+                  account: 'Please enter an email or username.'
+                }, true);
+                return;
+              }
+              updateData({ account: value });
+            }}
             onBlur={e => {
               const value = e.target.value;
               if (!value) {
@@ -99,10 +122,28 @@ const LoginPage = (props: {
         >
           <InputGroup
             id='password'
+            large={true}
             placeholder='Password'
             leftIcon={formErrors.password ? 'error' : 'lock'}
             type='password'
             intent={formErrors.password ? 'danger' : 'none'}
+            onChange={e => {
+              const value = e.target.value;
+              if (!value) {
+                updateData({
+                  password: 'password required'
+                }, true);
+                return;
+              }
+              updateData({
+                password: value
+              })
+            }}
+            onKeyUp={$event => {
+              if ($event.keyCode === 13) {
+                // submitForm()
+              }
+            }}
             onBlur={e => {
               const value = e.target.value;
               if (!value) {
@@ -124,6 +165,7 @@ const LoginPage = (props: {
           rightIcon='chevron-right'
           minimal={true} 
           onClick={() => submitForm()}
+          large={true}
         />
       </div>
     </div>

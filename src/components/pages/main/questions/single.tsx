@@ -2,28 +2,16 @@ import React, { useState } from 'react';
 import { IExpandedQuestion, IExpandedBook, IUser, IStore, ITopic, IComment, IReportRequest, acceptableTypes } from '../../../../state-management/models';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
-import { IAlertProps, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Tag, Button, MenuItem, Spinner } from '@blueprintjs/core';
+import { IAlertProps, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Tag, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
 import { createComment, createReport, removeComment, 
-  addTopicsToBook, toggleTopicAgreeBook } from '../../../../state-management/thunks';
+  addTopicsToBook, toggleTopicAgreeBook, searchBooks } from '../../../../state-management/thunks';
 import { keenToaster } from '../../../../containers/switcher';
 import Link from 'redux-first-router-link';
 import TopicBrowse from '../../auth/topic/topicBrowse';
 import moment from 'moment';
 import './questions.css';
-import { filterBook } from '../../../../state-management/utils/book.util';
-import { Select, ItemRenderer } from '@blueprintjs/select';
-const BookSelect = Select.ofType<IExpandedBook>();
+import { bookFilter, getAuthorName } from '../../../../state-management/utils/book.util'
 
-// const sampleBookComments = [{
-//   _id: '89fgbr10ovg',
-//   author: {
-//     username: 'juriste'
-//   },
-//   created: new Date(),
-//   suggested_Book: {},
-//   accepted: false,
-//   votes: [1, 2, 3, 4]
-// }]
 
 const SingleQuestionPage = (props: {
   question: IExpandedQuestion;
@@ -65,6 +53,8 @@ const SingleQuestionPage = (props: {
   });
   const [commentOpen, setCommentState] = useState(false);
   const [bookToAdd, setAddingBook] = useState({});
+  const [bookfilterText, updateFilter] = useState('');
+  const [loadingComment, updateLoading] = useState(false);
   const pathToHere = [
     { type: 'HOME', href: '/', icon: 'home', text: 'Home' },
     { type: 'ALLQUESTIONS', href: '/questions', icon: 'th', text: 'All questions' },
@@ -80,7 +70,7 @@ const SingleQuestionPage = (props: {
       {
         author: user._id,
         text,
-        suggested_book: suggested_book._id,
+        suggested_book,
         parentId: question._id,
         parentType: acceptableTypes.question,
         created: new Date()
@@ -134,34 +124,6 @@ const SingleQuestionPage = (props: {
       }
     ).catch() : null,
     reportComment: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
-  }
-  const renderBook: ItemRenderer<IExpandedBook> = (book, { handleClick, modifiers, query }) => {
-    if (!modifiers.matchesPredicate) {
-      return null;
-    }
-    return (
-      <MenuItem
-            active={modifiers.active}
-            disabled={modifiers.disabled}
-            key={book._id}
-            icon='book'
-            text={<div><strong>{book.title}</strong><br /><small>{book.author.name}</small></div>}
-            onClick={() => {
-              setAddingBook(book);
-              setCommentState(true);
-            }}
-      />
-    )
-  }
-  const addBookProps = {
-    itemPredicate: filterBook,
-    itemRenderer: renderBook,
-    items: books,
-    filterable: true,
-    hasInitialContent: false,
-    resetOnClose: true,
-    resetOnQuery: true,
-    resetOnSelect: true
   }
   return (
     <div className='singleQuestionPage singleBookPage'>
@@ -219,7 +181,7 @@ const SingleQuestionPage = (props: {
         </div>
         <div className='col-md-8 singleBook_top_topics_wrapper'>
           <h5>Topics ({question.topics.length})</h5>
-          <p>Thumbs up only if you agree a topic is covered in this book.</p>
+          <p>Thumbs up only if you agree a topic is covered by this request.</p>
           <div className='singleBookAddTopics'>
             <Collapse isOpen={topicsToAdd.length > 0}>
               <div className='row incomingTopics'>
@@ -298,7 +260,35 @@ const SingleQuestionPage = (props: {
             </div>
             <div className='col-11 text-right'>
               <ButtonGroup>
-                <BookSelect
+                <Button
+                  minimal={true}
+                  rightIcon={commentOpen ? 'cross' : 'chevron-down'}
+                  onClick={() => {
+                    setCommentState(!commentOpen);
+                    setAddingBook({});
+                    updateComment({
+                      ...newComment,
+                      text: '',
+                      suggested_book: undefined
+                    })
+                  }}
+                  intent={commentOpen ? 'danger' : 'none'}
+                >
+                  {commentOpen ? 'Cancel' :  'Suggest Book'}
+                </Button>
+                {/* <BookSearch
+                  itemSelected={item => {
+                    updateComment({
+                      ...newComment,
+                      suggested_book: item
+                    });
+                    setAddingBook(item);
+                    console.log('added book to local state', bookToAdd.title)
+                    setCommentState(true);
+                  }}
+                  placeholder='Suggest Book'
+                /> */}
+                {/* <BookSelect
                   {...addBookProps}
                   noResults={<MenuItem disabled={true} text='No books.' />}
                   onItemSelect={(item: IExpandedBook) => {
@@ -312,46 +302,132 @@ const SingleQuestionPage = (props: {
                     setCommentState(true);
                   }}
                 >
-                  <Button
-                    icon='book'
-                    minimal={true}
-                    rightIcon={newComment.suggested_book ? null : 'chevron-down'}
-                  >
-                    {newComment.suggested_book ? newComment.suggested_book.title : 'Suggest Book'}
-                  </Button>
-                </BookSelect>
-                {commentOpen && <Button
+                  
+                </BookSelect> */}
+                {/* {commentOpen && <Button
                   icon='cross'
                   minimal={true}
+                  intent='danger'
                   onClick={() => {
                     setCommentState(false);
                     setAddingBook({});
                   }}
-                />}
+                />} */}
               </ButtonGroup> 
             </div>
           </div>
-          <Collapse isOpen={commentOpen} className='questionCard_comment'>
+          <Collapse isOpen={bookToAdd['title'] && bookToAdd['title'].length}>
+            <div className='singleQuestion_finishComment'>
+              <Card elevation={3}>
+                <div className='row'>
+                  <div className='col-md-12'>
+                    <strong><Icon icon='book' /> {bookToAdd.title}</strong>
+                    <span className='sq_booksubtitle'>{bookToAdd.subtitle}</span>
+                    <small>{getAuthorName(bookToAdd)}</small>
+                    <br />
+                    <ControlGroup fill={true}>
+                      <InputGroup
+                        leftIcon='comment'
+                        large={true}
+                        placeholder='Enter Comment...'
+                        onChange={e => {
+                          const value = e.target.value;
+                          updateComment({
+                            ...newComment,
+                            text: value
+                          });
+                        }}
+                        onKeyUp={$event => {
+                          if ($event.keyCode === 13) {
+                            submitNewComment();
+                          }
+                        }}
+                        rightElement={
+                          <Button
+                            text='Submit'
+                            minimal={true}
+                            onClick={() => submitNewComment()}
+                          />
+                        }
+                      />
+                    </ControlGroup>
+                  </div> 
+                </div>
+              </Card>
+            </div>
+          </Collapse>
+          <Collapse isOpen={commentOpen && !bookToAdd['title']} className='questionCard_comment' transitionDuration={100}>
             <div className='singleQuestion_addComment'>
-              <ControlGroup fill={true} vertical={false}>
-                <InputGroup
-                  placeholder='Add optional comment'
-                  leftIcon='comment'
-                  onKeyUp={$event => {
-                    if ($event.keyCode === 13) {
-                      submitNewComment();
-                    }
-                  }}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    updateComment({
-                      ...newComment,
-                      text: value
-                    })
-                  }}
-                  rightElement={<Button minimal={true} icon='tick' onClick={() => submitNewComment()}/>}
-                />
-              </ControlGroup>
+              <div className='row'>
+                <div className='col-12' style={{ height: '42px'}}>
+                  <ControlGroup fill={true} vertical={false}>
+                    <InputGroup
+                      large={true}
+                      placeholder='Search Books...'
+                      leftIcon='book'
+                      onKeyUp={$event => {
+                        if ($event.keyCode === 13) {
+                          updateLoading(true)
+                          searchBooks(bookfilterText).then(
+                            () => updateLoading(false)
+                          ).catch(() => console.log('error from req.'))
+                        }
+                      }}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        updateFilter(value);
+                        // if (value.length > 3) {
+                        //   searchBooks(value);
+                        // }
+                        // updateComment({
+                        //   ...newComment,
+                        //   text: value
+                        // })
+                      }}
+                      rightElement={
+                        <Button
+                          icon='search'
+                          minimal={true}
+                          onClick={() => {
+                            searchBooks(bookfilterText).then(
+                              () => updateLoading(false)
+                            ).catch(() => console.log('error from req.'))
+                          }}
+                        />
+                      }
+                    />
+                  </ControlGroup>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-12'>
+                  {loadingComment && <div style={{ marginTop: '15px'}}><Spinner size={25} /></div>}
+                  {!loadingComment && 
+                  <ul className='bookSearchResults'>
+                      {books.filter(bookFilter(bookfilterText)).map((book, i) => {
+                        return (
+                          <MenuItem
+                            key={book._id}
+                            icon='book'
+                            text={<Tooltip content={book.title}>
+                              <div><strong>{book.title}</strong><br /><small>{getAuthorName(book)}</small></div>
+                            </Tooltip>}
+                            onClick={() => {
+                              // itemSelected(book);
+                              // updateSelected(book); 
+                              updateComment({
+                                ...newComment,
+                                suggested_book: book
+                              });
+                              setAddingBook(book);
+                            }}
+                          />
+                        
+                        )
+                      })}
+                      </ul>}
+                </div>
+              </div>
             </div>
           </Collapse>
           <div className='singleQuestion_commentHolder'>

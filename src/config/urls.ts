@@ -35,7 +35,8 @@ export const bookAddPicUrl = (id: string): string => `/book/addPic/${id}`;
 export const bookRmPicUrl = (book: string, pictureId: string): string => `/book/rmPic/${book}/${pictureId}`;
 export const bookToggleAgreeUrl = (book: string, topicId: string): string => `/book/toggleAgree/${book}/${topicId}`;
 export const bookAddTopicsUrl = (book: string): string => `/book/addTopics/${book}`;
-export const bookQueryTopicSortUrl: string = `book/queryTopicSort`;
+export const bookQueryTopicSortUrl: string = `/book/queryTopicSort`;
+export const bookCreateFromInternetUrl: string = `/book/createFromInternet`;
 
 // Comment '/comment
 export const commentGetManyUrl: string = `/comment/getMany`;
