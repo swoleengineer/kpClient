@@ -44,7 +44,7 @@ const TopicBrowse = (props: {
     items: topics,
     allowCreate: true,
     intent: false,
-    openOnKeyDown: true,
+    openOnKeyDown: false,
     popoverMinimal: false,
     resetOnSelect: true,
     tagMinimal: false,
@@ -54,20 +54,21 @@ const TopicBrowse = (props: {
   const topicInputProps = {
     tagProps: (value: string, index: number): ITagProps => ({ icon: 'lightbulb' }),
     onRemove: (tag: string, index: number) => processRemove(tag, index),
+    large: true,
     placeholder: 'Search for topics to add.'
   }
   return (
     <div className='topicSearchWrapper'>
       <TopicMultiSelect
         {...topicSelectProps}
-        createNewItemFromQuery={(name: string): ITopic => {
+        createNewItemFromQuery={(name: string): ITopic =>  {
           return {
             name,
             description: name,
             _id: `${topics.length + 1}`,
             active: true,
             similar: []
-          }
+          }          
         }}
         createNewItemRenderer={(query: string, active: boolean, handleClick: React.MouseEventHandler<HTMLElement>) => {
           return (

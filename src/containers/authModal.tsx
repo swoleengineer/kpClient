@@ -1,20 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { IStore } from '../state-management/models';
-import { Overlay, Classes, Card, Button } from '@blueprintjs/core';
+import { IStore, AuthModalTypes } from '../state-management/models';
+import { Overlay, Classes, Card, Button, ButtonGroup } from '@blueprintjs/core';
 import '../app.css';
 import Logo from '../components/header/logo';
 import pageMap from './pageMap';
 import { userActionTypes as userTypes } from '../state-management/actions';
+import { authSettings } from './authSettings';
 
 const AuthModal = (props: {
   showModal: boolean;
-  activePage: 'auth/login' | 'auth/register' | 'auth/forgotPw/forgot';
+  activePage: AuthModalTypes;
   setModal: Function;
+  changePage: Function;
 }) => {
-  const { showModal, activePage, setModal } = props;
-  console.log(`inmodal: ${showModal}`)
+  const { showModal, activePage, setModal, changePage } = props;
   const Display = pageMap[activePage];
+  const pageType = activePage.split('/')[activePage.split('/').length - 1];
+  const { cardWidth, pageSubtitle, pageTitle, pageDescription, style = {} } = authSettings[pageType];
   return (
     <Overlay
       isOpen={showModal}
@@ -22,16 +25,41 @@ const AuthModal = (props: {
       canEscapeKeyClose={true}
       hasBackdrop={true}
       usePortal={true}
-      className={`${Classes.OVERLAY_SCROLL_CONTAINER} authModalWrapper`}
+      className={`${Classes.OVERLAY_SCROLL_CONTAINER} authModalWrapper row`}
     >
-      <Card elevation={3} className='authModalCard'>
+      <Card elevation={3} className={`${cardWidth} authModalCard`}>
         <header className='authModalHeader'>
           <Logo large={true} />
-          <h6><strong>Keen Pages is way better when you're logged in</strong></h6>
+          <h5>
+            <strong>{pageTitle}</strong>
+            <small>{pageSubtitle}</small>
+            <small>{pageDescription}</small>
+          </h5>
           <Button className='authModalDismissBtn' icon='cross' intent='danger' minimal={true} onClick={() => setModal(false)} />
         </header>
-        
-        <Display goToNext={false} callBack={() => setModal(false)}/>
+        <div className='authModalMiddleLinks'>
+          {pageType === 'login' && <ButtonGroup fill={true}>
+            <Button
+              text='Register'
+              small={true}
+              onClick={() => changePage(AuthModalTypes.register)}
+            />
+            <Button
+              text='Forgot password'
+              small={true}
+              onClick={() => changePage(AuthModalTypes.forgot)}
+            />
+          </ButtonGroup>}
+          {['register', 'forgot'].includes(pageType) && <ButtonGroup fill={true}>
+            <Button
+              text='Login'
+              small={true}
+              onClick={() => changePage(AuthModalTypes.login)}
+            />
+          </ButtonGroup>}
+        </div>
+        <br />
+        <Display goToNext={false} callBack={() => setModal(false)} style={style}/>
       </Card>
     </Overlay>
   )
@@ -43,7 +71,8 @@ const mapStateToProps = (state: IStore) => ({
 });
 
 const mapDispatch = dispatch => ({
-  setModal: (shown: boolean) => dispatch({ type: userTypes.toggleAuthModal, payload: shown })
+  setModal: (shown: boolean) => dispatch({ type: userTypes.toggleAuthModal, payload: shown }),
+  changePage: (page: AuthModalTypes) => dispatch({ type: userTypes.setAuthModalPage, payload: page })
 })
 
 export default connect(mapStateToProps, mapDispatch)(AuthModal);

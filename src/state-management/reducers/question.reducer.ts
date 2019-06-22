@@ -20,6 +20,15 @@ export const questionReducer = (state: IQuestionState = initialQuestionState, ac
           .concat(action.payload)
           .sort(sortQuestionByDate)
       };
+    case types.gotMoreQuestions:
+      return {
+        ...state,
+        questions: state.questions.concat(...action.payload.map(question => ({
+          ...question,
+          comments: [],
+          reports: []
+            }))).sort(sortQuestionByDate)
+        };
     case types.updateNewQuestion:
       return {
         ...state,
@@ -34,8 +43,8 @@ export const questionReducer = (state: IQuestionState = initialQuestionState, ac
         newQuestion: {
           ...state.newQuestion,
           topics: action.payload.type === 'remove'
-            ? state.newQuestion.topics.filter(topic => topic !== action.payload.topic)
-            : state.newQuestion.topics.concat(action.payload.topic)
+            ? state.newQuestion.topics.filter(topic => topic.name !== action.payload.topic.name)
+            : state.newQuestion.topics.filter(topic => topic.name !== action.payload.topic.name).concat(action.payload.topic)
         }
       }
     case types.clearNewQuestion:
@@ -65,14 +74,15 @@ export const questionReducer = (state: IQuestionState = initialQuestionState, ac
         }))
       };
     case types.updateComment:
+      console.log('Adding comment to question', action.payload);
       return {
         ...state,
-        selectedQuestion: state.selectedQuestion && Object.keys(state.selectedQuestion).length && state.selectedQuestion._id === action.payload._id
+        selectedQuestion: state.selectedQuestion && Object.keys(state.selectedQuestion).length && state.selectedQuestion._id === action.payload.data.parentId
           ? {
             ...state.selectedQuestion,
             comments: action.payload.type === 'add'
               ? state.selectedQuestion.comments.concat(action.payload.data)
-              : state.selectedQuestion.comments.filter(comment => comment._id !== action.payload._id)
+              : state.selectedQuestion.comments.filter(comment => comment._id !== action.payload.data._id)
           }
           : state.selectedQuestion
       };

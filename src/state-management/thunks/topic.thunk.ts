@@ -27,7 +27,8 @@ export const createTopic = (params: ITopicRequest, goToNext: boolean = false, re
       intent: 'success',
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
-    })
+    });
+    return newTopic;
   },
   (err: any) => {
     let message;

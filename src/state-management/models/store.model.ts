@@ -1,8 +1,9 @@
 import { LocationState } from 'redux-first-router';
 import { IUserState, ITopicState, IReportState,
-  IQuestionState, ICommentState, IBookState, IAuthorState } from '.';
+  IQuestionState, ICommentState, IBookState, IAuthorState, IAppState } from '.';
 
 export interface IStore {
+  app: IAppState;
   page: string;
   location: LocationState;
   user: IUserState;

@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 import { getAllBooks, getAllTopics, getAllQuestions, postSearchManyForManyComments  } from './config';
 import { bookActionTypes, topicActionTypes, questionActionTypes } from './state-management/actions'
 import { autoLogin } from './state-management/thunks'
+import { expandQuestion } from './state-management/utils'
 
 type Props = { store: Store<IStore> };
 
@@ -55,7 +56,7 @@ export class App extends React.Component<Props, {}> {
       (res: any) => {
         this.props.store.dispatch({
           type: questionActionTypes.updateQuestions,
-          payload: res.data.data
+          payload: res.data.data.map(expandQuestion)
         })
       }
     ).catch(handleErr);

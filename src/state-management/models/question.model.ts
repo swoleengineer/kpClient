@@ -7,11 +7,13 @@ export interface IQuestionRequest {
   text: string;
 }
 
-export interface IQuestion extends IQuestionRequest {
+export interface IQuestion {
   _id: string;
   author: IUser | string;
   created: Date;
-  
+  text: string;
+  title: string;
+  topics: Array<ITopicBodyObj>
 }
 
 export interface IExpandedQuestion extends IQuestion {

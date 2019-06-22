@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IStore, IExpandedBook, ITopic } from '../../../../state-management/models';
+import { IStore, IExpandedBook, ITopic, AuthModalTypes } from '../../../../state-management/models';
 import './books.css';
 import BookCard from './bookCard';
-import { Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
+import { NonIdealState, Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
 import { queryMoreBooks, searchBooks } from '../../../../state-management/thunks';
 import { allBooksSearchOpen, allBooksViewBooks } from '../../../../config/appSettings';
-import { bookFilter } from '../../../../state-management/utils/book.util';
-
+import { bookFilter, bookSorts } from '../../../../state-management/utils/book.util';
+import { bookActionTypes as bookTypes, userActionTypes as userTypes } from '../../../../state-management/actions';
 
 const tagStyle = {
   margin: '0 10px 10px 0'
@@ -17,37 +17,19 @@ const tagStyle = {
 
 const Allbooks = (props: {
   books: IExpandedBook[];
-  topics: ITopic[]
+  topics: ITopic[];
+  selectedTopics: ITopic[];
+  updateFilteredTopics: Function;
+  showAuthModal: Function;
 }) => {
-  const { topics } = props;
+  const { updateFilteredTopics, selectedTopics, showAuthModal } = props;
   if (props.books.length) {
     // return null
   }
-  const [selectedTags, updateTags] = useState([]);
   const [commentsFirst, updateCommentSort] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
-  const [sortOptions, updateSorts] = useState<any>([{
-    sort: { 'topicsLength': 1 },
-    selected: true,
-    sortName: 'Highest topics',
-    sortFn: (a, b) => a.topics.length < b.topics.length ? 1 : a.topics.length > b.topics.length ? -1 : 0
-  }, {
-    sort: { 'topicsLength': -1 },
-    selected: false,
-    sortName: 'Lowest topics',
-    sortFn: (a, b) => a.topics.length < b.topics.length ? -1 : a.topics.length > b.topics.length ? -1 : 0
-  }, {
-    sort: { 'likesLength': 1 },
-    selected: false,
-    sortName: 'Highest likes',
-    sortFn: (a, b) => a.likes.length < b.likes.length ? 1 : a.likes.length > b.likes.length ? -1 : 0
-  }, {
-    sort: { 'likesLength': -1 },
-    selected: false,
-    sortName: 'Lowest likes',
-    sortFn: (a, b) => a.likes.length < b.likes.length ? -1 : a.likes.length > b.likes.length ? 1 : 0
-  }])
+  const [sortOptions, updateSorts] = useState<any>(bookSorts)
   const [viewCards, updateView] = useState(!allBooksViewBooks.get());
   const [isLoading, updateLoading] = useState(false);
   const books = props.books
@@ -59,7 +41,7 @@ const Allbooks = (props: {
       return;
     }
 
-    queryMoreBooks(currentsort.sort, selectedTags.map(tag => tag._id), books.map(book => book._id)).then(
+    queryMoreBooks(currentsort.sort, selectedTopics.map(tag => tag._id), books.map(book => book._id)).then(
       () => updateLoading(false),
       () => {
         updateLoading(false);
@@ -67,7 +49,24 @@ const Allbooks = (props: {
       }
     )
   }
-  
+  const shownBooks = books
+    .filter(bookFilter(searchText))
+    .filter(livre => !selectedTopics.length ? true : selectedTopics.map(tag => tag._id).every(tag => livre.topics.filter(topic => topic.topic).map(topic => topic.topic._id).includes(tag)))
+    .sort(sortOptions.find(opt => opt.selected).sortFn)
+    .sort((a, b) => {
+      if (!commentsFirst) {
+        return a.comments.length > b.comments.length
+        ? 1
+        : a.comments.length < b.comments.length
+          ? -1
+          : 0
+      }
+      return a.comments.length > b.comments.length
+        ? -1
+        : a.comments.length < b.comments.length
+          ? 1
+          : 0
+    });
   return (
     <div className='row'>
       <div className='col-md-4'>
@@ -76,52 +75,15 @@ const Allbooks = (props: {
             <h6>
               Browse by topics
               <br />
-              <small>Selected ({selectedTags.length})</small>
+              <small>Selected ({selectedTopics.length})</small>
             </h6>
-            <Collapse isOpen={selectedTags.length > 0}>
-              <div className='selectedTagsHolder'>
-                {selectedTags
-                  .map((topic, i) => (
-                    <Tag 
-                      style={tagStyle}
-                      icon='lightbulb'
-                      interactive={true}
-                      key={i}
-                      minimal={true}
-                      onClick={() => {
-                        updateTags(selectedTags.filter(tag => tag._id !== topic._id));
-                        refreshBooks();
-                      }}
-                    >
-                      {topic.name}
-                    </Tag>
-                  ))}
-              </div>
-            </Collapse>
-            <div>
-              {topics
-                .map((topic, i) => (
-                  <Tag 
-                    style={tagStyle}
-                    rightIcon='chevron-up'
-                    icon='lightbulb'
-                    interactive={true}
-                    key={i}
-                    minimal={true}
-                    onClick={() => {
-                      updateTags(selectedTags.filter(tag => tag._id !== topic._id).concat(topic));
-                      refreshBooks();
-                    }}
-                  >
-                    {topic.name}
-                  </Tag>
-                ))
-              }
-            </div>
             <div>
               <TopicSearch 
                 processNewItem={(topic, event) => {
-                  updateTags(selectedTags.filter(tag => tag._id !== topic._id).concat(topic));
+                  updateFilteredTopics({
+                    data: topic,
+                    type: 'add'
+                  });
                   refreshBooks();
                 }}
                 processRemove={() => console.log('removed')}
@@ -155,8 +117,6 @@ const Allbooks = (props: {
             </ul>
           </div>
         </div>
-
-        
       </div>
       <div className='col-md-8'>
         <div className={searchOpen ? 'allPage_topSettings_wrapper transitionEverything' : 'transitionEverything'}>
@@ -208,8 +168,39 @@ const Allbooks = (props: {
                 </ButtonGroup>
             </div>
           </div>
+          {selectedTopics.length > 0 && <div className={searchOpen ? 'topTopicsContainer topTopicsExpanded' : 'topTopicsContainer'}>
+            {selectedTopics.map((topic, i) => {
+              if (!topic.name) {
+                return null;
+              }
+              return (
+                <Tag
+                  style={tagStyle}
+                  large={!searchOpen}
+                  icon='lightbulb'
+                  interactive={true}
+                  rightIcon='small-cross'
+                  key={i}
+                  minimal={!searchOpen}
+                  onClick={() => {
+                    updateFilteredTopics({
+                      type: 'remove',
+                      data: topic
+                    })
+                  }}
+                >
+                  {topic.name}
+                </Tag>
+              )
+            })}  
+          </div>}
+          
           <Collapse isOpen={searchOpen} transitionDuration={85}>
             <div className='row allBookSearchInput'>
+              <div className='col-12 allSearchOptions'>
+                <span>Title</span>
+                <span>Author</span>
+              </div>
               <div className='col-12'>
                 <ControlGroup fill={true} vertical={false}>
                   <InputGroup
@@ -247,28 +238,26 @@ const Allbooks = (props: {
           </Collapse>
         </div>
         {isLoading && <Spinner />}
-        {!isLoading && books
-          .filter(bookFilter(searchText))
-          // .filter(livre => !selectedTags.length ? true : selectedTags.map(tag => tag._id).every(tag => livre.topics.map(topic => topic.topic._id).includes(tag)))
-          // .sort(sortOptions.find(opt => opt.selected).sortFn)
-          // .sort((a, b) => {
-          //   if (!commentsFirst) {
-          //     return a.comments.length > b.comments.length
-          //     ? 1
-          //     : a.comments.length < b.comments.length
-          //       ? -1
-          //       : 0
-          //   }
-          //   return a.comments.length > b.comments.length
-          //     ? -1
-          //     : a.comments.length < b.comments.length
-          //       ? 1
-          //       : 0
-          // })
-          .map((book, i) => viewCards
-            ? <div key={`${i}`}><BookCard minimal={false} liv={book}  /></div>
-            : <div className='singleBookContainer' key={i}><Book liv={book}  /></div>
+        {(!isLoading && shownBooks.length > 0) && shownBooks.map((book, i) => viewCards
+            ? <BookCard book={book} key={i} />
+            : <div className='singleBookContainer' key={i}><Book liv={book} /></div>
             )}
+        {(!isLoading && !shownBooks.length) && <div className='nonIdealWrapper'>
+          <NonIdealState
+            icon='help'
+            title='No Results'
+            description={<p>There are no books that match your query. <br /> You can ask users for a suggestion by clicking below.</p>}
+            action={
+            <Button
+              icon='help'
+              text='Ask For Suggestions'
+              onClick={() => {
+                showAuthModal(AuthModalTypes.question);
+              }}
+            />
+          }
+          />
+        </div>}
       </div>
     </div>
   )
@@ -276,6 +265,21 @@ const Allbooks = (props: {
 
 const mapStateToProps = (state: IStore) => ({
   books: state.book.books,
-  topics: state.topic.allTopics
+  topics: state.topic.allTopics,
+  selectedTopics: state.book.selectedTopics
+});
+
+const mapDispatch = dispatch => ({
+  showAuthModal: (page: AuthModalTypes) => {
+    dispatch({
+      type: userTypes.toggleAuthModal,
+      payload: true
+    });
+    dispatch({
+      type: userTypes.setAuthModalPage,
+      payload: page
+    })
+  },
+  updateFilteredTopics: payload => dispatch({ type: bookTypes.updateFilterTopics, payload })
 })
-export default connect(mapStateToProps)(Allbooks);
+export default connect(mapStateToProps, mapDispatch)(Allbooks);

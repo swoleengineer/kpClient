@@ -8,7 +8,7 @@ import Book from '../../../book';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router'
 import TopicBrowse from '../../auth/topic/topicBrowse';
-import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook } from '../../../../state-management/thunks'
+import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook, engagePrecheck } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
 import { getAuthorName } from '../../../../state-management/utils/book.util'
 
@@ -60,26 +60,31 @@ const SingleBook = (props: {
     if (!text || !text.length) {
       return;
     }
-    createComment(
-      {
-        author: user._id,
-        text,
-        parentId: book._id,
-        parentType: acceptableTypes.book,
-        created: new Date()
-      },
-      false,
-      {
-        type: 'SINGLEBOOK',
-        payload: {
-        id: book._id
-        }
+    engagePrecheck(book, true, error => {
+      if (error) {
+        return;
+      }
+      createComment(
+        {
+          author: user._id,
+          text,
+          parentId: book._id,
+          parentType: acceptableTypes.book,
+          created: new Date()
+        },
+        false,
+        {
+          type: 'SINGLEBOOK',
+          payload: {
+          id: book._id
+          }
+        })
+      .then(() => {
+        updateComment({ ...newComment, text: '' })
       })
-    .then(() => {
-      updateComment({ ...newComment, text: '' })
-    })
-    .catch((e) => {
-      console.log(e);
+      .catch((e) => {
+        console.log(e);
+      })
     })
   }
   const submitNewReport = () => {
@@ -141,38 +146,55 @@ const SingleBook = (props: {
       </header>
       <div className='row'>
         <div className='col-md-4'>
-          <Book bookId={book._id} />
+          <Book liv={book} />
           <br />
           <ul className='underBookMenu'>
             <MenuItem
               icon={user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
               text={`Mark ${user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'unread' : 'as read'}`}
-              onClick={() => toggleUserBook(book._id, 'readBooks', user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add')}
+              onClick={() => {
+                engagePrecheck(book, true, (err) => {
+                  if (err) {
+                    return;
+                  }
+                  toggleUserBook(book._id, 'readBooks', user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add').then(
+                    () => console.log(''),
+                    () => console.log('')
+                  )
+                })
+              }}
             />
-            <Menu.Divider />
-            <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+            {(book.affiliate_link || book.amazon_link) && <>
+              <Menu.Divider />
+              <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+            </>}
             <Menu.Divider />
             <MenuItem
               icon='flag'
               text='Report Book' 
               onClick={() => {
-                updateReportingItem({
-                  parentId: book._id,
-                  parentType: acceptableTypes.book,
-                  author: user ? user._id : '',
-                  reportType: 'inappropriate'
+                engagePrecheck(book, true, err => {
+                  if (err) {
+                    return;
+                  }
+                  updateReportingItem({
+                    parentId: book._id,
+                    parentType: acceptableTypes.book,
+                    author: user ? user._id : '',
+                    reportType: 'inappropriate'
+                  })
+                  updateAlertConfig({
+                    type: 'reportBook',
+                    text: `Are you sure you want to report '${book.title}' as Inappropriate?`
+                  })
+                  updateAlertProps({
+                    cancelButtonText: 'Nevermind',
+                    confirmButtonText: 'Report it',
+                    icon: 'flag',
+                    isOpen: true,
+                    intent: 'danger',
+                  });
                 })
-                updateAlertConfig({
-                  type: 'reportBook',
-                  text: `Are you sure you want to report '${book.title}' as Inappropriate?`
-                })
-                updateAlertProps({
-                  cancelButtonText: 'Nevermind',
-                  confirmButtonText: 'Report it',
-                  icon: 'flag',
-                  isOpen: true,
-                  intent: 'danger',
-                });
               }}
             />
           </ul>
@@ -189,7 +211,7 @@ const SingleBook = (props: {
             {book.isbn13 && <span className='metaListItem'><strong>ISBN 13:</strong> {book.isbn13}</span>}
           </p>}
           <h5>Topics ({book.topics.length})</h5>
-          <p>Thumbs up only if you agree a topic is covered in this book.</p>
+          <p>Thumbs up if you agree a topic is covered in this book.</p>
           <div className='singleBookAddTopics'>
             <Collapse isOpen={topicsToAdd.length > 0}>
               <div className='row incomingTopics'>
@@ -211,9 +233,14 @@ const SingleBook = (props: {
                     icon='plus'
                     fill={true}
                     onClick={() => {
-                      addTopicsToBook(book._id, topicsToAdd)
-                        .then(() => adjustTopics([]))
-                        .catch(() => adjustTopics([]))
+                      engagePrecheck(book, true, err => {
+                        if (err) {
+                          return;
+                        }
+                        addTopicsToBook(book._id, topicsToAdd)
+                          .then(() => adjustTopics([]))
+                          .catch(() => adjustTopics([]))
+                      })
                     }}
                   >
                     Add {topicsToAdd.length} topic{topicsToAdd.length > 1 && 's'}
@@ -231,7 +258,7 @@ const SingleBook = (props: {
                   })
                   return;
                 }
-                adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id).concat(topic))}
+                adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
               }
               processRemove={() => console.log('removed topic')}
             />
@@ -249,13 +276,20 @@ const SingleBook = (props: {
                   marginBottom: '10px'
                 }}
                 minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
-                onClick={() => user
-                  ? toggleTopicAgreeBook(book._id, topic._id)
-                      .then(
-                        () => console.log('request successful. Toggled agree status'),
-                        () => console.log('request failed toggling topic agree status')
-                      )
-                  : null}
+                onClick={() => {
+                  engagePrecheck(book, true, err => {
+                    if (err) {
+                      return;
+                    }
+                    return user
+                      ? toggleTopicAgreeBook(book._id, topic._id)
+                          .then(
+                            () => console.log('request successful. Toggled agree status'),
+                            () => console.log('request failed toggling topic agree status')
+                          )
+                      : null
+                  })
+                }}
               >
                 {topic.topic.name}
               </Tag>
@@ -266,7 +300,18 @@ const SingleBook = (props: {
             <div className='col-12 '>
               <div className='singleBook_engageSection '>
                 <ul className='bookCard_engage'>
-                  <li onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(user._id) ? 'remove' : 'add')}>
+                  <li 
+                    onClick={() => {
+                    engagePrecheck(book, true, err => {
+                      if (err) {
+                        return;
+                      }
+                      return user 
+                        ? toggleUserBook(book._id, 'savedBooks', book.likes.includes(user._id) ? 'remove' : 'add')
+                        : null;
+                    })
+                  }}
+                  >
                     <Icon
                       icon='heart'
                       intent={user && book.likes.includes(user._id) ? 'danger' : 'none'}
@@ -312,23 +357,28 @@ const SingleBook = (props: {
                                   icon='flag'
                                   text='Report comment'
                                   onClick={() => {
-                                    updateReportingItem({
-                                      parentId: comment._id,
-                                      parentType: acceptableTypes.comment,
-                                      author: user ? user._id : '',
-                                      reportType: 'inappropriate'
+                                    engagePrecheck(book, user, err => {
+                                      if (err) {
+                                        return;
+                                      }
+                                      updateReportingItem({
+                                        parentId: comment._id,
+                                        parentType: acceptableTypes.comment,
+                                        author: user ? user._id : '',
+                                        reportType: 'inappropriate'
+                                      })
+                                      updateAlertConfig({
+                                        type: 'reportBook',
+                                        text: `Are you sure you want to report this comment as Inappropriate?`
+                                      })
+                                      updateAlertProps({
+                                        cancelButtonText: 'Nevermind',
+                                        confirmButtonText: 'Report it',
+                                        icon: 'flag',
+                                        isOpen: true,
+                                        intent: 'danger',
+                                      });
                                     })
-                                    updateAlertConfig({
-                                      type: 'reportBook',
-                                      text: `Are you sure you want to report this comment as Inappropriate?`
-                                    })
-                                    updateAlertProps({
-                                      cancelButtonText: 'Nevermind',
-                                      confirmButtonText: 'Report it',
-                                      icon: 'flag',
-                                      isOpen: true,
-                                      intent: 'danger',
-                                    });
                                   }}
                               />
                             }
@@ -355,7 +405,6 @@ const SingleBook = (props: {
                 </ul>
                 <div className='keen_comments_meta'>
                   <small><Icon iconSize={11} icon='comment' /> {book.comments.length}</small>
-                  <small><Link to={{ type: 'SINGLEBOOK', payload: { id: book._id }}}>View All</Link></small>
                 </div>
                 <div className='keen_comments_Input'>
                   <ControlGroup fill={true} vertical={false} >

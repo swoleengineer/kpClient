@@ -6,7 +6,7 @@ import { flatten } from 'lodash';
 import { Select } from '@blueprintjs/select';
 import Book from '../../../book';
 
-const getUnique = (arr, prop) => arr.map(e => e[prop]).map((e, i, f) => f.indexOf(e) === i && i).filter(e => arr[e]).map(e => arr[e])
+const getUnique = (arr, prop) => arr.filter(e => e).map(e => e[prop]).map((e, i, f) => f.indexOf(e) === i && i).filter(e => arr[e]).map(e => arr[e])
 
 const BookList = (props: {
   listType: string;

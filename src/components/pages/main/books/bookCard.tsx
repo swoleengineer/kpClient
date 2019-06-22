@@ -8,22 +8,21 @@ import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { createComment, toggleUserBook, removeComment, createReport } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
-
+ type alertConfigtype = {
+    type: 'deleteComment' | 'reportComment' | 'reportBook';
+    text: string;
+  };
 const BookCard = (props: {
-  liv: IExpandedBook;
+  book: IExpandedBook;
   minimal: boolean;
-  books: IExpandedBook[];
   user: IUser;
   linkTo: Function
 }) => {
-  const { liv = undefined, user, linkTo, books } = props;
-  if (!liv || !books.length) {
-    return null;
-  }
+  const { book } = props;
   const [newComment, updateComment] = useState({
     author: {
       _id: undefined,
-      username: user ? user.username : 'tempUser'
+      username: props.user ? props.user.username : 'tempUser'
     },
     text: ''
   });
@@ -31,18 +30,20 @@ const BookCard = (props: {
   const [itemToReport, updateReportingItem] = useState<IReportRequest>({
     parentId: '',
     parentType: acceptableTypes.comment,
-    author: user ? user._id : '',
+    author: props.user ? props.user._id : '',
     reportType: 'spam'
   })
   const [alertProps, updateAlertProps] = useState<IAlertProps>();
-  const [alertConfig, updateAlertConfig] = useState<{
-    type: 'deleteComment' | 'reportComment' | 'reportBook';
-    text: string;
-  }>({
+ 
+  const [alertConfig, updateAlertConfig] = useState<alertConfigtype>({
     type: 'deleteComment',
     text: ''
   });
-  const book = books.find(livre => livre.gId === liv.gId)
+  const { linkTo } = props;
+  if (!book) {
+    return null;
+  }
+
   const submitNewComment = () => {
     const { text } = newComment;
     if (!text || !text.length) {
@@ -50,7 +51,7 @@ const BookCard = (props: {
     }
     createComment(
       {
-        author: user._id,
+        author: props.user._id,
         text,
         parentId: book._id,
         parentType: acceptableTypes.book,
@@ -90,7 +91,7 @@ const BookCard = (props: {
           updateReportingItem({
             parentId: '',
             parentType: acceptableTypes.comment,
-            author: user ? user._id : '',
+            author: props.user ? props.user._id : '',
             reportType: 'spam'
           });
           updateAlertConfig({ ...alertConfig, text: ''})
@@ -115,11 +116,11 @@ const BookCard = (props: {
           <Icon icon='more' />
           <Menu>
             <MenuItem
-              icon={user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
-              text={`Mark ${user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'unread' : 'as read'}`}
-              onClick={() => toggleUserBook(book._id, 'readBooks', user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add')}
+              icon={props.user && props.user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
+              text={`Mark ${props.user && props.user.readBooks.map(livre => livre._id).includes(book._id) ? 'unread' : 'as read'}`}
+              onClick={() => toggleUserBook(book._id, 'readBooks', props.user && props.user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove' : 'add')}
             />
-            <MenuItem icon='lightbulb' text='Add Topic' />
+            <MenuItem icon='lightbulb' text='Add Topic' onClick={() => console.log(book)}/>
             <Menu.Divider />
             <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
             <Menu.Divider />
@@ -130,7 +131,7 @@ const BookCard = (props: {
                 updateReportingItem({
                   parentId: book._id,
                   parentType: acceptableTypes.book,
-                  author: user ? user._id : '',
+                  author: props.user ? props.user._id : '',
                   reportType: 'inappropriate'
                 })
                 updateAlertConfig({
@@ -153,7 +154,7 @@ const BookCard = (props: {
       </span>
       <div className='row'>
         <div className='col-5 bookCard_book'>
-          <Book bookId={book._id} key={book._id} />
+          <Book liv={book}  />
           <Alert
             {...alertProps}
             onConfirm={() => alertFunctions[alertConfig.type]()}
@@ -164,18 +165,18 @@ const BookCard = (props: {
         </div>
         <div className='col-7 bookCard_details'>
           <ul className='bookCard_engage'>
-            <li onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(user ? user._id : '') ? 'remove' : 'add')}>
+            <li onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(props.user ? props.user._id : '') ? 'remove' : 'add')}>
               <Icon
                 icon='heart'
-                intent={book.likes.includes(user ? user._id : '') ? 'danger' : 'none'}
-              /> {book.likes.length}
+                intent={book.likes && book.likes.includes(props.user ? props.user._id : '') ? 'danger' : 'none'}
+              /> {book.likes && book.likes.length}
             </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {book.comments.length} </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {book.topics.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {book.comments && book.comments.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {book.topics && book.topics.length} </li>
           </ul>
           <div className='bookCard_commentsContainer'>
             <ul className='keen_comments_wrapper'>
-              {book.comments.sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0).map((comment, i, arr) => {
+              {book.comments && book.comments.sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0).map((comment, i, arr) => {
                 if (i > 0) {
                   return null;
                 }
@@ -187,7 +188,7 @@ const BookCard = (props: {
                         <span className='keen_comment_text'>{comment.text}</span>
                       </div>
                       <Menu>
-                        {user && user._id === comment.author._id
+                        {props.user && props.user._id === comment.author._id
                           ? <MenuItem
                               icon='trash'
                               text='Delete comment'
@@ -213,7 +214,7 @@ const BookCard = (props: {
                                 updateReportingItem({
                                   parentId: comment._id,
                                   parentType: acceptableTypes.comment,
-                                  author: user ? user._id : '',
+                                  author: props.user ? props.user._id : '',
                                   reportType: 'inappropriate'
                                 })
                                 updateAlertConfig({
@@ -235,7 +236,7 @@ const BookCard = (props: {
                   </li>
                 )
               })}
-              {book.comments.length === 0 && <li>
+              {book.comments && book.comments.length === 0 && <li>
                 <p className='bookCard_noComments'>
                   No comments
                   <br />
@@ -252,7 +253,7 @@ const BookCard = (props: {
               </Collapse>
             </ul>
             <div className='keen_comments_meta'>
-              <small><Icon iconSize={11} icon='comment' /> {book.comments.length}</small>
+              <small><Icon iconSize={11} icon='comment' /> {book.comments && book.comments.length}</small>
               <small><Link to={{ type: 'SINGLEBOOK', payload: { id: book._id }}}>View All</Link></small>
             </div>
             <div className='keen_comments_Input'>

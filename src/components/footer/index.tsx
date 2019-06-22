@@ -16,9 +16,8 @@ const Footer = () => {
           <div className='col-md-6 footer_site_links'>
             <small>Created by <a className='footer_se_link' href='https://swoleengineer.com' target='_blank' style={{ color: 'rgba(0,0,0,.5)'}}><img src={SwoleEngineerLogo} alt='Swole Engineer' /> <strong>Swole Engineer</strong></a></small>
             <ul>
-              <li><Link to={{}}>Content Policy</Link></li>
-              <li><Link to={{}}>Privacy Policy</Link></li>
-              <li><Link to={{}}>Terms of Use</Link></li>
+              <li><Link to={{ type: 'PRIVACY' }}>Privacy Policy</Link></li>
+              <li><Link to={{ type: 'TERMS' }}>Terms of Use</Link></li>
             </ul>
           </div>
         </div>

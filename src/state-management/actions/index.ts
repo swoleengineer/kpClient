@@ -5,3 +5,4 @@ export * from './question.actions';
 export * from './report.actions';
 export * from './topic.actions';
 export * from './user.actions';
+export * from './app.actions';

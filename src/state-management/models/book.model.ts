@@ -38,6 +38,7 @@ export interface IBook {
   topics: ITopicBodyObj[];
   views: number;
   affiliate_link: string;
+  amazon_link: string;
 }
 
 export interface IExpandedBook extends IBook {
@@ -47,6 +48,6 @@ export interface IExpandedBook extends IBook {
 export interface IBookState {
   books: IExpandedBook[];
   googleBooks: any[];
-  newBook: IBookRequest;
   selectedBook: IExpandedBook | {};
+  selectedTopics: ITopic[];
 }

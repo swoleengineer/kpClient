@@ -6,10 +6,11 @@ export * from './report.util';
 export * from './topic.util';
 export * from './user.util';
 export * from './store.util';
+export * from './app.util';
 
 import { LocationState, Location } from 'redux-first-router';
 import { IStore } from '../models';
-import { initialAuthorState, initialBookState, initialCommentState,
+import { initialAuthorState, initialBookState, initialCommentState, appInitialState,
   initialQuestionState, initialReportState, initialTopicState, initialUserState } from './';
 
 
@@ -28,6 +29,7 @@ export const initialLocationState: LocationState = {
 }
 
 export const initialAppState: IStore = {
+  app: appInitialState,
   page: 'main/home',
   location: initialLocationState,
   author: initialAuthorState,

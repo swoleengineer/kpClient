@@ -1,6 +1,7 @@
 export const questionActionTypes = {
   updateQuestions: 'QUESTION_UPDATE_ALL',
   updateSingleQuestion: 'QUESTION_UPDATE_ONE',
+  gotMoreQuestions: 'QUESTION_GOT_MORE',
   updateNewQuestion: 'QUESTION_UPDATE_NEW',
   updateNewQuestionTopics: 'QUESTION_UPDATE_NEW_TOPICS',
   clearNewQuestion: 'QUESTION_CLEAR_NEW',

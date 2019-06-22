@@ -38,8 +38,6 @@ const Header = (props: { user: IUserState, style: any, linkTo: Function }) => {
                     <span><Link to={{ type: 'LOGIN' }}>Login</Link></span> | <span><Link to={{ type: 'REGISTER' }}>Register</Link></span>
                   </div>}
               </div>
-              <Link to={{ type: 'NEWBOOK'}} className='bp3-button'>&nbsp;<Icon icon='add' />&nbsp;&nbsp;&nbsp; Add Book</Link>
-              {/* <Button icon='add' text={'Add Book'} /> */}
             </div>
           </div>
         </div>

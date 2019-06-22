@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './questions.css';
 import { connect } from 'react-redux';
-import { IStore, IExpandedBook, IQuestion } from 'src/state-management/models';
+import { IStore, IExpandedBook, IQuestion, AuthModalTypes } from '../../../../../state-management/models';
 import QuestionCard from '../../../../question';
 import Slider from 'react-slick';
 import { ButtonGroup, Button, Divider } from '@blueprintjs/core';
-import { redirect } from 'redux-first-router'
+import { redirect } from 'redux-first-router';
+import { showModal } from '../../../../../state-management/thunks';
 
 
 const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[]; toPage: Function }) => {
@@ -23,7 +24,7 @@ const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[];
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='add' onClick={() => toPage({ type: 'NEWQUESTION' })}>Ask <span className='hidden-sm'>Question</span></Button>
+                <Button icon='help' onClick={() => showModal(AuthModalTypes.question)}>Ask <span className='hidden-sm'>For Suggestion</span></Button>
                 <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLQUESTIONS' })}>All <span className='hidden-sm'>Questions</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>

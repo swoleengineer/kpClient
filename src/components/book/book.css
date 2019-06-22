@@ -31,8 +31,14 @@
 .bookLink {
   display: block;
   width: 100%;
-  height: 100%
+  height: 100%;
+  transition: all .2s ease;
 }
+.bookLink.loadingBook {
+  background-color: rgba(255,255,255, 0.63);
+  padding: 45px 0;
+}
+.bookLink.loadingBook 
 .bookMark {
   position: absolute;
   top: 0;

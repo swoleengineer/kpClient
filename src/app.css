@@ -69,10 +69,19 @@ button:focus {
   .hidden-xs {
     display: none;
   }
+  .centerOnSmall .singleBookWrapper {
+    margin: 0 auto;
+  }
 } 
 @media (max-width: 500px) {
   .hidden-sm {
     display: none
+  }
+  .centerOnSmall .singleBookWrapper {
+    margin: 0 auto;
+  }
+  .bookResultsWrapper {
+    flex-direction: column
   }
 }
 @media (min-width: 768px) {
@@ -103,16 +112,23 @@ button:focus {
   outline: none;
 }
 .authModalWrapper .authModalCard {
-  top: 15%;
-  left: 40%;
+  position: relative;
+  margin: auto;
 }
-.authModalWrapper .authModalCard h6 {
+.authModalWrapper .authModalCard h6, .authModalWrapper .authModalCard h5 {
   color: #5c7080;
-  margin: 15px 0
+  margin: 15px 0 25px;
 }
 .authModalCard header.authModalHeader {
   display: block;
   position: relative;
+}
+.authModalCard header.authModalHeader strong, .authModalCard header.authModalHeader small {
+  display: block;
+  margin: 5px 0;
+}
+.authModalCard header.authModalHeader small:last-child {
+  font-weight: 200
 }
 .authModalCard header.authModalHeader .authModalDismissBtn {
   position: absolute;

@@ -16,6 +16,8 @@ const routes: {[key: string]: string } = {
   SINGLEQUESTION: 'main/questions/single',
   PROFILE: 'main/profile',
   MYPAGE: 'main/profile',
+  PRIVACY: 'main/privacy',
+  TERMS: 'main/termsOfService',
   [NOT_FOUND]: 'notFound',
 }
 

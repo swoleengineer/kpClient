@@ -36,19 +36,6 @@ export const bookReducer = (state: IBookState = initialBookState, action: {
           ? action.payload
           : state.selectedBook
       };
-    case types.updateNewBook:
-      return {
-        ...state,
-        newBook: {
-          ...state.newBook,
-          ...action.payload
-        }
-      };
-    case types.clearNewBook:
-      return {
-        ...state,
-        newBook: initialBookState.newBook
-      };
     case types.selectBook:
       return {
         ...state,
@@ -114,6 +101,18 @@ export const bookReducer = (state: IBookState = initialBookState, action: {
               : state.selectedBook.likes.filter(like => like !== action.payload.like)
           }
           : state.selectedBook
+      };
+    case types.filterTopics:
+      return {
+        ...state,
+        selectedTopics: action.payload
+      };
+    case types.updateFilterTopics:
+      return {
+        ...state,
+        selectedTopics: action.payload.type === 'add'
+          ? state.selectedTopics.filter(topic => topic.name !== action.payload.data.name).concat(action.payload.data)
+          : state.selectedTopics.filter(topic => topic.name !== action.payload.data.name)
       };
     default:
       return state;

@@ -52,10 +52,12 @@ export const questionGetManyUrl = (topicId: string): string => `/question/getMan
 export const questionCreateUrl: string = `/question/startCreating`;
 export const questionUpdateUrl = (id: string): string => `/question/update/${id}`;
 export const questionDeleteUrl = (id: string): string => `/question/single/${id}`;
-export const questionAddTopicUrl = (question: string, topicId: string): string => `/question/addTopic/${question}/${topicId}`;
+export const questionAddTopicUrl = (question: string): string => `/question/addTopic/${question}`;
 export const questionRmTopic = (question: string, topicId: string): string => `/question/rmTopic/${question}/${topicId}`;
 export const questionToggleAgree = (question: string, topicId: string): string => `/question/toggleAgree/${question}/${topicId}`;
 export const questionAllOfThem: string = `/question/getAll`;
+export const questionQueryTopicSortUrl: string = `/question/queryTopicSort`;
+export const questionSearchUrl: string = `/question/search`;
 
 // Report '/report
 export const reportCreateUrl: string = `/report/new`;

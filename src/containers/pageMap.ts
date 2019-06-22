@@ -11,6 +11,8 @@ import ResetPw from '../components/pages/auth/forgotPw/reset';
 import SingleQuestion from '../components/pages/main/questions/single';
 import AllQuestions from '../components/pages/main/questions/all';
 import Profile from '../components/pages/main/profile';
+import Privacy from '../components/pages/main/privacy';
+import Terms from '../components/pages/main/termsOfService';
 
 export default {
   'main/home': Home,
@@ -25,5 +27,7 @@ export default {
   'main/books/single': SingleBook,
   'main/questions/all': AllQuestions,
   'main/questions/single': SingleQuestion,
-  'main/profile': Profile
+  'main/profile': Profile,
+  'main/privacy': Privacy,
+  'main/termsOfService': Terms
 }

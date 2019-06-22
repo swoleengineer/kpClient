@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { IExpandedQuestion, IExpandedBook, IUser, IStore, ITopic, IComment, IReportRequest, acceptableTypes } from '../../../../state-management/models';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
-import { IAlertProps, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Tag, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
-import { createComment, createReport, removeComment, 
-  addTopicsToBook, toggleTopicAgreeBook, searchBooks } from '../../../../state-management/thunks';
+import { IAlertProps, Popover, Menu, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Tag, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
+import { createComment, createReport, removeComment, addTopicsToQuestion,
+  toggleTopicAgreeQuestion, searchBooks, engagePrecheck } from '../../../../state-management/thunks';
 import { keenToaster } from '../../../../containers/switcher';
 import Link from 'redux-first-router-link';
 import TopicBrowse from '../../auth/topic/topicBrowse';
 import moment from 'moment';
 import './questions.css';
 import { bookFilter, getAuthorName } from '../../../../state-management/utils/book.util'
+import KPBOOK from '../../../../assets/kp_book.png';
 
 
 const SingleQuestionPage = (props: {
@@ -64,6 +65,17 @@ const SingleQuestionPage = (props: {
   const submitNewComment = () => {
     const { text, suggested_book } = newComment;
     if (!text || !text.length || !suggested_book) {
+      return;
+    }
+    const suggestedBooks = question.comments && question.comments.length
+      ? question.comments.map(comment => comment.suggested_book.gId)
+      : [];
+    if (suggestedBooks.includes(suggested_book.gId)) {
+      keenToaster.show({
+        message: 'This book has already been suggested by another user.',
+        icon: 'error',
+        intent: 'danger'
+      });
       return;
     }
     createComment(
@@ -158,23 +170,28 @@ const SingleQuestionPage = (props: {
               icon='flag'
               text='Report Question' 
               onClick={() => {
-                updateReportingItem({
-                  parentId: question._id,
-                  parentType: acceptableTypes.question,
-                  author: user ? user._id : '',
-                  reportType: 'inappropriate'
+                engagePrecheck(null, true, err => {
+                  if (err) {
+                    return;
+                  }
+                  updateReportingItem({
+                    parentId: question._id,
+                    parentType: acceptableTypes.question,
+                    author: user ? user._id : '',
+                    reportType: 'inappropriate'
+                  })
+                  updateAlertConfig({
+                    type: 'reportComment',
+                    text: `Are you sure you want to report this question as Inappropriate?`
+                  })
+                  updateAlertProps({
+                    cancelButtonText: 'Nevermind',
+                    confirmButtonText: 'Report it',
+                    icon: 'flag',
+                    isOpen: true,
+                    intent: 'danger',
+                  });
                 })
-                updateAlertConfig({
-                  type: 'reportComment',
-                  text: `Are you sure you want to report this question as Inappropriate?`
-                })
-                updateAlertProps({
-                  cancelButtonText: 'Nevermind',
-                  confirmButtonText: 'Report it',
-                  icon: 'flag',
-                  isOpen: true,
-                  intent: 'danger',
-                });
               }}
             />
           </ul>
@@ -203,7 +220,7 @@ const SingleQuestionPage = (props: {
                     icon='plus'
                     fill={true}
                     onClick={() => {
-                      addTopicsToBook(book._id, topicsToAdd)
+                      addTopicsToQuestion(question._id, topicsToAdd)
                         .then(() => adjustTopics([]))
                         .catch(() => adjustTopics([]))
                     }}
@@ -215,15 +232,15 @@ const SingleQuestionPage = (props: {
             </Collapse>
             <TopicBrowse
               processNewItem={(topic, event) => {
-                if (book.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
+                if (question.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
                   keenToaster.show({
-                    message: `${topic.name} already in this book.`,
+                    message: `${topic.name} already in this Request.`,
                     intent: 'warning',
                     icon: 'error'
                   })
                   return;
                 }
-                adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id).concat(topic))}
+                adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
               }
               processRemove={() => console.log('removed topic')}
             />
@@ -241,24 +258,33 @@ const SingleQuestionPage = (props: {
                   marginBottom: '10px'
                 }}
                 minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
-                onClick={() => user
-                  ? toggleTopicAgreeBook(book._id, topic._id)
-                      .then(
-                        () => console.log('request successful. Toggled agree status'),
-                        () => console.log('request failed toggling topic agree status')
-                      )
-                  : null}
+                onClick={() => {
+                  engagePrecheck(null, true, err => {
+                    if (err) {
+                      return;
+                    }
+                    return user
+                      ? toggleTopicAgreeQuestion(question._id, topic._id)
+                          .then(
+                            () => console.log('request successful. Toggled agree status'),
+                            () => console.log('request failed toggling topic agree status')
+                          )
+                      : null
+                  })
+                  
+                }}
               >
                 {topic.topic.name}
               </Tag>
             )
           })}
           </div>}
+          
           <div className='row questionEngagement'>
-            <div className='col-1'>
-              <Button icon='book' minimal={true}>{question.comments.length}</Button>
+            <div className='col-4'>
+              <span style={{ marginTop: '7px', display: 'block'}}>{question.comments.length} Suggestions</span>
             </div>
-            <div className='col-11 text-right'>
+            <div className='col-8 text-right'>
               <ButtonGroup>
                 <Button
                   minimal={true}
@@ -397,6 +423,8 @@ const SingleQuestionPage = (props: {
                       }
                     />
                   </ControlGroup>
+                  {bookfilterText.length > 0 && <small style={{margin: '0 0 0 15px'}}>Click Enter to search...</small>}
+                  
                 </div>
               </div>
               <div className='row'>
@@ -432,8 +460,89 @@ const SingleQuestionPage = (props: {
           </Collapse>
           <div className='singleQuestion_commentHolder'>
             {question.comments.length > 0
-              ? <div>{question.comments.map((comment, i) => <div key={i}>{comment.created}</div>)}</div>
-              : <div>No commets here </div>
+              ? <ul className='keen_comments_wrapper'>
+                {question.comments.map((comment, i) => {
+                  const [ picture = { link: undefined}] = comment.suggested_book.pictures || [];
+                  return (
+                    <li key={i} className='questionComment'>
+                        <Popover>
+                          <div className='keen_comments_details'>
+                            
+                            <div className='comment_book_container'>
+                              <div className='comment_book_pic'>
+                                <img src={`${picture.link || KPBOOK}`} />
+                              </div>
+                              <div className='comment_book_info' >
+                                <strong>{comment.suggested_book.title}</strong>
+                                {comment.suggested_book.subtitle && <span>{comment.suggested_book.subtitle}</span>}
+                                <small>{getAuthorName(comment.suggested_book)}</small>
+                                <hr />
+                                <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
+                                <span className='keen_comment_text'>{comment.text}</span>
+                              </div>
+                            </div>
+                            
+                          </div>
+                          <Menu>
+                            {user && user._id === comment.author._id
+                              ? <MenuItem
+                                  icon='trash' 
+                                  text='Delete comment'
+                                  onClick={() => {
+                                    updateDeletingComment(comment);
+                                    updateAlertConfig({
+                                      type: 'deleteComment',
+                                      text: 'Are you sure you want to delete this comment?'
+                                    })
+                                    updateAlertProps({
+                                      cancelButtonText: 'Nevermind',
+                                      confirmButtonText: 'Delete it',
+                                      icon: 'trash',
+                                      isOpen: true,
+                                      intent: 'danger',
+                                    })
+                                  }}
+                              />
+                              : <MenuItem
+                                  icon='flag'
+                                  text='Report comment'
+                                  onClick={() => {
+                                    engagePrecheck(book, user, err => {
+                                      if (err) {
+                                        return;
+                                      }
+                                      updateReportingItem({
+                                        parentId: comment._id,
+                                        parentType: acceptableTypes.comment,
+                                        author: user ? user._id : '',
+                                        reportType: 'inappropriate'
+                                      })
+                                      updateAlertConfig({
+                                        type: 'reportBook',
+                                        text: `Are you sure you want to report this comment as Inappropriate?`
+                                      })
+                                      updateAlertProps({
+                                        cancelButtonText: 'Nevermind',
+                                        confirmButtonText: 'Report it',
+                                        icon: 'flag',
+                                        isOpen: true,
+                                        intent: 'danger',
+                                      });
+                                    })
+                                  }}
+                              />
+                            }
+                          </Menu>
+                        </Popover> 
+                      </li>
+                  )
+                })}
+              </ul>
+              : <p className='bookCard_noComments'>
+                  No Suggestions
+                  <br />
+                  <small style={{ display: 'block'}}>Add one above.</small>
+                </p>
             }
           </div>
         </div>

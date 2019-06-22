@@ -42,7 +42,9 @@
 .questionCardWrapper .questionCard_content .questionCard_meta .questionCard_meta_more:hover {
   cursor: pointer;
 }
-.questionCardWrapper .questionCard_content .questionCard_details {}
+.questionCardWrapper .questionCard_content .questionCard_details {
+  height: 61px;
+}
 .questionCardWrapper .questionCard_content .questionCard_details .questionCard_details_title {
   font-weight: 500;
   font-size: 20px;
@@ -60,7 +62,7 @@
   padding: 5px;
 }
 .questionCardWrapper .questionCard_content .questionCard_comment {
-  margin-top: 10px;
+  margin: 10px 0 15px;
 }
 
 @media (max-width: 500px) {

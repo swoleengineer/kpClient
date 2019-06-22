@@ -2,21 +2,26 @@ import { store } from '../../store';
 import { IBookRequest, ITopic, acceptableTypes, IBook, IExpandedBook, IStore } from '../models';
 import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort,
   postSearchManyForManyComments, getSearchGoogleBooks, getBookSearch, postCreateBookFromInt  } from '../../config';
-import {  bookActionTypes as types, userActionTypes as userTypes } from '../actions';
+import {  bookActionTypes as types, userActionTypes as userTypes, appActionTypes as appTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
-
+import { transformBook, bookSorts } from '../utils';
 const AppToaster = Toaster.create({
   className: 'keenpagesToaster',
 })
 
 
-export const engagePrecheck = (book: IBook | IExpandedBook, auth: boolean = true, cb) => {
+
+
+export const engagePrecheck = (book: IBook | IExpandedBook | null, auth: boolean = true, cb) => {
   const { user: { loggedIn, user }} = store.getState() as IStore;
   const { active = false } = book || {};
   console.log('precheck called')
   if (auth && (!loggedIn || !user || !user.profile)) {
     // not logged in, show popup
+    AppToaster.show({
+      message: `Let's get you logged in first...`
+    });
     store.dispatch({
       type: userTypes.toggleAuthModal,
       payload: true
@@ -25,33 +30,28 @@ export const engagePrecheck = (book: IBook | IExpandedBook, auth: boolean = true
       type: 'auth',
       message: 'You must be logged in to perform this action'
     }, null);
-    if (active) {
+    if (active || !book || book === undefined) {
       return;
     }
   }
-  if (!active) {
+  if (!active && book) {
     postCreateBookFromInt(book).then(
       (res: any) => cb(null, res.data),
       (err: any) => cb(err, null)
-    )
+    );
+    return;
   }
+  cb(null, book);
 }
 
 export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
   (response: any) => {
     const { data: { items: payload } = { items: []} } = response;
     store.dispatch({
-      type: types.setBooksFromGoogle,
+      type: appTypes.setBookSearchResults,
       payload: payload.map((book, i) => ({
-        ...book.volumeInfo,
+        ...transformBook(book),
         _id: `000${i}`,
-        likes: [],
-        topics: book.categories && book.categories.length 
-          ? book.categories.map((category, index) => ({
-              _id: `${index}`,
-              name: category
-            }))
-          : []
       }))
     });
   },
@@ -130,71 +130,74 @@ export const addBookFromInt = (book) => postCreateBookFromInt(book).then(
     return Promise.reject(err);
   }
 )
-export const queryMoreBooks = (sort: { [key: string]: any }, topics: string[] = [], already: string[] = []) => postQueryBookByTopicAndSort(sort, topics, already).then(
-  (res: any) => {
-    store.dispatch({
-      type: types.gotMoreBooks,
-      payload: res.data.data.map(book => ({
-        ...book,
-        comments: []
+export const queryMoreBooks = (sort: { [key: string]: any } = bookSorts[0].sort, topics: string[] = [], already: string[] = []) => {
+  const { book: {  books }} = store.getState() as IStore;
+  return postQueryBookByTopicAndSort(sort, topics, already && already.length ? already : books.map(book => book.gId) || []).then(
+    (res: any) => {
+      store.dispatch({
+        type: types.gotMoreBooks,
+        payload: res.data.data.map(book => ({
+          ...book,
+          comments: []
+        }))
+      })
+      return res.data.data.map(book => ({
+        parentType: acceptableTypes.book,
+        parentId: book._id
       }))
-    })
-    return res.data.data.map(book => ({
-      parentType: acceptableTypes.book,
-      parentId: book._id
-    }))
-  },
-  (err: any) => {
-    let message;
-    try {
-      message = err.response.data.message
-    } catch {
-      message = 'Could not get the books you requested.'
-    }
-    AppToaster.show({
-      message,
-      intent: 'danger',
-      icon: 'error'
-    })
-  }
-).then(
-  (bookIds: any) => {
-    if (!bookIds.length) {
-      return;
-    }
-    return postSearchManyForManyComments({ allRequests: bookIds }).then(
-      (res: any) => store.dispatch({
-          type: types.addComments,
-          payload: res.data
-        }),
+    },
     (err: any) => {
       let message;
       try {
         message = err.response.data.message
       } catch {
-        message = 'Could not get comments for your books.'
+        message = 'Could not get the books you requested.'
       }
       AppToaster.show({
         message,
         intent: 'danger',
         icon: 'error'
       })
-    })
-  },
-  err => {
-    let message;
-    try {
-      message = err.response.data.message
-    } catch {
-      message = 'Could not get the books you requested.'
     }
-    AppToaster.show({
-      message,
-      intent: 'danger',
-      icon: 'error'
-    })
-  }
-)
+  ).then(
+    (bookIds: any) => {
+      if (!bookIds.length) {
+        return;
+      }
+      return postSearchManyForManyComments({ allRequests: bookIds }).then(
+        (res: any) => store.dispatch({
+            type: types.addComments,
+            payload: res.data
+          }),
+      (err: any) => {
+        let message;
+        try {
+          message = err.response.data.message
+        } catch {
+          message = 'Could not get comments for your books.'
+        }
+        AppToaster.show({
+          message,
+          intent: 'danger',
+          icon: 'error'
+        })
+      })
+    },
+    err => {
+      let message;
+      try {
+        message = err.response.data.message
+      } catch {
+        message = 'Could not get the books you requested.'
+      }
+      AppToaster.show({
+        message,
+        intent: 'danger',
+        icon: 'error'
+      })
+    }
+  )
+}
 
 export const toggleTopicAgreeBook = (bookId: string, topicId: string) => putToggleTopicAgree(bookId, topicId).then(
   (res: any) => {

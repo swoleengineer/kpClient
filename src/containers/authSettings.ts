@@ -30,9 +30,12 @@ export const authSettings = {
   question: {
     cardWidth: 'col-md-5',
     topPadding: '10%',
-    pageTitle: 'Ask Question',
+    pageTitle: 'Ask Other Readers',
     page: 'Get book suggestions',
-    pageDescription: 'Ask for books to teach you something you want to learn.'
+    pageDescription: 'Ask other readers for books that covers a topic.',
+    style: {
+      maxWidth: '450px'
+    }
   },
   forgot: {
     cardWidth: 'col-md-4',

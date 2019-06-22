@@ -23,14 +23,40 @@
   margin-bottom: 25px;
   border-radius: 5px;
   position: sticky;
-  top: 50px;
+  top: 40px;
   z-index: 19;
 }
 .allPage_topSettings_wrapper .allPage_topSettings {
   background: transparent;
 }
+.topTopicsContainer {
+  margin-bottom: 10px;
+  transition: all .2s ease;
+}
+.topTopicsExpanded.topTopicsContainer {
+  background-color: rgba(167, 182, 194, 0.85);
+  margin: 0 -10px 20px;
+  padding: 10px 10px 0;
+}
 .allBookSearchInput {
   margin: -10px -15px 20px;
+}
+.allSearchOptions {
+  display: none;
+}
+.allSearchOptions span {
+  font-weight: 300;
+  font-size: 11px;
+  padding:2px 5px;
+  transition: all .2s ease;
+  text-transform: uppercase;
+}
+.allSearchOptions span:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+.allSearchOptions span.selectedSearchOption {
+  font-weight: 500
 }
 .singleBookContainer {
   display: block;
@@ -108,9 +134,43 @@
   margin: 0 0 60px;
   display: block;
 }
+.singleBook_actionsWrapper .keen_comments_wrapper {
+  margin-bottom: 75px;
+}
 .keen_comments_wrapper li {
   display: block;
   margin-bottom: 5px;
+  margin-top: 15px;
+}
+.keen_comments_wrapper li.questionComment {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  padding: 0 0 10px;
+  margin-bottom: 15px;
+}
+.keen_comments_wrapper li.questionComment .bp3-popover-wrapper,
+.keen_comments_wrapper li.questionComment .bp3-popover-wrapper .bp3-popover-target {
+  width: 100%
+}
+.keen_comments_wrapper li.questionComment .comment_book_container {
+  overflow: hidden;
+  width: 100%;
+}
+.keen_comments_wrapper li.questionComment .comment_book_container .comment_book_pic {
+  float: left;
+  width: 15%;
+  display: block;
+  margin-right: 15px;
+}
+
+.keen_comments_wrapper li.questionComment .comment_book_container .comment_book_pic img {
+  width: 100%;
+  display: block;
+}
+
+.keen_comments_wrapper li.questionComment .comment_book_container .comment_book_info {
+  display: block;
+  float: left;
+  width: calc(80% - 16px)
 }
 .keen_comments_wrapper li .keen_comments_avatar {
   float: left;
@@ -121,6 +181,9 @@
 .keen_comments_wrapper li .keen_comments_details {
   display: block;
   width: 100%
+}
+.keen_comments_wrapper li .keen_comments_details strong {
+  display: block
 }
 
 .keen_comments_wrapper li .keen_comments_details .keen_comment_text {
@@ -177,9 +240,14 @@
 }
 .singleBookPage .singleBookWrapper {}
 .singleBook_top_topics_wrapper {}
+.singleBook_top_topics_wrapper h5 {
+  color: rgba(0,0,0,.65);
+  font-weight: 600;
+  margin-bottom: 15px;
+}
 .singleBook_top_topics_wrapper p {
   display: block;
-  margin-top: -20px;
+  margin-top: -10px;
   border-bottom: 1px solid rgba(0,0,0,.1);
   padding-bottom: 10px;
 }

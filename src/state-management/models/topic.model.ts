@@ -1,7 +1,7 @@
 import { IUser } from './';
 
 export interface ITopicBodyObj {
-  topic: string | ITopic;
+  topic: ITopic;
   agreed: Array<IUser | string>;
   created: Date;
   _id: string;

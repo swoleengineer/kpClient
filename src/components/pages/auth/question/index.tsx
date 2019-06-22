@@ -23,11 +23,12 @@ const QuestionForm = (props: {
   updateField: Function;
   clearForm: Function;
   updateTopics: Function;
-  books: IExpandedBook[]
+  books: IExpandedBook[];
+  style
 }) => {
   const [formErrors, updateErrors] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' }>>([]);
   const [formComplete, updateStatus] = useState(false);
-  const { newQuestion, goToNext, nextPayload, clearForm, updateField, updateTopics, books } = props;
+  const { newQuestion, goToNext, nextPayload, clearForm, updateField, updateTopics, books, style } = props;
   const [finalQuestion, updateFinal] = useState(newQuestion);
   const processField = e => {
     const field = e.target.id;
@@ -144,6 +145,7 @@ const QuestionForm = (props: {
             <Button
               text='Ask Question'
               fill={true}
+              large={true}
               rightIcon='chevron-right'
               minimal={true}
               onClick={() => processForm()}
@@ -152,7 +154,7 @@ const QuestionForm = (props: {
           </div>
         </div>
       </Collapse>
-      <Collapse isOpen={formComplete}><Question question={finalQuestion} books={books} responsive={false}/></Collapse>
+      <Collapse isOpen={formComplete}><Question style={style} question={finalQuestion} books={books} responsive={false}/></Collapse>
     </div>
   )
 }

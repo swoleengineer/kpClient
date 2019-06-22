@@ -1,95 +1,90 @@
 import React from 'react';
-import { Suggest, ItemRenderer } from '@blueprintjs/select';
-import { MenuItem, Icon, Divider, Tag } from '@blueprintjs/core';
-import { ITopic, IStore } from '../../../../../state-management/models';
-import { filterTopic, areTopicsEqual } from '../../../../../state-management/utils';
+import { InputGroup, ControlGroup, Icon, Tag, Collapse } from '@blueprintjs/core';
+import { ITopic, IStore, IAppState, HomeSearchCategories, AuthModalTypes } from '../../../../../state-management/models';
 import { connect } from 'react-redux';
 import Slider from 'react-slick';
+import { appActionTypes, bookActionTypes as bookTypes } from '../../../../../state-management/actions';
+import { searchGoogle, showModal, queryMoreBooks } from '../../../../../state-management/thunks';
+import { redirect } from 'redux-first-router'
 
-const TopicSuggest = Suggest.ofType<ITopic>();
 
-export const renderTopic: ItemRenderer<ITopic> = (topic, { handleClick, modifiers, query }) => {
-  if (!modifiers.matchesPredicate) {
-      return null;
+const Hero = (props: {
+  topics: Array<ITopic>;
+  home: IAppState['home'];
+  updateSearch: Function;
+  updateCategory: Function;
+  updateFilteredTopics: Function;
+  linkTo: Function;
+}) => {
+  const { updateFilteredTopics, linkTo, topics, home: { searchText, selectedSearchCategory }, updateSearch, updateCategory } = props;
+  const processText = (force: boolean = false) => {
+    if (!force && (searchText.length < 3 || selectedSearchCategory === HomeSearchCategories.topic)) {
+      return;
+    }
+    searchGoogle(searchText).then(
+      () => console.log(''),
+      () => console.log('')
+    )
   }
   return (
-      <MenuItem
-          active={modifiers.active}
-          disabled={modifiers.disabled}
-          key={topic._id}
-          onClick={handleClick}
-          text={topic.name}
-          icon='tag'
-          label={query}
-      />
-  );
-};
-const Hero = (props: { topics: Array<ITopic> }) => {
-  const { topics } = props;
-  const inputProps = {
-    placeholder: 'Search a skill...',
-    rightElement: <Icon icon='search' iconSize={25} style={{ color: '#5c7080'}} />,
-    large: true,
-  }
-  const suggestProps = {
-    allowCreate: true,
-    closeOnSelect: true,
-    items: topics,
-    minimal: false,
-    openOnKeyDown: true,
-    resetOnClose: false,
-    resetOnSelect: true,
-    itemPredicate: filterTopic,
-    itemRenderer: renderTopic,
-    itemsEqual: areTopicsEqual,
-    inputProps
-  }
-  
-
-  return (
-  <section className='heroSection'>
-    <div className='container'>
+  <section className='heroSection' style={{ ...(searchText.length > 0 ? { marginBottom: '0px', position: 'sticky', top: '43px', zIndex: 19, backgroundColor: '#f4f6f7'} : {})}}>
+    <div className='container'  style={{ ...(searchText.length > 0 ? { background: 'none'} : {})}} >
       <div className='row'>
-        <div className='col-12'>
-          <h2>Find a book that teaches you (x).</h2>
-        </div>
+        <Collapse isOpen={!searchText.length} transitionDuration={25}>
+          <div className='col-12'>
+            <h2>Find a book that teaches you (x).</h2>
+          </div>
+          <div className='col-md-8'>
+            <p className='heroDescription'>Search and browse books by topics, share what you've learned with other readers.</p>
+          </div>
+        </Collapse>
         <div className='col-md-8'>
-          <p className='heroDescription'>Search a skill you want to learn, and we will show you books that have taught others the same thing.</p>
-        </div>
-        <div className='col-md-8'>
-          <div className='heroSearchWrapper'>
-            <TopicSuggest
-              {...suggestProps}
-              inputValueRenderer={(topic: ITopic) => topic.name}
-              onItemSelect={topic => console.log('value selected', topic)}
-              createNewItemFromQuery={text => {
-                const newTopic: ITopic = {
-                  _id: `${new Date().getTime()}`,
-                  active: true,
-                  similar: [],
-                  name: text,
-                  description: 'this is a whole lot of stuff'
+          <div className='heroSearchWrapper' style={{ ...(searchText.length > 0 ? { marginBottom: '0px'} : {})}} >
+            <div className='searchSelectors'>
+              <span
+                className={selectedSearchCategory === HomeSearchCategories.book ? 'searchSelector_selected' : ''}
+                onClick={() => selectedSearchCategory === HomeSearchCategories.book ? null : updateCategory(HomeSearchCategories.book)}
+              >
+                Books
+              </span>
+              <span
+                className={selectedSearchCategory === HomeSearchCategories.topic ? 'searchSelector_selected' : ''}
+                onClick={() => selectedSearchCategory === HomeSearchCategories.topic ? null : updateCategory(HomeSearchCategories.topic)}
+              >
+                Topics
+              </span>
+            </div>
+            <ControlGroup fill={true}>
+              <InputGroup
+                placeholder={`Search for a ${selectedSearchCategory}...`}
+                onKeyUp={$event => {
+                  if ($event.keyCode === 13) {
+                    processText(true);
+                  }
+                }}
+                onChange={e => {
+                  updateSearch(e.target.value);
+                  processText();
+                }}
+                rightElement={
+                  <Icon
+                    icon='search'
+                    iconSize={25}
+                    style={{ color: '#5c7080'}}
+                    onClick={() => {
+                      processText(true)
+                    }}
+                  />
                 }
-                // setTopics(componentTopics.concat(newTopic));
-                return newTopic;
-              }}
-              createNewItemRenderer={(query, active, handleClick) => {
-                return <MenuItem
-                  icon='add'
-                  text={`Add skill: '${query}'`}
-                  active={active}
-                  onClick={() => null}
-                  shouldDismissPopover={false}
-                />
-              }}
-            />
-            <Divider />
-            <button className='heroAddBookBtn'>Add Book</button>
+              />
+            </ControlGroup>
+            {searchText.length > 0 && <span className='searchBoxText'>Can't find what you're looking for? <strong onClick={() => showModal(AuthModalTypes.question)}>Ask for a Suggestion</strong></span>}
+            
           </div>
         </div>
       </div>
     </div>
-    <div className='heroTopicsWrapper'>
+    {!searchText.length && <div className='heroTopicsWrapper'>
       <div className='container'>
         <span className='heroTopicsTitle'>
           Topics: &nbsp;&nbsp;
@@ -110,19 +105,46 @@ const Hero = (props: { topics: Array<ITopic> }) => {
             {topics
               .reduce((acc, curr) => [...acc, curr, ``], [])
               .map((topic: ITopic, i) => topic
-                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.name}</Tag>
+                ? <Tag
+                  icon='lightbulb'
+                  minimal={false}
+                  interactive={true}
+                  key={topic._id}
+                  onClick={() => {
+                    updateFilteredTopics({
+                      type: 'add',
+                      data: topic
+                    });
+                    linkTo({ type: 'ALLBOOKS' });
+                    queryMoreBooks(undefined, [topic._id], undefined).then(
+                      () => {},
+                      () => console.log('error retrieving books')
+                    )
+                  }}
+                >
+                  {topic.name}
+                </Tag>
                 : <span key={i}>&nbsp;&nbsp;</span>)
             }
           </Slider>}
         </div>
       </div>
-    </div>
+    </div>}
+  
   </section>
   );
 }
 
 const mapStateToProps = (state: IStore) => ({
-  topics: state.topic.allTopics
+  topics: state.topic.allTopics,
+  home: state.app.home
+});
+
+const mapDispatch = dispatch => ({
+  updateSearch: payload => dispatch({ type: appActionTypes.updateSearchText, payload }),
+  updateCategory: payload => dispatch({ type: appActionTypes.updateSearchCategory, payload }),
+  updateFilteredTopics: payload => dispatch({ type: bookTypes.updateFilterTopics, payload }),
+  linkTo: payload => dispatch(redirect(payload))
 })
 
-export default connect(mapStateToProps)(Hero);
+export default connect(mapStateToProps, mapDispatch)(Hero);

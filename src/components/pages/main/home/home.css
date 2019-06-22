@@ -35,7 +35,6 @@
   color: rgb(24, 32, 38);
 }
 .heroSearchWrapper {
-  display: flex;
   margin-bottom: 50px;
 }
 .heroSearchWrapper .bp3-popover-wrapper {
@@ -43,11 +42,10 @@
 }
 .heroSearchWrapper input,
 .heroSearchWrapper .bp3-popover-wrapper,
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target,
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group  {
+.heroSearchWrapper .bp3-input-group  {
   width: 100%
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input, .heroSearchWrapper input {
+.heroSearchWrapper .bp3-input-group .bp3-input, .heroSearchWrapper input {
   border-radius: 5px;
   background-color: white;
   border: 3px solid rgba(167, 182, 194, 1);;
@@ -60,11 +58,11 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus, .heroSearchWrapper input:focus {
+.heroSearchWrapper .bp3-input-group .bp3-input:focus, .heroSearchWrapper input:focus {
   box-shadow: 0 8px 17px rgba(0, 0, 0, 0.08);
 }
 
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input-action {
+.heroSearchWrapper .bp3-input-group .bp3-input-action {
   width: 100px;
   background-color: rgba(167, 182, 194, 0.13);
   border-radius: 0 5px 5px 0;
@@ -77,11 +75,11 @@
   color: #696969;
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group:hover .bp3-input,
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group:hover .bp3-input-action {
+.heroSearchWrapper .bp3-input-group:hover .bp3-input,
+.heroSearchWrapper .bp3-input-group:hover .bp3-input-action {
   border-color:#5c7080;
 }
-.heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input:focus + .heroSearchWrapper .bp3-popover-wrapper .bp3-popover-target .bp3-input-group .bp3-input-action {
+.heroSearchWrapper .bp3-input-group .bp3-input:focus + .heroSearchWrapper .bp3-input-group .bp3-input-action {
   background: white
 }
 .heroAddBookBtn {
@@ -127,4 +125,38 @@
   display: block;
   float: left;
   width: calc(100% - 60px);
+}
+.searchSelectors {
+  padding: 0 0 0 15px;
+  display: flex;
+}
+.searchSelectors span {
+  display: block;
+  margin-right: 10px;
+  padding: 3px 3px 0;
+  font-weight: 300;
+  text-transform: uppercase;
+  transition: all .15 ease
+}
+.searchSelectors span:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+.searchSelectors span.searchSelector_selected {
+  font-weight: 500
+}
+.bookResultsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.searchBoxText {
+  padding: 0 0 0 15px;
+  font-weight: 300;
+}
+.searchBoxText strong {
+  transition: all .15s ease;
+}
+.searchBoxText strong:hover {
+  opacity: .7;
+  cursor: pointer;
 }

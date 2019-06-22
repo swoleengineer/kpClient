@@ -6,3 +6,4 @@ export * from './report.reducer';
 export * from './topic.reducer';
 export * from './user.reducer';
 export * from './page.reducer';
+export * from './app.reducer';

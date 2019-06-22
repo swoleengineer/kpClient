@@ -21,7 +21,6 @@ const BooksSection = ({ books, toPage }) => {
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='add' onClick={() => toPage({ type: 'NEWBOOK' })}>Add <span className='hidden-sm'>Book</span></Button>
                 <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLBOOKS' })}>All <span className='hidden-sm'>Books</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>
@@ -69,7 +68,7 @@ const BooksSection = ({ books, toPage }) => {
                 }
               }]}
             >
-              {books.map((book, i) => <Book bookId={book._id} key={book._id}/>)}
+              {books.map((book, i) => <Book liv={book} key={book.gId}/>)}
             </Slider>
           </div>
         </div>

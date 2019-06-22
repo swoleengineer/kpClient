@@ -5,7 +5,7 @@ const currentUrl = window.location.hostname;
 
 export const getApiUrl = () => {
   if (currentUrl.toLowerCase().startsWith('localhost')) return 'http://localhost:4810';
-  return 'https://api.keenpages.com';
+  return 'https://dev-api.keenpages.com';
 };
 
 export const gAPI = 'AIzaSyB8Z-fRItUJSUltWt3UXAkyvl15Dd6yfqM';

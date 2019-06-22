@@ -174,7 +174,9 @@ const routesMap = {
         return;
       }
     }
-  }
+  },
+  PRIVACY: '/privacy-statement',
+  TERMS: '/terms-service'
 }
 
 export { routesMap }

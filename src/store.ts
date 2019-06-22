@@ -35,6 +35,7 @@ const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
 const middlewares = applyMiddleware(middleware);
 
 export const rootReducer = combineReducers<IStore>({
+  app: reducers.appReducer,
   page: reducers.pageReducer,
   location: reducer,
   user: reducers.userReducer,

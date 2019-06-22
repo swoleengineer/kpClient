@@ -6,6 +6,7 @@ const Fragment = React.Fragment;
 import pageMap from './pageMap';
 import '../components/header/header.css';
 import { StickyContainer, Sticky } from 'react-sticky';
+import SidebarComponent from '../components/sidebar';
 
 const PageWrapper = ({ page }: { page: string }) => {
   const Display = pageMap[page];
@@ -21,7 +22,7 @@ const PageWrapper = ({ page }: { page: string }) => {
             <div className='container'>
               <div className='row'>
                 <div className='col-md-8'><Display /></div>
-                <div className='col-md-4 sideSticky'> Sidebar will go in here </div>
+                <div className='col-md-4 makeSticky'><SidebarComponent /></div>
               </div>
             </div>
           </section>
