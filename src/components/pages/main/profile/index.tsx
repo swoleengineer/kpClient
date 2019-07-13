@@ -4,13 +4,12 @@ import './profile.css';
 import { IStore, IUserPages, IUser } from '../../../../state-management/models';
 import { connect } from 'react-redux';
 import { LocationState, redirect } from 'redux-first-router';
-import moment from 'moment';
 import Profile from './profile';
 import BookList from './bookList';
-import { uploadToCloudinary } from './profile.util';
-import { keenToaster } from '../../../../containers/switcher';
-import { updateProfilePicture } from '../../../../state-management/thunks';
 import NotificationSettings from './notifications';
+import TopSection from './profileTopSection';
+import Nav from './accountNavigator';
+import StatPage from './stats';
 
 
 const ProfilePage = (props: {
@@ -21,43 +20,43 @@ const ProfilePage = (props: {
 }) => {
   const { location: { type, payload = { page: undefined }}, linkTo, user, loggedIn } = props;
   const { page } = payload as any;
-  const processImg = (err, result) => {
-    if (err) {
-      console.log(err);
-      let message;
-      try {
-        message = err.message;
-      } catch {
-        message = 'Could not upload your image'
-      }
-      keenToaster.show({
-        message,
-        intent: 'danger',
-        icon: 'error'
-      });
-      return;
-    }
-    if (result.event !== 'success') {
-      console.log('event fired:', result.event);
-      return;
-    }
-    console.log(result);
-    const { public_id, url: link } = result.info
-    updateProfilePicture(user._id, { public_id, link }).then(
-      () => {
-        keenToaster.show({
-          message: 'Picture has been uploaded',
-          intent: 'none',
-          icon: 'mugshot'
-        });
-      },
-      () => keenToaster.show({
-        message: 'Could not update your pictures',
-        intent: 'danger',
-        icon: 'error'
-      })
-    )
-  }
+  // const processImg = (err, result) => {
+  //   if (err) {
+  //     console.log(err);
+  //     let message;
+  //     try {
+  //       message = err.message;
+  //     } catch {
+  //       message = 'Could not upload your image'
+  //     }
+  //     keenToaster.show({
+  //       message,
+  //       intent: 'danger',
+  //       icon: 'error'
+  //     });
+  //     return;
+  //   }
+  //   if (result.event !== 'success') {
+  //     console.log('event fired:', result.event);
+  //     return;
+  //   }
+  //   console.log(result);
+  //   const { public_id, url: link } = result.info
+  //   updateProfilePicture(user._id, { public_id, link }).then(
+  //     () => {
+  //       keenToaster.show({
+  //         message: 'Picture has been uploaded',
+  //         intent: 'none',
+  //         icon: 'mugshot'
+  //       });
+  //     },
+  //     () => keenToaster.show({
+  //       message: 'Could not update your pictures',
+  //       intent: 'danger',
+  //       icon: 'error'
+  //     })
+  //   )
+  // }
   if (!loggedIn) {
     return null
   }
@@ -67,25 +66,13 @@ const ProfilePage = (props: {
         <div className='row'>
           <div className='col-md-8' style={{ margin: '0 auto'}}>
             <div className='profileHeader'>
-              <div className='profile_picture_name'>
-                <div className='profile_picture_img' onClick={() => uploadToCloudinary(processImg)}>
-                  {user.profile.picture && ![undefined, null].includes(user.profile.picture.link)
-                    ? <div className='user_profile_wrapper' style={{ backgroundImage: `url(${user.profile.picture.link})`}} />
-                    : <Icon icon='user' iconSize={60} />
-                  }
-                  
-                </div>
-                <div className='profile_picture_nm'>
-                  <span>{user.profile.first_name} {user.profile.last_name}</span>
-                </div>
-              </div>
-              <div className='profile_header_meta'>
-                <div>
-                  <span><strong>@{user.username}</strong></span>
-                  <span>Member since {moment(user.created).format('MMM DD, YYYY')}</span>
-                </div>
-              </div>
+              <TopSection user={user}/>
+              <Nav />
             </div>
+            {page === 'stats'
+              ? <StatPage />
+              : <BookList listType={page} />
+            }
             <div className='row profile_tabs_wrapper'>
               <div className='col-12'>
                 <Tabs

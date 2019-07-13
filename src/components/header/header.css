@@ -2,8 +2,13 @@
   background-color: #f4f6f7;
   z-index: 19
 }
+.appHeader.loggedInHeader {
+  background-color: #5c7080;
+  box-shadow: 0px 0px 4px 3px rgba(92,112,128,.2);
+  border-bottom: 1px solid #f4f6f7;
+}
 .headerWrapper {
-  padding: 10px 15px;
+  padding: 5px 15px 10px;
   border-bottom: 1px solid rgba(0,0,0,.1);
 }
 .logoWrapper {
@@ -19,6 +24,9 @@
 .logoWrapper span {
   font-family: ministry, sans-serif;
   color: #303030;
+}
+.logoWrapper.logoLight span {
+  color: white;
 }
 .logoWrapper span.logoKeen {
   font-weight: 300;
@@ -57,6 +65,12 @@
 .menuArea span {
   transition: all .10s ease;
 }
+.loggedInHeader .menuArea span, .loggedInHeader .menuArea i {
+  color: white
+}
+.loggedInHeader .bp3-overflow-list {
+  margin-bottom: 0
+}
 .menuArea .loggedOutLinks {
   display: block;
 }
@@ -69,6 +83,6 @@
 .menuArea .bp3-popover-wrapper:hover {
   cursor: pointer;
 }
-.menuArea .bp3-popover-wrapper:hover span {
+.appHeader:not(.loggedInHeader) .menuArea .bp3-popover-wrapper:hover span {
   color: black
 }

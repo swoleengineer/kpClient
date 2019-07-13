@@ -1,6 +1,6 @@
 import React from 'react';
 import { ITopic, IStore } from '../../../../state-management/models';
-import { MenuItem, Icon, ITagProps } from '@blueprintjs/core';
+import { MenuItem, Icon, ITagProps, } from '@blueprintjs/core';
 import { ItemRenderer, MultiSelect, ItemPredicate } from '@blueprintjs/select';
 import { connect } from 'react-redux';
 import '../auth.css';
@@ -34,7 +34,7 @@ const TopicBrowse = (props: {
         key={topic._id}
         onClick={handleClick}
         text={topic.name}
-        icon='lightbulb'
+        icon={<i className='fa fa-graduation-cap' style={{ position: 'relative', top: '2px'}}/>}
       />
     )
   }

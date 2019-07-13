@@ -109,3 +109,5 @@ export const bookSorts = [{
   sortName: 'Lowest likes',
   sortFn: (a, b) => a.likes.length < b.likes.length ? -1 : a.likes.length > b.likes.length ? 1 : 0
 }]
+
+export const getSelectedSort = options => options.find(opt => opt.selected);

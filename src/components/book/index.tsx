@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { redirect } from 'redux-first-router';
-import { Icon, Tooltip, Menu, MenuItem, Popover, Tag, IAlertProps, Alert, Spinner } from '@blueprintjs/core';
+import { Icon, Tooltip, Menu, MenuItem, Popover, IAlertProps, Alert, Spinner } from '@blueprintjs/core';
 import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
@@ -9,6 +9,7 @@ import { toggleUserBook, createReport, engagePrecheck, addBookFromInt } from '..
 import { connect } from 'react-redux';
 import { keenToaster } from '../../containers/switcher'
 import { getAuthorName } from '../../state-management/utils/book.util';
+import Topic from '../topic';
 import './book.css';
 
 const Book = ({
@@ -32,7 +33,6 @@ const Book = ({
   }  
   const { title, pictures, topics = [] } = book;
   const isRead = user && user.readBooks.findIndex(livre => livre.gId === book.gId) > -1;
-  console.log(isRead)
   const [ picture = { link: undefined}] = pictures || [];
   
   const [alertProps, updateAlertProps] = useState<IAlertProps>();
@@ -108,7 +108,7 @@ const Book = ({
     reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
   return (
-    <div className='singleBookWrapper' >
+    <div className='singleBookWrapper'>
       <div className='bookPicture' style={{backgroundImage: `url(${picture.link || KPBOOK})`}}>
         <Alert
           {...alertProps}
@@ -151,7 +151,7 @@ const Book = ({
                   dots={false}
                   infinite={true}
                   speed={500}
-                  slidesToShow={3}
+                  slidesToShow={topics.length > 1 ? 3 : 1}
                   slidesToScroll={2}
                   arrows={false}
                   variableWidth={true}
@@ -159,8 +159,14 @@ const Book = ({
                   autoplaySpeed={1500}
               >
                   {topics.reduce((acc, curr) => [...acc, curr, ``], [])
-                  .map((topic: ITopicBodyObj, i) => topic && topic.topic && topic.topic.name
-                    ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
+                  .map((topic_: ITopicBodyObj, i) => topic_ && topic_.topic && topic_.topic.name
+                    ? <Topic
+                        minimal={false}
+                        key={topic_._id}
+                        topicBody={topic_}
+                        topicSize='smallTopic'
+                        hideNumber={true}
+                    />
                     : <span key={i}>&nbsp;&nbsp;</span>)}
 
               </Slider>

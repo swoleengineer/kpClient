@@ -19,3 +19,6 @@
 .singleQuestion_finishComment strong, .singleQuestion_finishComment small, .singleQuestion_finishComment span.sq_booksubtitle {
   display: block;
 }
+.questionEngagement {
+  margin-top: 25px;
+}

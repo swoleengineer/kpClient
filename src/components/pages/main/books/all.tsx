@@ -3,16 +3,20 @@ import { connect } from 'react-redux';
 import { IStore, IExpandedBook, ITopic, AuthModalTypes } from '../../../../state-management/models';
 import './books.css';
 import BookCard from './bookCard';
-import { NonIdealState, Tag, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
+import { NonIdealState, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
 import { queryMoreBooks, searchBooks } from '../../../../state-management/thunks';
 import { allBooksSearchOpen, allBooksViewBooks } from '../../../../config/appSettings';
-import { bookFilter, bookSorts } from '../../../../state-management/utils/book.util';
+import { bookFilter, bookSorts,
+  // getSelectedSort 
+} from '../../../../state-management/utils/book.util';
 import { bookActionTypes as bookTypes, userActionTypes as userTypes } from '../../../../state-management/actions';
+import Topic from '../../../topic';
 
 const tagStyle = {
-  margin: '0 10px 10px 0'
+  margin: '0 10px 10px 0',
+  display: 'inline-block',
 }
 
 const Allbooks = (props: {
@@ -23,9 +27,6 @@ const Allbooks = (props: {
   showAuthModal: Function;
 }) => {
   const { updateFilteredTopics, selectedTopics, showAuthModal } = props;
-  if (props.books.length) {
-    // return null
-  }
   const [commentsFirst, updateCommentSort] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
@@ -52,7 +53,13 @@ const Allbooks = (props: {
   const shownBooks = books
     .filter(bookFilter(searchText))
     .filter(livre => !selectedTopics.length ? true : selectedTopics.map(tag => tag._id).every(tag => livre.topics.filter(topic => topic.topic).map(topic => topic.topic._id).includes(tag)))
-    .sort(sortOptions.find(opt => opt.selected).sortFn)
+    .sort((a, b) => {
+      if (sortOptions.find(opt => opt.selected)) {
+        return sortOptions.find(opt => opt.selected).sortFn(a, b)
+      }
+      console.log('there is no sort fuinction')
+      return a > b
+    })
     .sort((a, b) => {
       if (!commentsFirst) {
         return a.comments.length > b.comments.length
@@ -121,51 +128,48 @@ const Allbooks = (props: {
       <div className='col-md-8'>
         <div className={searchOpen ? 'allPage_topSettings_wrapper transitionEverything' : 'transitionEverything'}>
           <div className='row allPage_topSettings'>
-            <div className='col-md-6'>
-              <Switch
-                className='allPageCommentSort'
-                checked={commentsFirst}
-                label='Most comments'
-                onChange={() => updateCommentSort(!commentsFirst)}
-                alignIndicator='right'
-              />
-            </div>
-            <div className='col-md-6 text-right'>
-              <ButtonGroup>
-                <Button disabled={true} minimal={true} text={`${viewCards ? 'Detailed' : 'Books'}`} />
-                  <Tooltip content='View as books'>
-                    <Button 
-                      icon='book'
-                      minimal={true}
-                      onClick={() => {
-                        updateView(false);
-                        allBooksViewBooks.set(true);
-                      }} 
-                      intent={viewCards ? 'none' : 'primary'}
-                    />
-                  </Tooltip>
-                  <Tooltip content='View detailed'>
-                    <Button 
-                      icon='list'
-                      minimal={true}
-                      onClick={() => {
-                        updateView(true);
-                        allBooksViewBooks.set(false);
-                      }} 
-                      intent={!viewCards ? 'none' : 'primary'}
-                    />
-                  </Tooltip>
-                  <Divider />
+            <div className='col-md-12 text-right'>
+              <ButtonGroup  >
+                <Button
+                  text='Comments'
+                  rightIcon={!commentsFirst ? 'arrow-up' : 'arrow-down'}
+                  onClick={() => updateCommentSort(!commentsFirst)}
+                />
+              </ButtonGroup>
+              <ButtonGroup style={{position: 'relative', top: '3px'}}>
+                <Tooltip content='View as books'>
                   <Button 
-                    icon={searchOpen ? 'cross' : 'search'}
-                    intent={searchOpen ? 'danger' : 'none'}
+                    icon='book'
                     minimal={true}
                     onClick={() => {
-                      updateSearchOpen(!searchOpen)
-                      allBooksSearchOpen.set(!searchOpen);
-                    }}
+                      updateView(false);
+                      allBooksViewBooks.set(true);
+                    }} 
+                    intent={viewCards ? 'none' : 'primary'}
                   />
-                </ButtonGroup>
+                </Tooltip>
+                <Tooltip content='View detailed'>
+                  <Button 
+                    icon='list'
+                    minimal={true}
+                    onClick={() => {
+                      updateView(true);
+                      allBooksViewBooks.set(false);
+                    }} 
+                    intent={!viewCards ? 'none' : 'primary'}
+                  />
+                </Tooltip>
+                <Divider />
+                <Button 
+                  icon={searchOpen ? 'cross' : 'search'}
+                  intent={searchOpen ? 'danger' : 'none'}
+                  minimal={true}
+                  onClick={() => {
+                    updateSearchOpen(!searchOpen)
+                    allBooksSearchOpen.set(!searchOpen);
+                  }}
+                />
+              </ButtonGroup>
             </div>
           </div>
           {selectedTopics.length > 0 && <div className={searchOpen ? 'topTopicsContainer topTopicsExpanded' : 'topTopicsContainer'}>
@@ -174,23 +178,21 @@ const Allbooks = (props: {
                 return null;
               }
               return (
-                <Tag
+                <Topic
+                  skill={topic}
                   style={tagStyle}
-                  large={!searchOpen}
-                  icon='lightbulb'
-                  interactive={true}
-                  rightIcon='small-cross'
                   key={i}
                   minimal={!searchOpen}
+                  topicSize='normalTopic'
+                  interactive={true}
+                  removable={true}
                   onClick={() => {
                     updateFilteredTopics({
                       type: 'remove',
                       data: topic
                     })
                   }}
-                >
-                  {topic.name}
-                </Tag>
+                />
               )
             })}  
           </div>}

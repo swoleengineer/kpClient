@@ -19,8 +19,6 @@ const DEV_SERVER = {
 }
 
 module.exports = (env = {}) => {
-  console.log({ env })
-
   const isBuild = !!env.build
   const isDev   = !env.build
   const isSourceMap = !!env.sourceMap || isDev

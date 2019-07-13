@@ -1,13 +1,13 @@
 import React from 'react';
 import './question.css';
-import { Text, Tag, Button, ButtonGroup, Popover, Menu, MenuItem, Icon } from '@blueprintjs/core';
+import { Text, Button, ButtonGroup, Popover, Menu, MenuItem, Icon } from '@blueprintjs/core';
 import Slider from 'react-slick';
 import { IExpandedBook, ITopicBodyObj, IExpandedQuestion } from 'src/state-management/models';
 import moment from 'moment';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
-
+import Topic from '../topic';
 const QuestionCard = (props: { linkTo: Function; style: any; question: IExpandedQuestion; books: IExpandedBook[]; responsive: boolean; }) => {
   const { responsive, question, style } = props;
   if (!question) {
@@ -44,14 +44,20 @@ const QuestionCard = (props: { linkTo: Function; style: any; question: IExpanded
               dots={false}
               infinite={false}
               speed={500}
-              slidesToShow={3}
+              slidesToShow={topics.length > 1 ? 3 : 1}
               slidesToScroll={1}
               arrows={false}
               variableWidth={true}
             >
               {topics.reduce((acc, curr) => [...acc, curr, ``], [])
               .map((topic: ITopicBodyObj, i) => topic
-                ? <Tag icon='lightbulb' minimal={false} key={topic._id}>{topic.topic.name}</Tag>
+                ? <Topic
+                  topicBody={topic}
+                  hideNumber={true}
+                  minimal={false}
+                  topicSize='smallTopic'
+                  key={topic._id}
+                />
                 : <span key={i}>&nbsp;&nbsp;</span>)}
             </Slider>}
           </div>

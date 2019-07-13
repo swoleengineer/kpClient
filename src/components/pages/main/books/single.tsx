@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { IStore, IExpandedBook, IUser, ITopic, IComment, acceptableTypes, IReportRequest } from '../../../../state-management/models';
-import { Icon, Breadcrumbs, Tag, Collapse, Button, Popover, Menu, MenuItem, ControlGroup, InputGroup, Alert, IAlertProps } from '@blueprintjs/core'
+import { Card, Icon, Breadcrumbs, Tag, Collapse, ButtonGroup, Button, Popover, Menu, MenuItem, ControlGroup, InputGroup, Alert, IAlertProps } from '@blueprintjs/core'
 import moment from 'moment';
 import './books.css';
 import Book from '../../../book';
@@ -10,7 +10,8 @@ import { redirect } from 'redux-first-router'
 import TopicBrowse from '../../auth/topic/topicBrowse';
 import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook, engagePrecheck } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
-import { getAuthorName } from '../../../../state-management/utils/book.util'
+import { getAuthorName } from '../../../../state-management/utils/book.util';
+import Topic from '../../../topic';
 
 
 const SingleBook = (props: {
@@ -18,10 +19,12 @@ const SingleBook = (props: {
   user: IUser;
   linkTo: Function
 }) => {
-  const { book, user, linkTo } = props;
+  const { book, user } = props;
   if (!book || !Object.keys(book).length) {
     return null;
   }
+  document.title = `${book.title} - keenpages.com`;
+  const [addTopicOpen, setTopicForm] = useState<boolean>(false);
   const [topicsToAdd, adjustTopics] = useState<ITopic[]>([]);
   const [newComment, updateComment] = useState({
     author: {
@@ -121,6 +124,7 @@ const SingleBook = (props: {
     ).catch() : null,
     reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
+  let commentInput;
   return (
     <div className='singleBookPage'>
       <Alert
@@ -134,20 +138,9 @@ const SingleBook = (props: {
         items={pathToHere}
         breadcrumbRenderer={crumb => <Link to={{ type: crumb.type, payload: crumb.payload }} className='singleBook_bcrumb'><Icon icon={crumb.icon} iconSize={12} /> {crumb.text}</Link>}
       />
-      <header>
-        <h2>
-          <strong>{book.title}</strong>
-          {book.subtitle && <small>{book.subtitle}</small>}
-        </h2>
-        {getAuthorName(book) && <p className='description'>By {getAuthorName(book)}</p>}
-        {userBook && <Tag round={true} icon={userBook === 'readBooks' ? 'bookmark' : 'book'} intent='danger'>
-          {`${userBook === 'readBooks' ? 'You have read this book' : 'In your saved library'}`}
-        </Tag>}
-      </header>
       <div className='row'>
-        <div className='col-md-4'>
+        <div className='col-md-4 makeSticky'>
           <Book liv={book} />
-          <br />
           <ul className='underBookMenu'>
             <MenuItem
               icon={user && user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
@@ -200,128 +193,210 @@ const SingleBook = (props: {
           </ul>
         </div>
         <div className='col-md-8 singleBook_top_topics_wrapper'>
-          {book.description && <>
-            <h5>Description</h5>
-            <p>{book.description}</p>
-          </>}
-          {(book.isbn10 || book.isbn13 || book.publisher || book.publish_date) && <p>
-            {book.publisher && <span className='metaListItem'><strong>Publisher:</strong> {book.publisher}</span>}
-            {book.publish_date && <span className='metaListItem'><strong>Published:</strong> {book.publish_date}</span>}
-            {book.isbn10 && <span className='metaListItem'><strong>ISBN 10:</strong> {book.isbn10}</span>}
-            {book.isbn13 && <span className='metaListItem'><strong>ISBN 13:</strong> {book.isbn13}</span>}
-          </p>}
-          <h5>Topics ({book.topics.length})</h5>
-          <p>Thumbs up if you agree a topic is covered in this book.</p>
-          <div className='singleBookAddTopics'>
-            <Collapse isOpen={topicsToAdd.length > 0}>
-              <div className='row incomingTopics'>
-                <div className='col-md-8'>{topicsToAdd.map((topic, i) =>
-                  <Tag
-                    key={i}
-                    interactive={true}
-                    icon='lightbulb'
-                    onClick={() => adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id))}
-                    style={{
-                      margin: '0 10px 10px 0'
-                    }}
-                  >
-                    {topic.name}
-                  </Tag>)}</div>
-                <div className='col-md-4'>
-                  <Button
-                    minimal={true}
-                    icon='plus'
-                    fill={true}
-                    onClick={() => {
-                      engagePrecheck(book, true, err => {
-                        if (err) {
-                          return;
-                        }
-                        addTopicsToBook(book._id, topicsToAdd)
-                          .then(() => adjustTopics([]))
-                          .catch(() => adjustTopics([]))
-                      })
-                    }}
-                  >
-                    Add {topicsToAdd.length} topic{topicsToAdd.length > 1 && 's'}
-                  </Button>
-                </div>
-              </div>
-            </Collapse>
-            <TopicBrowse
-              processNewItem={(topic, event) => {
-                if (book.topics.filter(tpc => tpc.topic && tpc.topic.name).map(tpc => tpc.topic._id).includes(topic._id)) {
-                  keenToaster.show({
-                    message: `${topic.name} already in this book.`,
-                    intent: 'warning',
-                    icon: 'error'
-                  })
-                  return;
-                }
-                adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
-              }
-              processRemove={() => console.log('removed topic')}
-            />
-          </div>
-          {(book.topics && book.topics.length > 0) && <div>{book.topics.map((topic, i) => {
-            return (!topic || !topic.topic || !topic.topic.name) ? null : (
-              <Tag
-                icon='lightbulb'
-                rightIcon={<span>| <Icon icon='thumbs-up' /> {topic.agreed.length}</span>}
-                interactive={true}
-                large={true}
-                key={i}
-                style={{
-                  marginRight: '10px',
-                  marginBottom: '10px'
-                }}
-                minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
+          <header>
+            <h2>
+              <strong>{book.title}</strong>
+              {book.subtitle && <small>{book.subtitle}</small>}
+            </h2>
+            {getAuthorName(book) && <p className='description'>By {getAuthorName(book)}</p>}
+            {userBook && <Tag round={true} icon={userBook === 'readBooks' ? 'bookmark' : 'book'} intent='danger'>
+              {`${userBook === 'readBooks' ? 'You have read this book' : 'In your saved library'}`}
+            </Tag>}
+          </header>
+          <div className='underBookEngagement row'>
+            <ul className='bookCard_engage col-md-6'>
+              <li 
                 onClick={() => {
                   engagePrecheck(book, true, err => {
                     if (err) {
                       return;
                     }
-                    return user
-                      ? toggleTopicAgreeBook(book._id, topic._id)
-                          .then(
-                            () => console.log('request successful. Toggled agree status'),
-                            () => console.log('request failed toggling topic agree status')
-                          )
-                      : null
+                    return user 
+                      ? toggleUserBook(book._id, 'savedBooks', book.likes.includes(user._id) ? 'remove' : 'add')
+                      : null;
                   })
                 }}
               >
-                {topic.topic.name}
-              </Tag>
-            )
-          })}
-          </div>}
-          <div className='row singleBook_actionsWrapper'>
-            <div className='col-12 '>
-              <div className='singleBook_engageSection '>
-                <ul className='bookCard_engage'>
-                  <li 
-                    onClick={() => {
+                <Icon
+                  icon='heart'
+                  intent={user && book.likes.includes(user._id) ? 'danger' : 'none'}
+                /> {book.likes.length}
+              </li>
+              <li onClick={() => commentInput.focus()}> <Icon icon='comment' /> {book.comments.length} </li>
+              <li onClick={() => setTopicForm(!addTopicOpen)}> <Icon icon={<i className='fa fa-graduation-cap' />} /> {book.topics.length} </li>
+            </ul>
+          </div>
+          <Card>
+            {book.description && <>
+              <h5>Description</h5>
+              <p>{book.description}</p>
+            </>}
+            {(book.isbn10 || book.isbn13 || book.publisher || book.publish_date) && <p>
+              {book.publisher && <span className='metaListItem'><strong>Publisher:</strong> {book.publisher}</span>}
+              {book.publish_date && <span className='metaListItem'><strong>Published:</strong> {book.publish_date}</span>}
+              {book.isbn10 && <span className='metaListItem'><strong>ISBN 10:</strong> {book.isbn10}</span>}
+              {book.isbn13 && <span className='metaListItem'><strong>ISBN 13:</strong> {book.isbn13}</span>}
+            </p>}
+          </Card>
+          <div className={addTopicOpen ? 'singlePageTopicsSection addingOpen' : 'singlePageTopicsSection'}>
+            <h5>
+              <span>Topics ({book.topics.length})</span>
+              {(!addTopicOpen || (addTopicOpen && topicsToAdd.length < 1)) && <Button
+                text={addTopicOpen ? 'Cancel' : 'Add topic'}
+                icon={addTopicOpen ? 'cross' : 'add'}
+                small={true}
+                className='singlePageTopicAddbtn'
+                minimal={true}
+                onClick={() => setTopicForm(!addTopicOpen)}
+                intent={addTopicOpen ? 'danger' : 'none'}
+              />}
+              
+            </h5>
+            <p>Thumbs up if you agree a topic is covered in this book.</p>
+            <div className='singleBookAddTopics'>
+              <Collapse isOpen={topicsToAdd.length > 0 && addTopicOpen} transitionDuration={45}>
+                <div className='row incomingTopics'>
+                  <div className='col-12'>{topicsToAdd.map((topic, i) =>
+                    <Topic
+                      key={i}
+                      interactive={true}
+                      onClick={() => adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id))}
+                      skill={topic}
+                      topicSize='smallTopic'
+                      style={{
+                        margin: '0 10px 10px 0',
+                        display: 'block',
+                        float: 'left'
+                      }}
+                    />
+                    )}</div>
+                </div>
+                <div className='clearfix text-right' style={{ marginBottom: '10px'}}>
+                  <ButtonGroup>
+                    <Button
+                      minimal={true}
+                      small={true}
+                      icon='cross'
+                      intent='danger'
+                      onClick={() => {
+                        setTopicForm(!addTopicOpen);
+                        adjustTopics([])
+                      }}
+                      text='Cancel'
+                    />
+                    <Button
+                      minimal={true}
+                      small={true}
+                      icon='add'
+                      onClick={() => {
+                        engagePrecheck(book, true, err => {
+                          if (err) {
+                            return;
+                          }
+                          addTopicsToBook(book._id, topicsToAdd)
+                            .then(() => adjustTopics([]))
+                            .catch(() => adjustTopics([]))
+                        })
+                      }}
+                    >
+                      Add {topicsToAdd.length} topic{topicsToAdd.length > 1 && 's'}
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Collapse>
+              <Collapse isOpen={addTopicOpen} transitionDuration={60}>
+                
+                <TopicBrowse
+                  processNewItem={(topic, event) => {
+                    if (topicsToAdd.length > 9 && topicsToAdd.findIndex(skill => skill.name === topic.name) < 0) {
+                      keenToaster.show({
+                        message: '10 topics max at a time please.',
+                        intent: 'warning',
+                        icon: 'info-sign'
+                      });
+                      return;
+                    }
+                    if (book.topics.filter(tpc => tpc.topic && tpc.topic.name).map(tpc => tpc.topic._id).includes(topic._id)) {
+                      keenToaster.show({
+                        message: `${topic.name} already in this book.`,
+                        intent: 'warning',
+                        icon: 'error'
+                      })
+                      return;
+                    }
+                    adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
+                  }
+                  processRemove={() => console.log('removed topic')}
+                />
+              </Collapse>
+            </div>
+            {(book.topics && book.topics.length > 0) && <div className='singlePageTopicsWrapper'>{book.topics.map((topic, i) => {
+              return (!topic || !topic.topic || !topic.topic.name) ? null : (
+                <Topic
+                  topicBody={topic}
+                  key={topic._id}
+                  interactive={true}
+                  topicSize='normalTopic'
+                  minimal={true}
+                  selected={(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
+                  onClick={() => {
                     engagePrecheck(book, true, err => {
                       if (err) {
                         return;
                       }
                       return user 
-                        ? toggleUserBook(book._id, 'savedBooks', book.likes.includes(user._id) ? 'remove' : 'add')
-                        : null;
+                        ? toggleTopicAgreeBook(book._id, topic._id)
+                          .then(
+                            () => console.log('success'),
+                            () => console.log('fail')
+                          )
+                        : null
                     })
                   }}
-                  >
-                    <Icon
-                      icon='heart'
-                      intent={user && book.likes.includes(user._id) ? 'danger' : 'none'}
-                    /> {book.likes.length}
-                  </li>
-                  <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {book.comments.length} </li>
-                  <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {book.topics.length} </li>
-                </ul>
-              </div>
-            </div>
+                />
+                // <div className='topicCompWrapper topicCompInteractive'>
+                //   <div className='topicCompLeft'>
+                //     <Icon icon='lightbulb' iconSize={12} />
+                //     <span className='topicCompName'>{topic.topic.name}</span>
+                //   </div>
+                //   <div className='topicCompRight'>
+                //     {topic.agreed.length}
+                //   </div>
+                // </div>
+                // <Tag
+                //   icon='lightbulb'
+                //   rightIcon={<span>| <Icon icon='thumbs-up' /> {topic.agreed.length}</span>}
+                //   interactive={true}
+                //   large={true}
+                //   key={i}
+                //   style={{
+                //     marginRight: '10px',
+                //     marginBottom: '10px'
+                //   }}
+                //   minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
+                //   onClick={() => {
+                //     engagePrecheck(book, true, err => {
+                //       if (err) {
+                //         return;
+                //       }
+                //       return user
+                //         ? toggleTopicAgreeBook(book._id, topic._id)
+                //             .then(
+                //               () => console.log('request successful. Toggled agree status'),
+                //               () => console.log('request failed toggling topic agree status')
+                //             )
+                //         : null
+                //     })
+                //   }}
+                // >
+                //   {topic.topic.name}
+                // </Tag>
+              )
+            })}
+            </div>}
+          
+          </div>
+          <div className='row singleBook_actionsWrapper'>
             <div className='col-12'>
               <div className='bookCard_commentsContainer'>
                 <ul className='keen_comments_wrapper'>
@@ -410,6 +485,7 @@ const SingleBook = (props: {
                   <ControlGroup fill={true} vertical={false} >
                     <InputGroup
                       placeholder={`Add your comment...`}
+                      inputRef={input => commentInput = input}
                       leftIcon='user'
                       value={newComment.text}
                       onKeyUp={$event => {

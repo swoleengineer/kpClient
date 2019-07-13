@@ -42,6 +42,7 @@ const AllQuestions = (props: {
         console.log('could not get more questions to add.')
       }
     )
+    updateCommentSort(commentsFirst)
   }
   const processInput = () => {
     if (!searchInput) {
@@ -125,16 +126,7 @@ const AllQuestions = (props: {
       <div className='col-md-8'>
       <div className={searchOpen ? 'allPage_topSettings_wrapper transitionEverything' : 'transitionEverything'}>
           <div className='row allPage_topSettings'>
-            <div className='col-md-6'>
-              <Switch
-                className='allPageCommentSort'
-                checked={commentsFirst}
-                label='Most suggestions'
-                onChange={() => updateCommentSort(!commentsFirst)}
-                alignIndicator='right'
-              />
-            </div>
-            <div className='col-md-6 text-right'>
+            <div className='col-md-12 text-right'>
               <ButtonGroup>
                 <Button 
                   icon={searchOpen ? 'cross' : 'search'}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IExpandedQuestion, IExpandedBook, IUser, IStore, ITopic, IComment, IReportRequest, acceptableTypes } from '../../../../state-management/models';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
-import { IAlertProps, Popover, Menu, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Tag, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
+import { Card, IAlertProps, Popover, Menu, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
 import { createComment, createReport, removeComment, addTopicsToQuestion,
   toggleTopicAgreeQuestion, searchBooks, engagePrecheck } from '../../../../state-management/thunks';
 import { keenToaster } from '../../../../containers/switcher';
@@ -12,7 +12,7 @@ import moment from 'moment';
 import './questions.css';
 import { bookFilter, getAuthorName } from '../../../../state-management/utils/book.util'
 import KPBOOK from '../../../../assets/kp_book.png';
-
+import Topic from '../../../topic';
 
 const SingleQuestionPage = (props: {
   question: IExpandedQuestion;
@@ -24,6 +24,7 @@ const SingleQuestionPage = (props: {
   if (!question || !question.title) {
     return <Spinner />;
   }
+  const [addTopicOpen, setTopicForm] = useState<boolean>(false);
   const [topicsToAdd, adjustTopics] = useState<ITopic[]>([]);
   const [newComment, updateComment] = useState<{
     author: any;
@@ -150,10 +151,6 @@ const SingleQuestionPage = (props: {
         items={pathToHere}
         breadcrumbRenderer={crumb => <Link to={{ type: crumb.type, payload: crumb.payload }} className='singleBook_bcrumb'><Icon icon={crumb.icon} iconSize={12} /> {crumb.text}</Link>}
       />
-      <header>
-        <h2><strong>{question.title}{question.title.includes('?') ? '' : '?'}</strong></h2>
-        <p className='lead'>{question.text}</p>
-      </header>
       <div className='row'>
         <div className='col-md-4'>
           <div className='singleQuestion_meta'>
@@ -197,88 +194,130 @@ const SingleQuestionPage = (props: {
           </ul>
         </div>
         <div className='col-md-8 singleBook_top_topics_wrapper'>
-          <h5>Topics ({question.topics.length})</h5>
-          <p>Thumbs up only if you agree a topic is covered by this request.</p>
-          <div className='singleBookAddTopics'>
-            <Collapse isOpen={topicsToAdd.length > 0}>
-              <div className='row incomingTopics'>
-                <div className='col-md-8'>{topicsToAdd.map((topic, i) =>
-                  <Tag
-                    key={i}
-                    interactive={true}
-                    icon='lightbulb'
-                    onClick={() => adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id))}
-                    style={{
-                      margin: '0 10px 10px 0'
-                    }}
-                  >
-                    {topic.name}
-                  </Tag>)}</div>
-                <div className='col-md-4'>
-                  <Button
-                    minimal={true}
-                    icon='plus'
-                    fill={true}
-                    onClick={() => {
-                      addTopicsToQuestion(question._id, topicsToAdd)
-                        .then(() => adjustTopics([]))
-                        .catch(() => adjustTopics([]))
-                    }}
-                  >
-                    Add {topicsToAdd.length} topic{topicsToAdd.length > 1 && 's'}
-                  </Button>
+          <Card>
+            <header>
+              <h2><strong>{question.title}{question.title.includes('?') ? '' : '?'}</strong></h2>
+              <p className='lead description'>{question.text}</p>
+            </header>
+          </Card>
+          <div className={addTopicOpen ? 'singlePageTopicsSection addingOpen' : 'singlePageTopicsSection'}>
+            <h5>
+              <span>Topics ({question.topics.length})</span>
+              {(!addTopicOpen || (addTopicOpen && topicsToAdd.length < 1)) && <Button
+                text={addTopicOpen ? 'Cancel' : 'Add topic'}
+                icon={addTopicOpen ? 'cross' : 'add'}
+                small={true}
+                className='singlePageTopicAddbtn'
+                minimal={true}
+                onClick={() => setTopicForm(!addTopicOpen)}
+                intent={addTopicOpen ? 'danger' : 'none'}
+              />}
+            </h5>
+            <p>Thumbs up only if you agree a topic is covered by this request.</p>
+            <div className='singleBookAddTopics'>
+              <Collapse isOpen={topicsToAdd.length > 0}>
+                <div className='row incomingTopics'>
+                  <div className='col-12'>{topicsToAdd.map((topic, i) =>
+                    <Topic
+                      key={i}
+                      interactive={true}
+                      onClick={() => adjustTopics(topicsToAdd.filter(skill => skill._id !== topic._id))}
+                      skill={topic}
+                      topicSize='smallTopic'
+                      style={{
+                        margin: '0 10px 10px 0',
+                        display: 'block',
+                        float: 'left'
+                      }}
+                    />)}</div>
                 </div>
-              </div>
-            </Collapse>
-            <TopicBrowse
-              processNewItem={(topic, event) => {
-                if (question.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
-                  keenToaster.show({
-                    message: `${topic.name} already in this Request.`,
-                    intent: 'warning',
-                    icon: 'error'
-                  })
-                  return;
-                }
-                adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
-              }
-              processRemove={() => console.log('removed topic')}
-            />
-          </div>
-          {(question.topics && question.topics.length > 0) && <div>{question.topics.map((topic, i) => {
-            return (
-              <Tag
-                icon='lightbulb'
-                rightIcon={<span>| <Icon icon='thumbs-up' /> {topic.agreed.length}</span>}
-                interactive={true}
-                large={true}
-                key={i}
-                style={{
-                  marginRight: '10px',
-                  marginBottom: '10px'
-                }}
-                minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
-                onClick={() => {
-                  engagePrecheck(null, true, err => {
-                    if (err) {
+                <div className='clearfix text-right' style={{ marginBottom: '10px'}}>
+                  <ButtonGroup>
+                    <Button
+                      minimal={true}
+                      small={true}
+                      icon='cross'
+                      intent='danger'
+                      onClick={() => {
+                        setTopicForm(!addTopicOpen);
+                        adjustTopics([])
+                      }}
+                      text='Cancel'
+                    />
+                    <Button
+                      minimal={true}
+                      small={true}
+                      icon='add'
+                      onClick={() => {
+                        engagePrecheck(null, true, err => {
+                          if (err) {
+                            return;
+                          }
+                          addTopicsToQuestion(question._id, topicsToAdd)
+                          .then(() => adjustTopics([]))
+                          .catch(() => adjustTopics([]))
+                        })
+                      }}
+                    >
+                      Add {topicsToAdd.length} topic{topicsToAdd.length > 1 && 's'}
+                    </Button>
+                  </ButtonGroup>
+                  </div>
+              </Collapse>
+              <Collapse isOpen={addTopicOpen} transitionDuration={60}>
+                <TopicBrowse
+                  processNewItem={(topic, event) => {
+                    if (topicsToAdd.length > 9) {
+                      keenToaster.show({
+                        message: '10 topics max at a time please.',
+                        intent: 'warning',
+                        icon: 'info-sign'
+                      });
                       return;
                     }
-                    return user
-                      ? toggleTopicAgreeQuestion(question._id, topic._id)
-                          .then(
-                            () => console.log('request successful. Toggled agree status'),
-                            () => console.log('request failed toggling topic agree status')
-                          )
-                      : null
-                  })
-                  
-                }}
-              >
-                {topic.topic.name}
-              </Tag>
-            )
-          })}
-          </div>}
+                    if (question.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
+                      keenToaster.show({
+                        message: `${topic.name} already in this Request.`,
+                        intent: 'warning',
+                        icon: 'error'
+                      })
+                      return;
+                    }
+                    adjustTopics(topicsToAdd.filter(skill => skill.name !== topic.name).concat(topic))}
+                  }
+                  processRemove={() => console.log('removed topic')}
+                />
+              </Collapse>
+            </div>
+            {(question.topics && question.topics.length > 0) && <div className='singlePageTopicsWrapper'>{question.topics.map((topic, i) => {
+              return (
+                <Topic
+                  topicBody={topic}
+                  key={i}
+                  interactive={true}
+                  topicSize='normalTopic'
+                  minimal={true}
+                  selected={(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
+                  onClick={() => {
+                    engagePrecheck(null, true, err => {
+                      if (err) {
+                        return;
+                      }
+                      return user
+                        ? toggleTopicAgreeQuestion(question._id, topic._id)
+                            .then(
+                              () => console.log('request successful. Toggled agree status'),
+                              () => console.log('request failed toggling topic agree status')
+                            )
+                        : null
+                    })
+                    
+                  }}
+                />
+              )
+            })}
+            </div>}
+          </div>
           
           <div className='row questionEngagement'>
             <div className='col-4'>
@@ -464,10 +503,17 @@ const SingleQuestionPage = (props: {
                 {question.comments.map((comment, i) => {
                   const [ picture = { link: undefined}] = comment.suggested_book.pictures || [];
                   return (
-                    <li key={i} className='questionComment'>
+                    <li key={i} className='questionComment' style={{ borderBottom: 'none' }}>
                         <Popover>
+                          <Card>
                           <div className='keen_comments_details'>
-                            
+                            <div className='row'>
+                              <div className='col-12'>
+                                <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
+                                <span className='keen_comment_text'>{comment.text}</span>
+                              </div>
+                            </div>
+                            <hr />
                             <div className='comment_book_container'>
                               <div className='comment_book_pic'>
                                 <img src={`${picture.link || KPBOOK}`} />
@@ -475,14 +521,12 @@ const SingleQuestionPage = (props: {
                               <div className='comment_book_info' >
                                 <strong>{comment.suggested_book.title}</strong>
                                 {comment.suggested_book.subtitle && <span>{comment.suggested_book.subtitle}</span>}
-                                <small>{getAuthorName(comment.suggested_book)}</small>
-                                <hr />
-                                <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
-                                <span className='keen_comment_text'>{comment.text}</span>
+                                <small>{getAuthorName(comment.suggested_book)}</small>                                
                               </div>
                             </div>
                             
                           </div>
+                          </Card>
                           <Menu>
                             {user && user._id === comment.author._id
                               ? <MenuItem

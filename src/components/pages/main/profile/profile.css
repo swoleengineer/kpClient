@@ -31,10 +31,9 @@
   color: #5c7080;
 }
 .profileHeader {
-  background: rgb(138,155,168);
-  background: linear-gradient(0deg, rgba(138,155,168,.2) 10%, rgba(244,246,247,1) 100%);
-  height: 150px;
   position: relative;
+  margin-bottom: 35px;
+  overflow: hidden;
 }
 .profile_picture_name {
   width: 100%;
@@ -172,4 +171,101 @@
   font-size: 17px;
   font-weight: 500;
   border-bottom: none !important;
+}
+.accountUserMetaWrapper {}
+.accountUserMetaWrapper .aum_username {
+  font-size: 2em;
+  display: block;
+}
+.accountUserMetaWrapper .aum_name {
+  position: relative;
+  top: -5px;
+  margin-right: 10px;
+  font-size: .9em
+}
+.accountUserMetaWrapper .aum_joined {
+  font-size: .8em;
+  position: relative;
+  top: -5px;
+}
+.accountUserMetaWrapper .aum_action_btns {
+  display: block
+}
+.accountUserMetaWrapper .aum_Numbers_Wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  margin: 25px 0 0;
+}
+.accountUserMetaWrapper .aum_Numbers_Wrapper div {
+  text-align: center;
+
+}
+.accountUserMetaWrapper .aum_Numbers_Wrapper div:not(:last-child) {
+  margin-right: 25px;
+}
+.accountUserMetaWrapper .aum_Numbers_Wrapper div .aum_numbers_number {
+  font-size: 1.5em;
+  font-weight: 600;
+  display: block;
+}
+.accountUserMetaWrapper .aum_Numbers_Wrapper div .aum_numbers_text {}
+.userProfileNav {
+  border: 1px solid rgba(0,0,0,.15);
+  margin: 35px 0 15px;
+  display: flex;
+  align-items: stretch;
+  text-transform: uppercase;
+  font-size: .7em;
+}
+.userProfileNav div[class^='up_nav_item'] {
+  text-align: center;
+}
+.up_nav_item_nochilden {
+  display: block;
+  border-right:1px solid rgba(0,0,0,.15);
+  padding: 5px 15px;
+  align-self: center;
+}
+.up_nav_item_childen {
+  display: block;
+  width: calc(100% - 100px);
+}
+.up_nav_item_parent {
+  border-bottom: 1px solid rgba(0,0,0,.15);
+  position: relative;
+  padding: 5px 15px;
+}
+.up_nav_item_parent .up_nav_item_parent_btn {
+  position: absolute;
+  right:0px;
+  height: 15px !important;
+  padding: 3px 5px 5px;
+  border-radius: 5px;
+  top: 2px;
+}
+.up_nav_item_parent .up_nav_item_parent_btn:hover {
+  background-color: rgba(0,0,0,.05);
+  cursor: pointer;
+}
+.up_nav_item_parent_btn .bp3-icon {
+  margin-right: 5px;
+}
+.up_nav_item_children_wrapper {
+  display: flex;
+}
+.up_nav_item_child {
+  padding: 5px 10px
+}
+.up_nav_item_child:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,.15);
+  
+}
+.up_nav_item_nochilden, .up_nav_item_children_wrapper {
+  color: rgba(0,0,0,.4)
+}
+div.up_nav_item_selected[class^='up_nav_item'] {
+  font-weight: 500;
+  color: black
 }

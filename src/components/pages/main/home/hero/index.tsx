@@ -1,11 +1,12 @@
 import React from 'react';
-import { InputGroup, ControlGroup, Icon, Tag, Collapse } from '@blueprintjs/core';
+import { InputGroup, ControlGroup, Icon, Collapse } from '@blueprintjs/core';
 import { ITopic, IStore, IAppState, HomeSearchCategories, AuthModalTypes } from '../../../../../state-management/models';
 import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import { appActionTypes, bookActionTypes as bookTypes } from '../../../../../state-management/actions';
 import { searchGoogle, showModal, queryMoreBooks } from '../../../../../state-management/thunks';
 import { redirect } from 'redux-first-router'
+import Topic from '../../../../topic';
 
 
 const Hero = (props: {
@@ -105,25 +106,24 @@ const Hero = (props: {
             {topics
               .reduce((acc, curr) => [...acc, curr, ``], [])
               .map((topic: ITopic, i) => topic
-                ? <Tag
-                  icon='lightbulb'
-                  minimal={false}
-                  interactive={true}
-                  key={topic._id}
-                  onClick={() => {
-                    updateFilteredTopics({
-                      type: 'add',
-                      data: topic
-                    });
-                    linkTo({ type: 'ALLBOOKS' });
-                    queryMoreBooks(undefined, [topic._id], undefined).then(
-                      () => {},
-                      () => console.log('error retrieving books')
-                    )
-                  }}
-                >
-                  {topic.name}
-                </Tag>
+                ? <Topic
+                    skill={topic}
+                    key={topic._id}
+                    interactive={true}
+                    topicSize='smallTopic'
+                    minimal={false}
+                    onClick={() => {
+                      updateFilteredTopics({
+                        type: 'add',
+                        data: topic
+                      });
+                      linkTo({ type: 'ALLBOOKS' });
+                      queryMoreBooks(undefined, [topic._id], undefined).then(
+                        () => {},
+                        () => console.log('error retrieving books')
+                      )
+                    }}
+                />                
                 : <span key={i}>&nbsp;&nbsp;</span>)
             }
           </Slider>}

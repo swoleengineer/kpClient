@@ -59,7 +59,7 @@
 .questionCardWrapper .questionCard_content .questionCard_topics {
   margin: 15px -10px 5px;
   background-color: rgba(167, 182, 194, 0.85);
-  padding: 5px;
+  padding: 5px 5px 0;
 }
 .questionCardWrapper .questionCard_content .questionCard_comment {
   margin: 10px 0 15px;
