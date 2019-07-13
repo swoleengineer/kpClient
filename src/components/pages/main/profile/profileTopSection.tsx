@@ -9,13 +9,13 @@ const TopSection = (props: {
   const { user } = props;
   return (
     <div className='row'>
-      <div className='col-md-4 text-center'>
+      <div className='col-4 text-center'>
         {user.profile.picture && ![undefined, null].includes(user.profile.picture.link)
           ? <div className='user_profile_wrapper' style={{ backgroundImage: `url(${user.profile.picture.link})`}} />
           : <Icon icon='user' iconSize={60} />
         }
       </div>
-      <div className='col-md-8 accountUserMetaWrapper'>
+      <div className='col-8 accountUserMetaWrapper'>
         <span className='aum_username'>{user.username}</span>
         <span className='aum_name'>{user.profile.first_name} {user.profile.last_name}</span>
         <span className='aum_joined'>since {moment(user.created).format('MMM DD, YYYY')}</span>

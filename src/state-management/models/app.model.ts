@@ -12,4 +12,5 @@ export interface IAppState {
     bookResults: IExpandedBook[];
     topicResults: ITopic[];
   }
+  viewPort: 'mobile' | 'tablet' | 'pc'
 }

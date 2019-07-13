@@ -32,7 +32,6 @@
 }
 .profileHeader {
   position: relative;
-  margin-bottom: 35px;
   overflow: hidden;
 }
 .profile_picture_name {
@@ -217,7 +216,8 @@
   display: flex;
   align-items: stretch;
   text-transform: uppercase;
-  font-size: .7em;
+  font-size: .8em;
+  border-radius: 5px;
 }
 .userProfileNav div[class^='up_nav_item'] {
   text-align: center;
@@ -241,13 +241,14 @@
   position: absolute;
   right:0px;
   height: 15px !important;
-  padding: 3px 5px 5px;
+  padding: 5px 0px 5px 10px;
   border-radius: 5px;
-  top: 2px;
+  top: 1px;
+  transition: all .19s ease;
 }
 .up_nav_item_parent .up_nav_item_parent_btn:hover {
-  background-color: rgba(0,0,0,.05);
   cursor: pointer;
+  opacity: .6;
 }
 .up_nav_item_parent_btn .bp3-icon {
   margin-right: 5px;
@@ -262,10 +263,90 @@
   border-right: 1px solid rgba(0,0,0,.15);
   
 }
-.up_nav_item_nochilden, .up_nav_item_children_wrapper {
-  color: rgba(0,0,0,.4)
+.up_nav_item_nochilden, .up_nav_item_child {
+  color: rgba(0,0,0,.4);
+  transition: all .2s ease;
 }
+.up_nav_item_nochilden:hover, .up_nav_item_child:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+
 div.up_nav_item_selected[class^='up_nav_item'] {
   font-weight: 500;
-  color: black
+  color: #5c7080
+}
+.up_stats_panelWrapper {
+  height: 350px;
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 0px 3px 8px rgba(0,0,0,.1);
+  margin: 15px 0;
+}
+.up_stats_panelWrapper .up_state_panel_stack {
+  padding: 15px;
+  color: rgba(0,0,0,.8);
+}
+.up_stats_panelWrapper .up_state_panel_stack h4 {
+  font-weight: 600;
+  color: rgba(0,0,0,.8);
+}
+
+.stats_item {
+  border-radius: 5px;
+  border: 1px solid rgba(178,192,202, 1);
+}
+
+.stats_item .stats_item_body .stats_item_topPortion {
+  display: flex;
+  width: 100%;
+}
+.stats_item .stats_item_select_checkBox {
+  width: 35px;
+  padding: 10px 0 0 15px;
+}
+.stats_item .stats_item_body header {
+  padding: 8px;
+  position: relative;
+}
+.stats_item .stats_item_body header i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+.stats_item .stats_item_body header .stats_item_body_header_topicName {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn {
+  position: absolute;
+  right: 0;
+  border-left: 1px solid rgba(0,0,0,.3);
+  padding: 1px 15px;
+  transition: all .19s ease;
+  height: calc(100% - 16px);
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn span {
+  position: relative;
+  top: calc(25%)
+}
+.stats_item .stats_item_body .stats_item_body_meta {
+  display: flex;
+  font-size: .9em
+}
+.stats_item .stats_item_body .stats_item_body_meta div:not(:last-child) {
+  margin-right: 10px;
+}
+.stats_item .stats_item_body .stats_item_body_progressBarWrapper {
+  padding: 5px;
+  background-color: rgba(178,192,202,.3);
+}
+.stats_item .stats_item_body .stats_item_body_progressBarWrapper .progress {
+  background-color: #b2c0ca;
+}
+.progress-bar.bg-keen-dark {
+  background-color: #5c7080;
 }

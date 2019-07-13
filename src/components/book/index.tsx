@@ -114,6 +114,7 @@ const Book = ({
           {...alertProps}
           onConfirm={() => alertFunctions[alertConfig.type]()}
           onCancel={() => updateAlertProps({ isOpen: false})}
+          cancelButtonText='Nevermind'
         >
           {alertConfig.text}
         </Alert>
@@ -151,23 +152,22 @@ const Book = ({
                   dots={false}
                   infinite={true}
                   speed={500}
-                  slidesToShow={topics.length > 1 ? 3 : 1}
-                  slidesToScroll={2}
+                  slidesToShow={topics.length > 1 ? 2 : 1}
+                  slidesToScroll={1}
                   arrows={false}
                   variableWidth={true}
                   autoplay={true}
                   autoplaySpeed={1500}
+                  lazyLoad='progressive'
               >
-                  {topics.reduce((acc, curr) => [...acc, curr, ``], [])
-                  .map((topic_: ITopicBodyObj, i) => topic_ && topic_.topic && topic_.topic.name
-                    ? <Topic
+                  {topics.map((topic_: ITopicBodyObj, i) => <Topic
                         minimal={false}
                         key={topic_._id}
                         topicBody={topic_}
                         topicSize='smallTopic'
                         hideNumber={true}
-                    />
-                    : <span key={i}>&nbsp;&nbsp;</span>)}
+                        className='margin-right-15 auto-width'
+                  />)}
 
               </Slider>
               : 'No topics'
@@ -256,7 +256,6 @@ const Book = ({
                         text: `Are you sure you want to report '${book.title}' as Inappropriate?`
                       })
                       updateAlertProps({
-                        cancelButtonText: 'Nevermind',
                         confirmButtonText: 'Report it',
                         icon: 'flag',
                         isOpen: true,

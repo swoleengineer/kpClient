@@ -144,6 +144,7 @@ const SingleQuestionPage = (props: {
         {...alertProps}
         onConfirm={() => alertFunctions[alertConfig.type]()}
         onCancel={() => updateAlertProps({ isOpen: false})}
+        cancelButtonText='Nevermind'
       >
         {alertConfig.text}
       </Alert>

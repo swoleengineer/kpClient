@@ -1,7 +1,7 @@
 import React from 'react';
 import Logo from './logo';
 import { connect } from 'react-redux';
-import { IStore, IUserState } from 'src/state-management/models';
+import { IStore, IUserState, IAppState } from 'src/state-management/models';
 import { OverflowList, Button } from '@blueprintjs/core';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
@@ -27,7 +27,7 @@ interface IHeaderMenuItem {
     payload?: any;
   }
 }
-const Header = (props: { user: IUserState, style: any, linkTo: Function }) => {
+const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPort: IAppState['viewPort'] }) => {
   const { loggedIn, user } = props.user;
   const linkTo = props.linkTo;
   const { username } = user || { username: undefined };
@@ -51,7 +51,7 @@ const Header = (props: { user: IUserState, style: any, linkTo: Function }) => {
         <div className='row'>
           <div className='col-12'>
             <div className='logoArea'>
-              <Logo large={false} dark={loggedIn} />
+              <Logo large={false} dark={loggedIn} noText={props.viewPort === 'mobile'} />
             </div>
             <div className='menuArea'>
               <div className='authStatusWrapper'>
@@ -90,7 +90,8 @@ const Header = (props: { user: IUserState, style: any, linkTo: Function }) => {
 }
 
 const mapStateToProps = (state: IStore) => ({
-  user: state.user
+  user: state.user,
+  viewPort: state.app.viewPort
 })
 
 const mapDispatch = dispatch => ({

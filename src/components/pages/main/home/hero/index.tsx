@@ -16,8 +16,9 @@ const Hero = (props: {
   updateCategory: Function;
   updateFilteredTopics: Function;
   linkTo: Function;
+  viewPort: IAppState['viewPort']
 }) => {
-  const { updateFilteredTopics, linkTo, topics, home: { searchText, selectedSearchCategory }, updateSearch, updateCategory } = props;
+  const { updateFilteredTopics, linkTo, topics, home: { searchText, selectedSearchCategory }, updateSearch, updateCategory, viewPort } = props;
   const processText = (force: boolean = false) => {
     if (!force && (searchText.length < 3 || selectedSearchCategory === HomeSearchCategories.topic)) {
       return;
@@ -29,7 +30,7 @@ const Hero = (props: {
   }
   return (
   <section className='heroSection' style={{ ...(searchText.length > 0 ? { marginBottom: '0px', position: 'sticky', top: '43px', zIndex: 19, backgroundColor: '#f4f6f7'} : {})}}>
-    <div className='container'  style={{ ...(searchText.length > 0 ? { background: 'none'} : {})}} >
+    <div className='container'  style={{ ...(searchText.length > 0 || viewPort !== 'pc' ? { background: 'none'} : {})}} >
       <div className='row'>
         <Collapse isOpen={!searchText.length} transitionDuration={25}>
           <div className='col-12'>
@@ -137,7 +138,8 @@ const Hero = (props: {
 
 const mapStateToProps = (state: IStore) => ({
   topics: state.topic.allTopics,
-  home: state.app.home
+  home: state.app.home,
+  viewPort: state.app.viewPort
 });
 
 const mapDispatch = dispatch => ({

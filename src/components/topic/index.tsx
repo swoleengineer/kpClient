@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon, Menu, MenuItem, Popover, Icon } from '@blueprintjs/core';
+import { Icon, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { ITopicBodyObj, ITopic } from '../../state-management/models';
 import './topic.css';
 
-const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, selected, onClick, style, hideNumber, removable }: {
+const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, selected, onClick, style, hideNumber, removable, className }: {
   topicBody?: ITopicBodyObj;
   skill?: ITopic;
   interactive?: boolean;
@@ -13,7 +13,8 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   onClick?: any;
   style?: any;
   hideNumber?: boolean;
-  removable?: boolean
+  removable?: boolean;
+  className?: string
 } = {
   topicBody: undefined,
   skill: undefined,
@@ -24,7 +25,8 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   onClick: () => null,
   style: null,
   hideNumber: false,
-  removable: false
+  removable: false,
+  className: ''
 }) => {
   if (!topicBody && !skill) {
     return null;
@@ -33,6 +35,7 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   const agreed = topicBody ? topicBody.agreed : [];
   const wrapperClasses = [
     'topicCompWrapper',
+    className,
     topicSize,
     ...(minimal ? ['topicCompMinimal'] : []),
     ...(interactive ? ['topicCompInteractive'] : []),
@@ -56,6 +59,10 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
       {(topicBody && !hideNumber) && <div className='topicCompRight' onClick={() => onClick()}>
         <span >{agreed.length}</span>
       </div>}
+      <div className='clearfix' />
+      <div className='topicCompProgressWrapper'>
+        <div className='topicCompProgressBar' style={{ width: '60%'}} />
+      </div>
     </div>
   );
 }

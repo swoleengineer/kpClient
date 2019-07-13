@@ -131,6 +131,7 @@ const SingleBook = (props: {
         {...alertProps}
         onConfirm={() => alertFunctions[alertConfig.type]()}
         onCancel={() => updateAlertProps({ isOpen: false})}
+        cancelButtonText='Nevermind'
       >
         {alertConfig.text}
       </Alert>
@@ -139,7 +140,7 @@ const SingleBook = (props: {
         breadcrumbRenderer={crumb => <Link to={{ type: crumb.type, payload: crumb.payload }} className='singleBook_bcrumb'><Icon icon={crumb.icon} iconSize={12} /> {crumb.text}</Link>}
       />
       <div className='row'>
-        <div className='col-md-4 makeSticky'>
+        <div className='col-md-4'>
           <Book liv={book} />
           <ul className='underBookMenu'>
             <MenuItem

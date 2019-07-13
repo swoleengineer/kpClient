@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '@blueprintjs/core';
+import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 
@@ -11,8 +11,20 @@ const accountNav = ({ linkTo }) => {
         <div className='up_nav_item_parent'>
           My Lists
           <span className='up_nav_item_parent_btn'>
-            <Icon icon='add' iconSize={10} />
-            Create List
+            <Popover>
+              <Icon icon='more' iconSize={10} />
+              <Menu>
+                <MenuItem
+                  text='Create New List'
+                  icon='add'
+                />
+                <MenuItem
+                  text='View All Lists'
+                  icon='list-columns'
+                />
+              </Menu>
+            </Popover>
+
           </span>
         </div>
         <div className='up_nav_item_children_wrapper'>

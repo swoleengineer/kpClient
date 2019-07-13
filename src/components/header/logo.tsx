@@ -7,12 +7,14 @@ import logoLight from '../../assets/simple_light.png';
 
 
 
-const Logo = ({ large = false, dark = false }: { large: boolean, dark?: boolean }) => (
+const Logo = ({ large = false, dark = false, noText = false }: { large: boolean; dark?: boolean; noText: boolean }) => (
   <Link to={{ type: 'HOME' }} className={['logoWrapper', ...(large ? ['larger'] : []), ...(dark ? ['logoLight'] : [])].join(' ')}>
     <img src={dark ? logoLight : logo} alt='Keen Pages' />
-    <span className='logoKeen'>KEEN</span>
-    <span className='logoPages'>PAGES</span>
-    <span className='logoTld'>.com</span>
+    {noText ? null : <>
+      <span className='logoKeen'>KEEN</span>
+      <span className='logoPages'>PAGES</span>
+      <span className='logoTld'>.com</span>
+    </>}
   </Link>
 );
 
