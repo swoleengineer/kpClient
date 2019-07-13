@@ -1,4 +1,4 @@
-
+.firebase/
 logs
 *.log
 npm-debug.log*
