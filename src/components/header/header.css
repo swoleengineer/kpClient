@@ -91,7 +91,7 @@
   display: inline-block
 }
 .menuArea .loggedOutLinks span a {
-  color: rgba(0,0,0,.6)
+  color: rgba(255,255,255,.6)
 }
 .menuArea .bp3-popover-wrapper:hover {
   cursor: pointer;

@@ -3,9 +3,11 @@ import Logo from './logo';
 import { connect } from 'react-redux';
 import { IStore, IUserState, IAppState } from 'src/state-management/models';
 import { Button, Popover, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import Link from 'redux-first-router-link';
+// import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import KeenIcon from '../icons';
+import { showAuthModal } from '../../state-management/thunks';
+import { AuthModalTypes } from '../../state-management/models';
 
 // interface IHeaderMenuItem {
 //   text: string;
@@ -20,7 +22,7 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
   const linkTo = props.linkTo;
   const { username } = user || { username: undefined };
   return (
-    <header className={loggedIn ? 'appHeader loggedInHeader' : 'appHeader'} style={props.style}>
+    <header className={'appHeader loggedInHeader'} style={props.style}>
       <div className='container headerWrapper'>
         <div className='row'>
           <div className='col-12'>
@@ -76,7 +78,7 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
                       </Popover>
                     </div>
                   : <div className='loggedOutLinks'>
-                    <span><Link to={{ type: 'LOGIN' }}>Login</Link></span> | <span><Link to={{ type: 'REGISTER' }}>Register</Link></span>
+                    <span onClick={() => showAuthModal(AuthModalTypes.login)}>Login</span> | <span onClick={() => showAuthModal(AuthModalTypes.register)}>Register</span>
                   </div>}
               </div>
             </div>
