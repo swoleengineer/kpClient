@@ -32,7 +32,6 @@
 }
 .profileHeader {
   position: relative;
-  overflow: hidden;
 }
 .profile_picture_name {
   width: 100%;
@@ -98,6 +97,9 @@
   font-weight: 200;
   margin: 0 5px 
 }
+.uploadClick:hover {
+  cursor: pointer;
+}
 
 .user_profile_wrapper {
   display: block;
@@ -105,11 +107,18 @@
   background-size: 100% 100%;
   background-position: center;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  height: 100px;
   box-sizing: border-box;
-  border: 7px solid #5c7080;
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.user_profile_wrapper .sb-avatar {}
+.user_profile_wrapper .sb-avatar img {
+  border: 3px solid #fff;
+  box-shadow: 0px 2px 5px rgba(92,112,128,0.25);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.uploadClick:hover .user_profile_wrapper .sb-avatar img {
+  box-shadow: 0px 5px 9px rgba(92,112,128,0.35);
 }
 .profile_picture_name .profile_picture_img:hover .user_profile_wrapper {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -135,6 +144,7 @@
 .listPage_topics_wrapper .listPage_topics_meta {
   border-bottom: 1px solid rgba(0,0,0,.1);
   margin: 0 0 15px;
+  
 }
 .listPage_topics_wrapper .listPage_topics_meta > div {
   padding: 0 0;
@@ -186,95 +196,121 @@
   font-size: .8em;
   position: relative;
   top: -5px;
+  clear: both;
+  opacity: .7;
 }
 .accountUserMetaWrapper .aum_action_btns {
   display: block
 }
-.accountUserMetaWrapper .aum_Numbers_Wrapper {
+.accountUserMetaWrapper .aum_logoutLink {
+  display: inline-block;
+  clear: both;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,.5);
+  padding: 3px 7px;
+  font-size: .9em;
+  opacity: .5;
+  margin: 5px 0;
+  transition: all .28s ease;
+}
+.accountUserMetaWrapper .aum_logoutLink:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.accountUserMetaWrapper .aum_logoutLink .bp3-icon {
+  margin-left: 5px;
+  position: relative;
+  top: -1px;
+}
+.aum_Numbers_Wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
   margin: 25px 0 0;
 }
-.accountUserMetaWrapper .aum_Numbers_Wrapper div {
+.aum_Numbers_Wrapper div {
   text-align: center;
-
+  flex-grow: 1;
 }
-.accountUserMetaWrapper .aum_Numbers_Wrapper div:not(:last-child) {
-  margin-right: 25px;
-}
-.accountUserMetaWrapper .aum_Numbers_Wrapper div .aum_numbers_number {
+.aum_Numbers_Wrapper div .aum_numbers_number {
   font-size: 1.5em;
   font-weight: 600;
   display: block;
 }
-.accountUserMetaWrapper .aum_Numbers_Wrapper div .aum_numbers_text {}
 .userProfileNav {
-  border: 1px solid rgba(0,0,0,.15);
   margin: 35px 0 15px;
+  font-size: .95em;
+  box-shadow: 0px 2px 5px rgba(92,112,128,.2);
+}
+.userProfileNav .userProfileNav_top {
   display: flex;
-  align-items: stretch;
+  background-color: #5c7080;
+  padding: 5px 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.userProfileNav .userProfileNav_top .userProfileNav_top_item {
+  display: block;
+  padding: 5px;
   text-transform: uppercase;
-  font-size: .8em;
-  border-radius: 5px;
-}
-.userProfileNav div[class^='up_nav_item'] {
-  text-align: center;
-}
-.up_nav_item_nochilden {
-  display: block;
-  border-right:1px solid rgba(0,0,0,.15);
-  padding: 5px 15px;
-  align-self: center;
-}
-.up_nav_item_childen {
-  display: block;
-  width: calc(100% - 100px);
-}
-.up_nav_item_parent {
-  border-bottom: 1px solid rgba(0,0,0,.15);
+  margin: 0 10px 0 0;
   position: relative;
-  padding: 5px 15px;
+  transition: all .28s ease;
+  color: rgba(255,255,255,.6)
 }
-.up_nav_item_parent .up_nav_item_parent_btn {
-  position: absolute;
-  right:0px;
-  height: 15px !important;
-  padding: 5px 0px 5px 10px;
-  border-radius: 5px;
-  top: 1px;
-  transition: all .19s ease;
-}
-.up_nav_item_parent .up_nav_item_parent_btn:hover {
-  cursor: pointer;
-  opacity: .6;
-}
-.up_nav_item_parent_btn .bp3-icon {
+.userProfileNav .userProfileNav_top .userProfileNav_top_item i {
   margin-right: 5px;
 }
-.up_nav_item_children_wrapper {
-  display: flex;
-}
-.up_nav_item_child {
-  padding: 5px 10px
-}
-.up_nav_item_child:not(:last-child) {
-  border-right: 1px solid rgba(0,0,0,.15);
-  
-}
-.up_nav_item_nochilden, .up_nav_item_child {
-  color: rgba(0,0,0,.4);
-  transition: all .2s ease;
-}
-.up_nav_item_nochilden:hover, .up_nav_item_child:hover {
+.userProfileNav .userProfileNav_top .userProfileNav_top_item:hover {
   cursor: pointer;
-  opacity: .7;
+  color: white;
 }
-
-div.up_nav_item_selected[class^='up_nav_item'] {
+.userProfileNav .userProfileNav_top .userProfileNav_top_item.nav_active {
+  color: white;
+}
+.userProfileNav .userProfileNav_top .userProfileNav_top_item.nav_active:after {
+  width: 0px;
+  height: 0px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+  content: ' ';
+  position: absolute;
+  bottom: -5px;
+  left: calc(50% - 2px)
+}
+.userProfileNav .userProfileNav_bottom {
+  background-color: white;
+  overflow: hidden;
+  padding: 5px 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.userProfileNav .userProfileNav_bottom .userProfileNav_bottom_list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.userProfileNav .userProfileNav_bottom .userProfileNav_bottom_list li {
+  display: block;
+  padding: 5px;
+  transition: all .28s ease;
+  color: rgba(0,0,0,.4);
+}
+.userProfileNav .userProfileNav_bottom .userProfileNav_bottom_list li .bp3-icon {
+  position: relative;
+  top: -1px;
+  margin-right: 3px;
+}
+.userProfileNav .userProfileNav_bottom .userProfileNav_bottom_list li:hover {
+  cursor: pointer;
+  color: rgba(0,0,0,.7);
+}
+.userProfileNav .userProfileNav_bottom .userProfileNav_bottom_list li.nav_active {
   font-weight: 500;
-  color: #5c7080
+  color: rgba(0,0,0,.7)
 }
 .up_stats_panelWrapper {
   height: 350px;
@@ -282,6 +318,15 @@ div.up_nav_item_selected[class^='up_nav_item'] {
   border-radius: 5px;
   box-shadow: 0px 3px 8px rgba(0,0,0,.1);
   margin: 15px 0;
+}
+.up_stats_panelWrapper.x_lt3 {
+  height: calc(220px + 176px);
+}
+.up_stats_panelWrapper.x_lt5 {
+  height: calc(220px + 352px);
+}
+.up_stats_panelWrapper.x_mt5 {
+  height: calc(220px + 440px);
 }
 .up_stats_panelWrapper .up_state_panel_stack {
   padding: 15px;
@@ -291,62 +336,41 @@ div.up_nav_item_selected[class^='up_nav_item'] {
   font-weight: 600;
   color: rgba(0,0,0,.8);
 }
-
-.stats_item {
-  border-radius: 5px;
-  border: 1px solid rgba(178,192,202, 1);
+.stats_item_wrapper .stats_item {
+  margin-bottom: 15px;
 }
-
-.stats_item .stats_item_body .stats_item_topPortion {
+.statNavBarWrapper {
   display: flex;
-  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
-.stats_item .stats_item_select_checkBox {
-  width: 35px;
-  padding: 10px 0 0 15px;
+.statNavBarWrapper .statNavBarStates {
+  width: 220px;
 }
-.stats_item .stats_item_body header {
-  padding: 8px;
-  position: relative;
-}
-.stats_item .stats_item_body header i {
-  margin-right: 10px;
-  font-size: 1.2em;
-}
-.stats_item .stats_item_body header .stats_item_body_header_topicName {
-  font-weight: 500;
-  font-size: 1.2em;
-}
-.stats_item .stats_item_body header .stats_item_body_header_rightBtn {
-  position: absolute;
-  right: 0;
-  border-left: 1px solid rgba(0,0,0,.3);
-  padding: 1px 15px;
-  transition: all .19s ease;
-  height: calc(100% - 16px);
-}
-.stats_item .stats_item_body header .stats_item_body_header_rightBtn:hover {
-  cursor: pointer;
-  opacity: .7;
-}
-.stats_item .stats_item_body header .stats_item_body_header_rightBtn span {
-  position: relative;
-  top: calc(25%)
-}
-.stats_item .stats_item_body .stats_item_body_meta {
+.statNavBarWrapper .statNavBarActions {
+  width: calc(100% - 220px);
   display: flex;
-  font-size: .9em
+  justify-content: flex-end;
+  margin-left: auto;
 }
-.stats_item .stats_item_body .stats_item_body_meta div:not(:last-child) {
-  margin-right: 10px;
+.statNavBarWrapper .statNavBarActions .statNavBarActions_btn {
+  margin-left: 10px;
 }
-.stats_item .stats_item_body .stats_item_body_progressBarWrapper {
-  padding: 5px;
-  background-color: rgba(178,192,202,.3);
+.stats_selectedNote {
+  font-size: .85em;
 }
-.stats_item .stats_item_body .stats_item_body_progressBarWrapper .progress {
-  background-color: #b2c0ca;
+
+.justBooks_wrapper {
+  padding: 15px;
 }
-.progress-bar.bg-keen-dark {
-  background-color: #5c7080;
+.justBooks_wrapper header {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  margin-bottom: 25px;
+}
+.justBooks_wrapper header small {
+  display: block;
+}
+.justBooks_wrapper .row .col-12 {
+  display: flex;
 }

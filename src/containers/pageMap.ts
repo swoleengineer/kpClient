@@ -13,6 +13,7 @@ import AllQuestions from '../components/pages/main/questions/all';
 import Profile from '../components/pages/main/profile';
 import Privacy from '../components/pages/main/privacy';
 import Terms from '../components/pages/main/termsOfService';
+import AddTopicToStats from '../components/pages/auth/stats/addTopic';
 
 export default {
   'main/home': Home,
@@ -23,6 +24,7 @@ export default {
   'auth/question': NewQuestion,
   'auth/forgotPw/forgot': ForgotPw,
   'auth/forgotPw/reset': ResetPw,
+  'auth/stats/addTopic': AddTopicToStats,
   'main/books/all': Allbooks,
   'main/books/single': SingleBook,
   'main/questions/all': AllQuestions,

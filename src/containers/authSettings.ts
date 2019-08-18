@@ -50,5 +50,12 @@ export const authSettings = {
     pageTitle: 'Reset Password',
     pageSubtitle: '',
     pageDescription: 'Enter a new password. Make sure both fields match'
+  },
+  addTopic: {
+    cardWidth: 'col-md-4',
+    topPadding: '15%',
+    pageTitle: 'Track New Topic',
+    pageSubtitle: '',
+    pageDescription: 'Add new topic to your stats so you can track progress.'
   }
 }

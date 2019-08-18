@@ -1,12 +1,14 @@
 import React from 'react';
-import { InputGroup, ControlGroup, Icon, Collapse } from '@blueprintjs/core';
-import { ITopic, IStore, IAppState, HomeSearchCategories, AuthModalTypes } from '../../../../../state-management/models';
+import { ITopic, IStore, IAppState } from '../../../../../state-management/models';
 import { connect } from 'react-redux';
-import Slider from 'react-slick';
 import { appActionTypes, bookActionTypes as bookTypes } from '../../../../../state-management/actions';
-import { searchGoogle, showModal, queryMoreBooks } from '../../../../../state-management/thunks';
+import { 
+  // searchGoogle, showModal, 
+  queryMoreBooks } from '../../../../../state-management/thunks';
 import { redirect } from 'redux-first-router'
-import Topic from '../../../../topic';
+import HeroSlider from './heroSlider';
+import HeroSearch from './heroSearch';
+import './heroStyle.css';
 
 
 const Hero = (props: {
@@ -16,21 +18,54 @@ const Hero = (props: {
   updateCategory: Function;
   updateFilteredTopics: Function;
   linkTo: Function;
-  viewPort: IAppState['viewPort']
+  viewPort: IAppState['viewPort'];
+  loggedIn: boolean;
 }) => {
-  const { updateFilteredTopics, linkTo, topics, home: { searchText, selectedSearchCategory }, updateSearch, updateCategory, viewPort } = props;
-  const processText = (force: boolean = false) => {
-    if (!force && (searchText.length < 3 || selectedSearchCategory === HomeSearchCategories.topic)) {
-      return;
-    }
-    searchGoogle(searchText).then(
-      () => console.log(''),
-      () => console.log('')
-    )
-  }
+  const { updateFilteredTopics, linkTo, topics, home: { searchText,
+    // selectedSearchCategory 
+  }, updateSearch, 
+  // updateCategory, 
+  viewPort, loggedIn } = props;
+  // const processText = (force: boolean = false) => {
+  //   if (!force && (searchText.length < 3 || selectedSearchCategory === HomeSearchCategories.topic)) {
+  //     return;
+  //   }
+  //   searchGoogle(searchText).then(
+  //     () => console.log(''),
+  //     () => console.log('')
+  //   )
+  // }
+  const screenHeight = window.innerHeight - 41;
+  const style = {
+    ...(searchText.length > 0
+      ? {
+        position: 'sticky',
+        top: '43px',
+        zIndex: 19,
+        backgroundColor: '#b2c0ca',
+        height: '55px'
+      }
+      : {}),
+    ...( viewPort === 'mobile'
+      ? {
+          height: `${screenHeight}px`
+        }
+      : {})
+    };
   return (
-  <section className='heroSection' style={{ ...(searchText.length > 0 ? { marginBottom: '0px', position: 'sticky', top: '43px', zIndex: 19, backgroundColor: '#f4f6f7'} : {})}}>
-    <div className='container'  style={{ ...(searchText.length > 0 || viewPort !== 'pc' ? { background: 'none'} : {})}} >
+  <section className={viewPort === 'mobile' ? 'heroSection mobileHero' : 'heroSection'} style={style}>
+    {searchText.length < 1 && <HeroSlider loggedIn={loggedIn} />}
+    <HeroSearch
+      topics={topics}
+      updateFilteredTopics={updateFilteredTopics}
+      linkTo={linkTo}
+      queryMoreBooks={queryMoreBooks}
+      enterClicked={updateSearch}
+      searchMode={searchText.length > 0}
+      loggedIn={loggedIn}
+      viewPort={viewPort}
+    />
+    {/* <div className='container'  style={{ ...(searchText.length > 0 || viewPort !== 'pc' ? { background: 'none'} : {})}} >
       <div className='row'>
         <Collapse isOpen={!searchText.length} transitionDuration={25}>
           <div className='col-12'>
@@ -131,7 +166,7 @@ const Hero = (props: {
         </div>
       </div>
     </div>}
-  
+   */}
   </section>
   );
 }
@@ -139,7 +174,8 @@ const Hero = (props: {
 const mapStateToProps = (state: IStore) => ({
   topics: state.topic.allTopics,
   home: state.app.home,
-  viewPort: state.app.viewPort
+  viewPort: state.app.viewPort,
+  loggedIn: state.user.loggedIn
 });
 
 const mapDispatch = dispatch => ({

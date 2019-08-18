@@ -1,8 +1,9 @@
 import { store } from '../../store';
-import { INewUserRequest, IUserLoginRequest, IStore } from '../models';
+import { INewUserRequest, IUserLoginRequest, IStore, IUser, IAddTopicToStatRequest, AuthModalTypes, ITopic } from '../models';
 import { postNewUser, postUserLogin, postSaveBookToUser, postRmBookFrUser,
   postUserAutoAuth, postUserForgotPass, postUserResetPassword, postUserUpdatePic,
-  postUserUpdate, postUserChangePassword, postUserNotificationSettings
+  postUserUpdate, postUserChangePassword, postUserNotificationSettings,
+  getSingeUserStats, postNewTopicToStat, postGenerateStat, postEditStatSkill, postRemoveStatSkill
 } from '../../config';
 import { userActionTypes as types, bookActionTypes as bookTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core'
@@ -11,6 +12,17 @@ import { redirect } from 'redux-first-router'
 const AppToaster = Toaster.create({
   className: 'keenpagesToaster',
 })
+
+export const showAuthModal = (page: AuthModalTypes) => {
+  store.dispatch({
+    type: types.toggleAuthModal,
+    payload: true
+  });
+  store.dispatch({
+    type: types.setAuthModalPage,
+    payload: page
+  })
+}
 
 export const register = (params: INewUserRequest, goToNext: boolean = false, redirectPayload: {
   type: string;
@@ -26,13 +38,7 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
       type: types.updateLoggedIn,
       payload: { loggedIn: true, jwt }
     });
-    localStorage.setItem('x-access-token', jwt);
-    AppToaster.show({
-      message: 'Successfully registered.',
-      intent: 'success',
-      icon: 'tick',
-      onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
-    });
+    return { user, goToNext, redirectPayload, jwt };
   },
   (err: any) => {
     console.log(err, err.response.data);
@@ -42,7 +48,36 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
       icon: 'error'
     })
   }
-)
+).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
+  const { user, goToNext: gNext, redirectPayload: rdPload, jwt } = nextPayload;
+  return getSingeUserStats(user._id).then(
+    res => {
+      if (!res.data) {
+        return;
+      }
+      const payload = res.data;
+      store.dispatch({
+        type: types.setUserStats,
+        payload
+      });
+      localStorage.setItem('x-access-token', jwt);
+      AppToaster.show({
+        message: 'Successfully registered.',
+        intent: 'success',
+        icon: 'tick',
+        onDismiss: () => gNext ? store.dispatch(redirect(rdPload)) : null
+      });
+    },
+    error => {
+      console.log(error, error.response.data);
+      AppToaster.show({
+        message: error.response.data.message || 'Could not register your account. Please try again later.',
+        intent: 'danger',
+        icon: 'error'
+      });
+    }
+  )
+});
 
 
 
@@ -67,6 +102,7 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     });
+    return { user, goToNext, redirectPayload, jwt };
   },
   err => {
     console.log(err, err.response.data);
@@ -76,7 +112,36 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
       icon: 'error'
     })
   }
-)
+).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
+  const { user, goToNext: goNext, redirectPayload: nexpload, jwt } = nextPayload;
+  return getSingeUserStats(user._id).then(
+    res => {
+      if (!res.data) {
+        return;
+      }
+      const payload = res.data;
+      store.dispatch({
+        type: types.setUserStats,
+        payload
+      });
+      localStorage.setItem('x-access-token', jwt);
+      AppToaster.show({
+        message: 'Successfully registered.',
+        intent: 'success',
+        icon: 'tick',
+        onDismiss: () => goNext ? store.dispatch(redirect(nexpload)) : null
+      });
+    },
+    error => {
+      console.log(error, error.response.data);
+      AppToaster.show({
+        message: error.response.data.message || 'Could not register your account. Please try again later.',
+        intent: 'danger',
+        icon: 'error'
+      });
+    }
+  )
+});
 
 export const autoLogin = () => {
   const token = localStorage.getItem('x-access-token');
@@ -94,17 +159,39 @@ export const autoLogin = () => {
         type: types.updateLoggedIn,
         payload: { loggedIn: true, jwt }
       });
-      localStorage.setItem('x-access-token', jwt);
-      AppToaster.show({
-        message: `Welcome ${user.profile.first_name}`,
-        intent: 'success',
-        icon: 'tick',
-      });
+      return { user, jwt };
     },
     (err: any) => {
       localStorage.removeItem('x-access-token');
     }
-  )
+  ).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
+    const { user, jwt } = nextPayload;
+    return getSingeUserStats(user._id).then(
+      res => {
+        if (!res.data) {
+          return;
+        }
+        const payload = res.data;
+        store.dispatch({
+          type: types.setUserStats,
+          payload
+        });
+        localStorage.setItem('x-access-token', jwt);
+        AppToaster.show({
+          message: `Welcome ${user.profile.first_name}`,
+          intent: 'success',
+          icon: 'tick',
+        });
+      },
+      error => {
+        AppToaster.show({
+          message: error.response.data.message || 'Could not register your account. Please try again later.',
+          intent: 'danger',
+          icon: 'error'
+        });
+      }
+    )
+  }).catch((err) => err)
 }
 
 export const updateProfilePicture = (id: string, body: { public_id: string; link: string }) => postUserUpdatePic(id, body).then(
@@ -301,4 +388,63 @@ export const submitResetPass = (params: { password: string }, goToNext: boolean 
       })
     }
   )
+}
+
+const updateStatState = res => {
+  const { updatedStat = undefined } = res.data;
+  store.dispatch({
+    type: types.updateUserStats,
+    payload: updatedStat || res.data
+  });
+  return res.data;
+}
+const handleStatErr = (errMsg: string) => err => {
+  let message;
+  try {
+    message = err.response.data.message
+  } catch {
+    message = errMsg;
+  }
+  AppToaster.show({ message, intent: 'danger', icon: 'error' });
+  return err;
+}
+
+export const addSkillToStats = (params: { topic: ITopic; description: string; goal: number; dueDate: Date }) => {
+  const { user: { userStats }} = store.getState() as IStore;
+  const { figures: statFigures = [], _id: statId = ''} = { ...(userStats || {}) };
+  const figures = statFigures.filter(fig => fig);
+  if (figures.length && figures.findIndex(({ topic: { _id }}) => _id === params.topic._id) > -1) {
+    const message = 'You are already tracking this topic.';
+    AppToaster.show({ message, intent: 'danger', icon: 'error' });
+    return new Promise((resolve, reject) => reject(undefined));
+  }
+  
+  const request: IAddTopicToStatRequest = { statId, ...params };
+  return postNewTopicToStat(request).then(
+    updateStatState,
+    handleStatErr('Could not add this topic to your stats.')
+  )
+}
+
+export const generateStats = (body: { statId: string }) => postGenerateStat(body).then(
+  updateStatState,
+  handleStatErr('Error generating your stats, please try again later.')
+)
+
+export const editStats = (body: { skillId: string; edits: Array<{ field: string; value: any; }>}) => {
+  const { user: { userStats }} = store.getState() as IStore;
+  const { _id: statId = ''} = { ...(userStats || {}) };
+  return postEditStatSkill(statId, body).then(
+    updateStatState,
+    handleStatErr('Error editing your stats. Please try again later.')
+  );
+}
+
+export const deleteStatSkill = (figureId: string) => {
+  const { user: { userStats }} = store.getState() as IStore;
+  const { _id: statId = ''} = { ...(userStats || {}) };
+  return postRemoveStatSkill(statId, figureId).then(
+    updateStatState,
+    handleStatErr('Could not delete this skill from your stats. Please try again later.')
+  );
 }

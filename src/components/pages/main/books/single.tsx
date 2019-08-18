@@ -8,11 +8,11 @@ import Book from '../../../book';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router'
 import TopicBrowse from '../../auth/topic/topicBrowse';
-import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook, engagePrecheck } from '../../../../state-management/thunks'
+import { toggleUserBook, addTopicsToBook, createComment, removeComment, createReport, toggleTopicAgreeBook, engagePrecheck, editBookDetails } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
 import { getAuthorName } from '../../../../state-management/utils/book.util';
 import Topic from '../../../topic';
-
+import EditBook from './editBook';
 
 const SingleBook = (props: {
   book: IExpandedBook;
@@ -25,6 +25,7 @@ const SingleBook = (props: {
   }
   document.title = `${book.title} - keenpages.com`;
   const [addTopicOpen, setTopicForm] = useState<boolean>(false);
+  const [showEdit, setEditForm] = useState<boolean>(false)
   const [topicsToAdd, adjustTopics] = useState<ITopic[]>([]);
   const [newComment, updateComment] = useState({
     author: {
@@ -125,6 +126,8 @@ const SingleBook = (props: {
     reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
   let commentInput;
+
+
   return (
     <div className='singleBookPage'>
       <Alert
@@ -161,6 +164,10 @@ const SingleBook = (props: {
             {(book.affiliate_link || book.amazon_link) && <>
               <Menu.Divider />
               <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+            </>}
+            {user && user.role === 'admin' && <>
+              <Menu.Divider />
+              <MenuItem icon='edit' text='Add Purchase Url' onClick={() => setEditForm(true)} />
             </>}
             <Menu.Divider />
             <MenuItem
@@ -227,6 +234,11 @@ const SingleBook = (props: {
               <li onClick={() => setTopicForm(!addTopicOpen)}> <Icon icon={<i className='fa fa-graduation-cap' />} /> {book.topics.length} </li>
             </ul>
           </div>
+          {(showEdit && user && user.role === 'admin') && <EditBook
+            saveEdit={(bookId: string, details: { [key: string]: any}) => editBookDetails(bookId, details)}
+            cancelEdit={() => setEditForm(false)}
+            book={book}
+          />}
           <Card>
             {book.description && <>
               <h5>Description</h5>

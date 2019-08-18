@@ -11,23 +11,9 @@
 .heroSection {
   background-color: rgba(167, 182, 194, 0.13);
   font-family: ministry, sans-serif;
-  padding: 50px 15px 0;
-}
-.heroSection h2 {
-  font-size: 32pt;
-  font-weight: 400;
-  color: #303030;
-}
-.heroSection .container {
-  background-image: url('../../../../assets/bookShelf.png');
-  background-size: 42%;
-  background-repeat: no-repeat;
-  background-position: right 65%;
-}
-.heroSection .heroDescription {
-  font-size: 20px;
-  color: #303030;
-  font-weight: 200;
+  position: relative;
+  height: 550px;
+  margin-bottom: 70px;
 }
 
 .heroSection h2::selection, .heroSection .heroDescription::selection {
@@ -45,40 +31,7 @@
 .heroSearchWrapper .bp3-input-group  {
   width: 100%
 }
-.heroSearchWrapper .bp3-input-group .bp3-input, .heroSearchWrapper input {
-  border-radius: 5px;
-  background-color: white;
-  border: 3px solid rgba(167, 182, 194, 1);;
-  font-size: 25px;
-  height: 50px;
-  font-family: ministry, sans-serif;
-  font-weight: 200;
-  padding: 10px 15px;
-  outline: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.heroSearchWrapper .bp3-input-group .bp3-input:focus, .heroSearchWrapper input:focus {
-  box-shadow: 0 8px 17px rgba(0, 0, 0, 0.08);
-}
 
-.heroSearchWrapper .bp3-input-group .bp3-input-action {
-  width: 100px;
-  background-color: rgba(167, 182, 194, 0.13);
-  border-radius: 0 5px 5px 0;
-  border-top: 3px solid rgba(167, 182, 194, 1);;
-  border-right: 3px solid rgba(167, 182, 194, 1);;
-  border-bottom: 3px solid rgba(167, 182, 194, 1);;
-  height: 50px;
-  text-align: center;
-  padding-top: 8px;
-  color: #696969;
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.heroSearchWrapper .bp3-input-group:hover .bp3-input,
-.heroSearchWrapper .bp3-input-group:hover .bp3-input-action {
-  border-color:#5c7080;
-}
 .heroSearchWrapper .bp3-input-group .bp3-input:focus + .heroSearchWrapper .bp3-input-group .bp3-input-action {
   background: white
 }
@@ -152,6 +105,7 @@
 .searchBoxText {
   padding: 0 0 0 15px;
   font-weight: 300;
+  display: block;
 }
 .searchBoxText strong {
   transition: all .15s ease;

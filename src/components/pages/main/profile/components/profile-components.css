@@ -1,0 +1,255 @@
+.stats_item {
+  border-radius: 5px;
+  border: 1px solid rgba(178,192,202, 1);
+}
+
+.stats_item .stats_item_body .stats_item_topPortion {
+  display: flex;
+  width: 100%;
+  transition: all .18s ease;
+}
+.stats_item .stats_item_select_checkBox {
+  width: 35px;
+  padding: 10px 0 0 15px;
+}
+.stats_item .stats_item_body header {
+  padding: 8px;
+  position: relative;
+}
+.stats_item .stats_item_body .stats_item_topPortion:hover {
+  cursor: pointer;
+  background-color: rgba(178,192,202,.3);
+}
+.stats_item .stats_item_body header i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+.stats_item .stats_item_body header .stats_item_body_header_topicName {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn {
+  position: absolute;
+  right: 0;
+  border-left: 1px solid rgba(0,0,0,.3);
+  padding: 1px 15px;
+  transition: all .19s ease;
+  height: calc(100% - 16px);
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+.stats_item .stats_item_body header .stats_item_body_header_rightBtn span {
+  position: relative;
+  top: calc(25%)
+}
+.stats_item .stats_item_body .stats_item_body_meta {
+  display: flex;
+  font-size: .9em;
+  color: rgba(0,0,0,.6)
+}
+.stats_item .stats_item_body .stats_item_body_meta div:not(:last-child) {
+  margin-right: 10px;
+}
+.stats_item .stats_item_body .stats_item_body_progressBarWrapper {
+  padding: 5px;
+  background-color: rgba(178,192,202,.3);
+}
+.stats_item .stats_item_body .stats_item_body_progressBarWrapper .progress {
+  background-color: #b2c0ca;
+}
+.progress-bar.bg-keen-dark {
+  background-color: #5c7080;
+}
+
+.fullStatWrapper {
+  padding: 15px;
+}
+.fullStat_header {
+  font-size: 1.5em
+}
+.fullStat_header i {
+  margin-right: 10px;
+}
+.fullStatMetaWrapper {
+  font-size: 1.1em;
+  background-color: #5c7080;
+  margin: 10px -15px 0;
+  padding: 15px;
+  color: rgba(255,255,255,1)
+}
+.fullStatMeta_goal_text {
+  border-bottom: 1px solid rgba(255,255,255,.5);
+  display: block;
+  padding-bottom: 10px;
+  margin: 5px 0;
+  overflow: hidden;
+}
+.fullStatMeta_goal_text .fullStatMeta_goal_btn {
+  border: 1px solid rgba(255,255,255,.5);
+  padding: 5px;
+  font-size: .9em;
+  border-radius: 4px;
+  display: block;
+  float: left;
+  clear: both;
+  margin: 10px 0 5px;
+  transition: all .28s ease;
+}
+.fullStatMeta_goal_text .fullStatMeta_goal_btn:hover {
+  cursor: pointer;
+  border-color: white;
+}
+.fullStat_header .fullStat_header_btns {
+  float: right;
+  text-align: right
+}
+.fullStat_header .fullStat_header_btns button {
+  margin-left: 10px
+}
+
+.fullStat_form_wrapper {
+  border: 2px dashed #5c7080;
+  border-radius: 5px;
+  padding: 25px;
+  width: 90%;
+  margin: 15px auto;
+  box-shadow: 0px 4px 8px rgba(92,112,128, .25)
+}
+.fullStatMetaWrapper table {
+  width: 100%;
+}
+.fullStatMetaWrapper table tr {}
+.fullStatMetaWrapper table tr td {
+  vertical-align: top;
+  padding: 5px 0;
+}
+.fullStatMetaWrapper table tr td:first-child {
+  font-weight: 600;
+  width: 75px;
+}
+.fullStatMetaWrapper table tr td:last-child {
+  font-weight: 200
+}
+.fullStatMetaWrapper table tr td:last-child .fullStatMeta_goal_nm {
+  text-decoration: underline;
+  font-weight: 500
+}
+.fullStatMetaWrapper .progress {
+  box-shadow: 0 6px 7px rgba(92,112,128,.3);
+  margin: 10px 0;
+}
+.fullStat_progressBarWrapper {
+  padding: 15px;
+  margin: 0 -15px 0;
+  background-color: rgba(178, 192, 202, .3);
+}
+.fullStat_progressBarWrapper .progress {
+  background-color: #b2c0ca;
+}
+.fullStat_dates_wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.fullStat_dates_wrapper .fullStat_dates_single {
+  position: relative;
+  padding: 15px;
+  flex-grow: 1
+}
+.fullStat_dates_wrapper .fullStat_dates_single span {
+  display: block;
+}
+.fullStat_dates_wrapper .fullStat_dates_single .fullStat_dates_cat,
+.fullStat_dates_wrapper .fullStat_dates_single .fullStat_dates_fromNow {
+  font-size: .9em;
+}
+.fullStat_dates_wrapper .fullStat_dates_single .fullStat_dates_date {
+  font-weight: 600;
+  font-size: 1.25em;
+  color: #5c7080
+}
+.fullStat_snapshots_wrapper {
+  position: relative;
+}
+.fullStat_snapshots_container:before {
+  content: ' ';
+  display: block;
+  border-left: 5px solid #5c7080;
+  position: absolute;
+  top: 44px;
+  height: calc(100% - 44px);
+  left: 45px;
+}
+.single_stat_snapshot {
+  display: flex;
+  clear: both;
+  margin: 0 0 25px;
+  align-items: stretch;
+}
+.single_stat_snapshot .single_stat_snapshot_bookCount {
+  display: block;
+  width: 90px;
+  background-color: #5c7080;
+  color: white;
+  padding: 0 10px;
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 1px 1px 5px rgba(92,112,128,.6)
+}
+.single_stat_snapshot .single_stat_snapshot_bookCount span {
+  display: block;
+  text-align: center;
+}
+.single_stat_snapshot .single_stat_snapshot_bookCount .single_stat_snapshot_bookCount_nm {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: calc(50% - 3px)
+}
+.single_stat_snapshot .single_stat_snapshot_bookCount .single_stat_snapshot_bookCount_txt {
+  font-size: .8em;
+  font-weight: 500
+}
+.single_stat_snapshot .single_stat_snapshot_details {
+  display: block;
+  overflow: hidden;
+  margin-left: 15px;
+  border-radius: 4px;
+  width: calc(100% - 106px);
+  box-shadow: 1px 1px 5px rgba(92,112,128,.3);
+  border: 1px solid rgba(92,112,128,.4);
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_top {
+  background-color: rgba(178,192,202, .3);
+  border-bottom: 1px solid #b2c0ca;
+  display: flex;
+  padding: 5px 10px;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_top .single_stat_snapshot_details_date {
+  font-weight: 500;
+  font-size: 1.1em;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_top .single_stat_snapshot_details_btn {
+  margin: 0 0 0 auto;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_bottom {
+  padding: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_bottom .single_stat_snapshot_details_allBooks {
+  display: flex;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_bottom .single_stat_snapshot_details_allBooks .single_stat_snapshot_details_book_wrapper {
+  margin-right: 5px;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_bottom .single_stat_snapshot_details_book {
+  height: 50px;
+  width: 30px;
+  background-size: cover;
+  background-position: top center;
+}
+.single_stat_snapshot .single_stat_snapshot_details .single_stat_snapshot_details_bottom .single_stat_snapshot_details_noBooks {
+  color: rgba(0,0,0,.5);
+  height: 50px;
+}

@@ -1,0 +1,15 @@
+.keen_avatar_wrapper {
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.keen_avatar_wrapper.withBorder {
+  border: 3px solid white;
+  box-shadow: 0 3px 6px rgba(92,112,128,.25)
+}
+.keen_avatar_wrapper .keen_avatar_pictureHolder {
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}

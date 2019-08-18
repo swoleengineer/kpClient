@@ -1,11 +1,11 @@
-import { IBook } from './'
+import { IBook, ITopic } from './';
 export interface IUserProfile {
   first_name: string;
   last_name: string;
   picture: {
     public_id: string;
     link: string;
-  } | {}
+  }
 }
 
 export interface INewUserRequest {
@@ -48,13 +48,55 @@ export enum AuthModalTypes {
   login = 'auth/login',
   register = 'auth/register',
   forgot = 'auth/forgotPw/forgot',
-  question = 'auth/question'
+  question = 'auth/question',
+  topicToStat = 'auth/stats/addTopic'
 }
 
+
+export interface IStatBookEntry {
+  book: IBook;
+  topicWeight: number
+}
+
+export interface IStatSnapshot {
+  books: Array<IStatBookEntry>;
+  created: Date;
+  status: number;
+}
+
+export interface IStatFigure {
+  _id: string;
+  topic: ITopic;
+  description?: string;
+  goal: number;
+  dueDate?: Date;
+  currentStatus: number;
+  created: Date;
+  snapShots: Array<IStatSnapshot>;
+  completed: boolean;
+  updated: Date
+}
+
+export interface IStat {
+  _id: string;
+  owner: string;
+  figures: Array<IStatFigure>;
+  updated: Date;
+}
 export interface IUserState {
   jwt: string;
   user:  IUser;
   loggedIn: boolean;
   showAuthModal: boolean;
-  authModalActivePage: AuthModalTypes
+  authModalActivePage: AuthModalTypes;
+  userStats: IStat | null;
+  topicForStat: ITopic | null;
+}
+
+export interface IAddTopicToStatRequest {
+  statId: string;
+  topic: any;
+  description?: string;
+  goal?: number;
+  dueDate?: Date;
 }

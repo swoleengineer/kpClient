@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IStore, IExpandedBook, ITopic, AuthModalTypes } from '../../../../state-management/models';
+import { IStore, IExpandedBook, ITopic, AuthModalTypes, IAppState } from '../../../../state-management/models';
 import './books.css';
 import BookCard from './bookCard';
 import { NonIdealState, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
@@ -25,14 +25,16 @@ const Allbooks = (props: {
   selectedTopics: ITopic[];
   updateFilteredTopics: Function;
   showAuthModal: Function;
+  viewPort: IAppState['viewPort']
 }) => {
-  const { updateFilteredTopics, selectedTopics, showAuthModal } = props;
+  const { updateFilteredTopics, selectedTopics, showAuthModal, viewPort } = props;
   const [commentsFirst, updateCommentSort] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
   const [sortOptions, updateSorts] = useState<any>(bookSorts)
   const [viewCards, updateView] = useState(!allBooksViewBooks.get());
   const [isLoading, updateLoading] = useState(false);
+  const [showSideMenu, updateSideMenuView] = useState<boolean>(false);
   const books = props.books
   const refreshBooks = () => {
     updateLoading(true);
@@ -76,7 +78,7 @@ const Allbooks = (props: {
     });
   return (
     <div className='row'>
-      <div className='col-md-4'>
+      {(!['mobile', 'tablet'].includes(viewPort) || showSideMenu) && <div className='col-lg-4 col-md-12'>
         <div className='clearfix makeSticky'>
           <div className='clearfix tagsHolder'>
             <h6>
@@ -124,19 +126,23 @@ const Allbooks = (props: {
             </ul>
           </div>
         </div>
-      </div>
-      <div className='col-md-8'>
+      </div>}
+      <div className='col-lg-8 col-md-12'>
         <div className={searchOpen ? 'allPage_topSettings_wrapper transitionEverything' : 'transitionEverything'}>
           <div className='row allPage_topSettings'>
             <div className='col-md-12 text-right'>
               <ButtonGroup  >
+                {['mobile', 'tablet'].includes(viewPort) && <Button
+                  icon='menu'
+                  onClick={() => updateSideMenuView(!showSideMenu)}
+                />}
                 <Button
                   text='Comments'
                   rightIcon={!commentsFirst ? 'arrow-up' : 'arrow-down'}
                   onClick={() => updateCommentSort(!commentsFirst)}
                 />
               </ButtonGroup>
-              <ButtonGroup style={{position: 'relative', top: '3px'}}>
+              <ButtonGroup style={{position: 'relative', top: ['mobile', 'tablet'].includes(viewPort) ? '0' : '3px'}}>
                 <Tooltip content='View as books'>
                   <Button 
                     icon='book'
@@ -150,7 +156,7 @@ const Allbooks = (props: {
                 </Tooltip>
                 <Tooltip content='View detailed'>
                   <Button 
-                    icon='list'
+                    icon={<span className='bp3-icon'><i className='fas fa-th-list' /></span>}
                     minimal={true}
                     onClick={() => {
                       updateView(true);
@@ -268,7 +274,8 @@ const Allbooks = (props: {
 const mapStateToProps = (state: IStore) => ({
   books: state.book.books,
   topics: state.topic.allTopics,
-  selectedTopics: state.book.selectedTopics
+  selectedTopics: state.book.selectedTopics,
+  viewPort: state.app.viewPort
 });
 
 const mapDispatch = dispatch => ({

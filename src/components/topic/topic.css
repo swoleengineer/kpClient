@@ -74,6 +74,9 @@
   font-size: 11px;
   position: relative
 }
+.topicCompWrapper.topicCompSelected {
+  border-color: #339af0;
+}
 .topicCompWrapper.topicCompSelected .topicCompRight {
   background-color: rgba(138,155,168,.6);
   transition: all .18s ease

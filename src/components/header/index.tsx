@@ -2,49 +2,23 @@ import React from 'react';
 import Logo from './logo';
 import { connect } from 'react-redux';
 import { IStore, IUserState, IAppState } from 'src/state-management/models';
-import { OverflowList, Button } from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
+import KeenIcon from '../icons';
 
-
-{/* <Popover>
-<span><Icon icon={'user'} /> &nbsp;{username} | Log Out</span>
-<Menu>
-  <MenuItem icon='user' text={'Edit Account'} onClick={() => linkTo({ type: 'PROFILE' })}/>
-  <MenuItem icon='book' text={'Saved Books'}  label={`${user.savedBooks.length || 0}`} onClick={() => linkTo({ type: 'MYPAGE', payload: { page: 'likedBooks' }})}/>
-  <MenuItem icon='bookmark' text={`Books I've Read`} label={`${user.readBooks.length || 0}`} onClick={() => linkTo({ type: 'MYPAGE', payload: { page: 'readBooks' }})}/>
-  <Menu.Divider />
-  <MenuItem icon='settings' text={`Notification Settings`} onClick={() => linkTo({ type: 'MYPAGE', payload: { page: 'notifications' }})}/>
-  <Menu.Divider />
-  <MenuItem icon='log-out' text={'Log out'} onClick={() => logUserOut()} />
-</Menu>
-</Popover> */}
-interface IHeaderMenuItem {
-  text: string;
-  icon?: any;
-  navPayload: {
-    type: string;
-    payload?: any;
-  }
-}
+// interface IHeaderMenuItem {
+//   text: string;
+//   icon?: any;
+//   navPayload: {
+//     type: string;
+//     payload?: any;
+//   }
+// }
 const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPort: IAppState['viewPort'] }) => {
   const { loggedIn, user } = props.user;
   const linkTo = props.linkTo;
   const { username } = user || { username: undefined };
-
-  const menuItems: IHeaderMenuItem[] = [{
-    text: username,
-    icon: 'user',
-    navPayload: {
-      type: 'PROFILE'
-    }
-  }, {
-    text: 'My Stats',
-    icon: <i className='fa fa-award' style={{ position: 'relative', top: '1px'}}/>,
-    navPayload: {
-      type: 'STATS'
-    }
-  }]
   return (
     <header className={loggedIn ? 'appHeader loggedInHeader' : 'appHeader'} style={props.style}>
       <div className='container headerWrapper'>
@@ -56,27 +30,51 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
             <div className='menuArea'>
               <div className='authStatusWrapper'>
                 {loggedIn
-                  ? <OverflowList
-                      collapseFrom='end'
-                      minVisibleItems={1}
-                      tagName='div'
-                      items={menuItems}
-                      visibleItemRenderer={(item, index) => {
-                        return (
-                          <Button
-                            key={index}
-                            small={true}
-                            minimal={true}
-                            text={item.text}
-                            icon={item.icon ? item.icon : null}
-                            onClick={() => linkTo(item.navPayload)}
+                  ? <div className='headerUserBtns'>
+                      <Button
+                        small={true}
+                        minimal={true}
+                        icon={<KeenIcon icon='fa-tasks-alt' />}
+                        text={<span className='hidden-sm'>Stats</span>}
+                        onClick={() => linkTo({ type: 'MYPAGE' })}
+                      />
+                      <Popover popoverClassName='headerUserMenu'>
+                        <Button
+                          small={true}
+                          minimal={true}
+                          text={username}
+                          icon={'user'}
+                        />
+                        <Menu>
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-tasks-alt' color={true} />}
+                            text='My Stats'
                           />
-                        )
-                      }}
-                      overflowRenderer={(items) => {
-                        return (<span>something to show</span>)
-                      }}
-                  />
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-books' color={true} />}
+                            text='My Library'
+                          />
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-user-circle' color={true} />}
+                            text='My Profile'
+                          />
+                          <MenuDivider />
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-books-medical' color={true} />}
+                            text='Track Topic'
+                          />
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-hands-helping' color={true} />}
+                            text='Get Suggestion'
+                          />
+                          <MenuDivider />
+                          <MenuItem
+                            icon={<KeenIcon icon='fa-sign-out-alt' color={true} />}
+                            text='Log out'
+                          />
+                        </Menu>
+                      </Popover>
+                    </div>
                   : <div className='loggedOutLinks'>
                     <span><Link to={{ type: 'LOGIN' }}>Login</Link></span> | <span><Link to={{ type: 'REGISTER' }}>Register</Link></span>
                   </div>}

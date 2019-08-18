@@ -1,82 +1,124 @@
-import React from 'react';
-import { IUser } from '../../../../state-management/models';
-import { IPanelProps, Button, Icon, Checkbox } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { IUser, IStore, IStat, IAppState, AuthModalTypes } from '../../../../state-management/models';
+import { IPanelProps, Button, NonIdealState, Icon } from '@blueprintjs/core';
+import SingleStat from './components/singleStat';
+import { connect } from 'react-redux';
+import { generateStats, showAuthModal } from '../../.././../state-management/thunks';
+import { omit } from 'lodash';
 
 interface IProps extends IPanelProps {
-  user: IUser
+  user: IUser;
+  userStats: IStat;
+  viewPort: IAppState['viewPort'];
+  profileNav: IAppState['profile']
 }
 
 const statHomeComponent = (props: IProps) => {
-  // const { user, openPanel } = props;
+  const { user, openPanel, userStats, viewPort, profileNav: { topLevel, lowerLevel: { [topLevel]: selectedStat } } } = props;
+  if (!userStats) {
+    return null;
+  }
+  const { figures: userStatFigures, _id: statId } = userStats;
+  const figures = userStatFigures
+    .filter(fig => fig)
+    .sort((a, b) => a.created > b.created ? -1 : a.created < b.created ? 1 : 0)
+    .map(fig => ({
+      ...fig,
+      state: fig.completed
+        ? 'completed'
+        : 'inProgress'
+    }));
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  // const [editMode, setEditMode] = useState<boolean>(false);
+  const menuItems = [{
+    visible: true,
+    icon: 'refresh',
+    onClick: () => generateStats({ statId })
+  }, {
+    visible: viewPort === 'pc',
+    icon: 'add',
+    onClick: () => showAuthModal(AuthModalTypes.topicToStat)
+  }];
+  const figuresToShow = figures.filter(fig => selectedStat === 'all' ? true : fig.state === selectedStat);
+  const displayText = {
+    inProgress: {
+      header: 'In Progress',
+      desc: (
+        <>
+          Click on any stat below to see more details about your progress.
+          <br />
+          Clicking on the Refresh &nbsp;<Icon icon='refresh' iconSize={12} />&nbsp; will generate a new update for any skill you haven't updated in one month.
+        </>
+      )
+    },
+    completed: {
+      header: 'Completed',
+      desc: `Topics and goals you've completed. Click below to see how you did.`
+    },
+    all: {
+      header: 'My Stats',
+      desc: 'Click on any stat below to see more details about your progress.'
+    }
+  }
   return (
     <div className='up_state_panel_stack'>
       <div className='row'>
-        <div className='col-md-7'>
+        <div className='col-md-12'>
           <header>
-            <h4>My Stats</h4>
+            <h4>{displayText[selectedStat].header}</h4>
           </header>
-          <p className='lead'>
-            Here is an explanation for how to use stats. What you can do and what you cannot do.
-          </p>
-          <p>This explanation will always be here no matter what... Whenever you need it you can always look up for it.</p>
-          <div>
-            <Button text='reload Stats' small={true} />
-          </div>
+          <p>{displayText[selectedStat].desc}</p>
         </div>
-        <div className='col-md-5'>IN here I may put a chart</div>
       </div>
-      <div className='row'>
-        <div className='col-md-8' style={{ margin: '15px auto'}}>
-          <div className='clearfix text-right'>
-            Dropdown sort
-          </div>
-          <div className='stats_item_wrapper'>
-            <div className='stats_item'>
-              
-              <div className='stats_item_body' >
-                <div className='stats_item_topPortion'>
-                  <div className='stats_item_select_checkBox'>
-                    <Checkbox checked={true} onChange={() => console.log('checkbox changed')} />
-                  </div>
-                  <header className='stats_item_body_header' style={{ width: 'calc(100% - 35px)' }}>
-                    <Icon icon={<i className='fa fa-graduation-cap' />} />
-                    <span className='stats_item_body_header_topicName'>Entrepreneurship</span>
-                    <span className='stats_item_body_header_rightBtn'>
-                      <Icon icon='chevron-right' />
-                    </span>
-                    <div className='stats_item_body_meta'>
-                      <div>
-                        <strong>Started:</strong>
-                        <span>10 days ago</span>
-                      </div>
-                      <div>
-                        <strong>Due:</strong>
-                        <span>3 months from now</span>
-                      </div>
-                    </div>
-                  </header>
-                </div>
-                <div className='stats_item_body_progressBarWrapper'>
-                  <div className='progress'>
-                    <div
-                      className='progress-bar bg-keen-dark'
-                      role='progressbar'
-                      style={{ width: '50%'}}
-                      aria-valuenow={50}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    >
-                      50% - Almost There!
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {selectedStat === 'inProgress' && <div className='row'>
+        <div className='col-md-8' style={{ margin: '15px auto 0' }}>
+          <div className='statNavBarWrapper'>
+            <div className='statNavBarActions'>
+              {menuItems.filter(item => item.visible).map((item, i) => <div className='statNavBarActions_btn' key={i}> <Button {...omit(item, 'visible')} onClick={item.onClick} /> </div>)}
             </div>
           </div>
+        </div>
+      </div>}
+      <div className='row'>
+        <div className='col-md-8' style={{ margin: '15px auto'}}>
+          {selectedTopics.length > 0 && <div className='stats_selectedNote'> {selectedTopics.length} selected. </div>}
+          {figuresToShow.length > 0
+            ? <div className='stats_item_wrapper'>
+              {figuresToShow.map(fig => <SingleStat
+                openPanel={openPanel}
+                user={user}
+                profileNavPage={selectedStat}
+                viewPort={viewPort}
+                checked={selectedTopics.includes(fig._id)}
+                checkboxClick={(figId) => {
+                  if (selectedTopics.includes(figId)) {
+                    setSelectedTopics(selectedTopics.filter(fg => fg !== figId));
+                    return;
+                  }
+                  setSelectedTopics(selectedTopics.concat(figId))
+                }}
+                showCheckbox={false}
+                key={fig._id}
+                figure={fig}
+              />)}
+            </div>
+            : <div className='nonIdealWrapper'>
+                <NonIdealState
+                  icon='help'
+                  title='No Stats to show'
+                  description={<p>There are no stats to show.</p>}
+                />
+              </div>
+          }
         </div>
       </div>
     </div>
   );
 }
 
-export default statHomeComponent;
+const mapStateToProps = (state: IStore) => ({
+  userStats: state.user.userStats,
+  viewPort: state.app.viewPort,
+  profileNav: state.app.profile
+})
+export default connect(mapStateToProps)(statHomeComponent);

@@ -1,9 +1,14 @@
 import React from 'react';
 import { Icon, Menu, MenuItem, Popover } from '@blueprintjs/core';
-import { ITopicBodyObj, ITopic } from '../../state-management/models';
+import { ITopicBodyObj, ITopic, AuthModalTypes } from '../../state-management/models';
 import './topic.css';
+import { showAuthModal } from '../../state-management/thunks';
+import { userActionTypes } from '../../state-management/actions';
+import { connect } from 'react-redux';
+import KeenIcon from '../icons';
 
-const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, selected, onClick, style, hideNumber, removable, className }: {
+const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, selected, onClick,
+  style, hideNumber, removable, className, setTopicToAdd, addDisabled }: {
   topicBody?: ITopicBodyObj;
   skill?: ITopic;
   interactive?: boolean;
@@ -14,7 +19,9 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   style?: any;
   hideNumber?: boolean;
   removable?: boolean;
-  className?: string
+  className?: string;
+  setTopicToAdd: Function;
+  addDisabled: boolean;
 } = {
   topicBody: undefined,
   skill: undefined,
@@ -26,7 +33,9 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   style: null,
   hideNumber: false,
   removable: false,
-  className: ''
+  className: '',
+  setTopicToAdd: () => null,
+  addDisabled: false
 }) => {
   if (!topicBody && !skill) {
     return null;
@@ -40,16 +49,20 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
     ...(minimal ? ['topicCompMinimal'] : []),
     ...(interactive ? ['topicCompInteractive'] : []),
     ...(selected ? ['topicCompSelected'] : [])
-  ]
+  ];
   return (
     <div className={wrapperClasses.join(' ')} style={style}>
       <div className='topicCompLeft'>
-        <Popover>
-          <Icon icon={<i className='fa fa-graduation-cap' />} iconSize={12} />
+        <Popover disabled={addDisabled}>
+          <Icon icon={<KeenIcon icon='fa-graduation-cap' />} iconSize={12} />
           <Menu>
             <MenuItem
-              text='Set Topic Goal'
-              labelElement={<Icon icon={<i className='fa fa-award' />} />}
+              icon={<KeenIcon icon='fa-books-medical' push={true} />}
+              text='Track topic'
+              onClick={() => {
+                setTopicToAdd(topic);
+                showAuthModal(AuthModalTypes.topicToStat)
+              }}
             />
           </Menu>
         </Popover>
@@ -60,11 +73,14 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
         <span >{agreed.length}</span>
       </div>}
       <div className='clearfix' />
-      <div className='topicCompProgressWrapper'>
-        <div className='topicCompProgressBar' style={{ width: '60%'}} />
-      </div>
+      <div className='topicCompProgressWrapper'><div className='topicCompProgressBar' style={{ width: '60%'}} /></div>
     </div>
   );
 }
 
-export default topicComponent;
+const mapDispatch = dispatch => ({
+  setTopicToAdd: payload => dispatch({ type: userActionTypes.setTopicToAdd, payload })
+})
+
+
+export default connect(null, mapDispatch)(topicComponent);

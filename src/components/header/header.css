@@ -15,11 +15,20 @@
   position: relative;
   top: 5px
 }
+.logoWrapper.logoBorder {
+  padding: 3px 5px;
+  border: 1px solid #b2c0ca;
+  border-radius: 4px;
+  top: 4px;
+}
 .logoWrapper img {
   width: 12px;
   margin-right: 5px;
   position: relative;
   top: -3px
+}
+.logoWrapper.logoBorder img {
+  margin-right: 0;
 }
 .logoWrapper span {
   font-family: ministry, sans-serif;
@@ -62,6 +71,10 @@
   position: relative;
   top: 3px
 }
+.authStatusWrapper .bp3-button-text {
+  position: relative;
+  top: -2px;
+}
 .menuArea span {
   transition: all .10s ease;
 }
@@ -85,4 +98,8 @@
 }
 .appHeader:not(.loggedInHeader) .menuArea .bp3-popover-wrapper:hover span {
   color: black
+}
+.headerUserMenu .bp3-menu-item i {
+  position: relative;
+  top: 4px
 }

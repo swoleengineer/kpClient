@@ -161,16 +161,19 @@ const routesMap = {
           message: 'You must be logged in to access this page.',
           icon: 'lock',
           intent: 'danger'
-        })
+        });
+        dispatch(redirect({ type: 'HOME' }));
+        return;
       }
+      dispatch(redirect({ type: 'MYPAGE', payload: { page: 'stats' } }));
     }
   },
   MYPAGE: {
     path: '/account/:page',
     thunk: (dispatch, getState) => {
       const { location: { payload: { page }}} = getState();
-      if (!IUserPages.includes(page)) {
-        dispatch(redirect({ type: 'PROFILE' }));
+      if (!IUserPages.includes(page) || !page) {
+        dispatch(redirect({ type: 'MYPAGE', payload: { page: 'stats' }}));
         return;
       }
     }

@@ -1,51 +1,49 @@
 import React from 'react';
-import { IUser } from '../../../../state-management/models';
-import { Icon, Button, ButtonGroup } from '@blueprintjs/core';
+import { IUser, IStat } from '../../../../state-management/models';
+import { Icon, } from '@blueprintjs/core';
+import { logUserOut } from '../../../../state-management/thunks';
 import moment from 'moment';
+import { uploadToCloudinary } from './profile.util';
+import Avatar from '../../../avatar';
 
 const TopSection = (props: {
-  user: IUser
+  user: IUser;
+  processImg: Function;
+  stats: IStat;
 }) => {
-  const { user } = props;
+  const { user, processImg, stats } = props;
+  const { readBooks = [], savedBooks = []} = user;
+  const { figures = []} = stats || { };
   return (
     <div className='row'>
-      <div className='col-4 text-center'>
-        {user.profile.picture && ![undefined, null].includes(user.profile.picture.link)
+      <div className='col-4 text-center uploadClick' onClick={() => uploadToCloudinary(processImg)}>
+        <div className='user_profile_wrapper'>
+          <Avatar user={user} border={true}/>
+        </div>
+        {/* {user.profile.picture && ![undefined, null].includes(user.profile.picture.link)
           ? <div className='user_profile_wrapper' style={{ backgroundImage: `url(${user.profile.picture.link})`}} />
           : <Icon icon='user' iconSize={60} />
-        }
+        } */}
       </div>
       <div className='col-8 accountUserMetaWrapper'>
         <span className='aum_username'>{user.username}</span>
         <span className='aum_name'>{user.profile.first_name} {user.profile.last_name}</span>
         <span className='aum_joined'>since {moment(user.created).format('MMM DD, YYYY')}</span>
-        <ButtonGroup
-          className='aum_action_btns'
-        >
-          <Button
-            small={true}
-            text='Edit Profile'
-          />
-          <Button
-            small={true}
-            text='New Stats'
-          />
-          <Button
-            small={true}
-            text='Log out'
-          />
-        </ButtonGroup>
+        <br />
+        <span className='aum_logoutLink' onClick={() => logUserOut()}>Log out <Icon icon='log-out' iconSize={11} /></span>
+      </div>
+      <div className='col-12'>
         <div className='aum_Numbers_Wrapper'>
           <div>
-            <span className='aum_numbers_number'>4</span>
+            <span className='aum_numbers_number'>{savedBooks.length}</span>
             <span className='aum_numbers_text'>Liked Books</span>
           </div>
           <div>
-            <span className='aum_numbers_number'>12</span>
+            <span className='aum_numbers_number'>{readBooks.length}</span>
             <span className='aum_numbers_text'>Books Read</span>
           </div>
           <div>
-            <span className='aum_numbers_number'>5</span>
+            <span className='aum_numbers_number'>{figures.length}</span>
             <span className='aum_numbers_text'>Topics Tracked</span>
           </div>
         </div>

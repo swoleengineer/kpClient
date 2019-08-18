@@ -11,7 +11,7 @@ const LoginPage = (props: {
     type: string;
     payload?: any;
   };
-  callBack?: Function
+  callBack?: Function;
 }) => {
   const { goToNext, nextPayload = undefined, callBack = undefined } = props;
   const [formData, formUpdate] = useState<IUserLoginRequest>({

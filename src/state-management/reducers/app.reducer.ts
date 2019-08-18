@@ -1,6 +1,6 @@
 import { appActionTypes as types } from '../actions';
 import { IAppState } from '../models';
-import { appInitialState } from '../utils';
+import { appInitialState, getViewPort } from '../utils';
 
 
 export const appReducer = (state: IAppState = appInitialState, action: {
@@ -8,6 +8,11 @@ export const appReducer = (state: IAppState = appInitialState, action: {
   payload?: any
 }): IAppState => {
   switch(action.type) {
+    case types.updateViewPort:
+      return {
+        ...state,
+        viewPort: getViewPort()
+      };
     case types.updateSearchText:
       return {
         ...state,
@@ -55,7 +60,18 @@ export const appReducer = (state: IAppState = appInitialState, action: {
           ...state.home,
           topicResults: action.payload
         }
-      }
+      };
+    case types.setProfileNav:
+      return {
+        ...state,
+        profile: {
+          topLevel: action.payload.topLevel,
+          lowerLevel: {
+            ...state.profile.lowerLevel,
+            ...action.payload.lowerLevel
+          }
+        }
+      };
     default:
       return state;
   }

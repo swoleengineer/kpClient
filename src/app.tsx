@@ -9,7 +9,8 @@ import 'antd/dist/antd.css';
 import { getAllBooks, getAllTopics, getAllQuestions, postSearchManyForManyComments  } from './config';
 import { bookActionTypes, topicActionTypes, questionActionTypes } from './state-management/actions'
 import { autoLogin } from './state-management/thunks'
-import { expandQuestion } from './state-management/utils'
+import { expandQuestion } from './state-management/utils';
+
 
 type Props = { store: Store<IStore> };
 

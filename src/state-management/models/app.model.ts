@@ -5,6 +5,11 @@ export enum HomeSearchCategories {
   topic = 'topic'
 }
 
+export enum ProfileNavOptions {
+  stats = 'stats',
+  lists =  'lists',
+  account = 'account'
+}
 export interface IAppState {
   home: {
     searchText: string;
@@ -12,5 +17,13 @@ export interface IAppState {
     bookResults: IExpandedBook[];
     topicResults: ITopic[];
   }
+  profile: {
+    topLevel: ProfileNavOptions;
+    lowerLevel: {
+      [ProfileNavOptions.stats]: 'inProgress' | 'completed' | 'all';
+      [ProfileNavOptions.lists]: string;
+      [ProfileNavOptions.account]: 'profile' | 'notifications'
+    }
+  },
   viewPort: 'mobile' | 'tablet' | 'pc'
 }

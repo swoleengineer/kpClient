@@ -25,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "@blueprintjs/core": "^3.15.1",
+    "@blueprintjs/datetime": "^3.9.2",
     "@blueprintjs/icons": "^3.8.0",
     "@blueprintjs/select": "^3.8.0",
     "@blueprintjs/tslint-config": "^1.8.0",
@@ -39,6 +40,7 @@
     "history": "^4.7.2",
     "lodash": "^4.17.4",
     "moment": "^2.22.2",
+    "prop-types": "^15.7.2",
     "query-string": "^6.1.0",
     "react": "^16.8.6",
     "react-custom-scroll": "^4.0.0",
@@ -65,6 +67,7 @@
     "utility-types": "1.0.0-rc.2"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-pro": "^5.10.1",
     "@types/enzyme": "3.1.6",
     "@types/jest": "22.0.1",
     "@types/lodash": "^4.14.93",

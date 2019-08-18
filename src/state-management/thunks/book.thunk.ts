@@ -1,7 +1,7 @@
 import { store } from '../../store';
 import { IBookRequest, ITopic, acceptableTypes, IBook, IExpandedBook, IStore } from '../models';
 import { postAddBook, postAddTopicsToBook, putToggleTopicAgree, postQueryBookByTopicAndSort,
-  postSearchManyForManyComments, getSearchGoogleBooks, getBookSearch, postCreateBookFromInt  } from '../../config';
+  postSearchManyForManyComments, getSearchGoogleBooks, getBookSearch, postCreateBookFromInt, postEditBook  } from '../../config';
 import {  bookActionTypes as types, userActionTypes as userTypes, appActionTypes as appTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router'
@@ -43,6 +43,8 @@ export const engagePrecheck = (book: IBook | IExpandedBook | null, auth: boolean
   }
   cb(null, book);
 }
+
+
 
 export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
   (response: any) => {
@@ -259,3 +261,33 @@ export const addTopicsToBook = (book: string, topics: ITopic[]) => postAddTopics
     })
   }
 )
+
+export const editBookDetails = (bookId: string, details: { [key: string]: any}) => postEditBook(bookId, details).then(
+  (res: any) => {
+    if (!res || !res.data) {
+      throw { response: { data: {
+        message: 'Error updating topics for this book',
+        status: 400,
+        data: false
+      }}};
+      return;
+    }
+    store.dispatch({
+      type: types.updateSelected,
+      payload: res.data
+    });
+  },
+  (err: any) => {
+    let message;
+    try {
+      message = err.response.data.message
+    } catch {
+      message = 'Could not update topics for this book.'
+    }
+    AppToaster.show({
+      message,
+      intent: 'danger',
+      icon: 'error'
+    })
+  }
+);

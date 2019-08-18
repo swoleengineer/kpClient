@@ -31,15 +31,15 @@ const ResultsSection = (props: {
         <div className='resultsTopOptions text-right'>
           <ButtonGroup>
             <Button
-              text='Cancel Search'
               rightIcon='cross'
               minimal={true}
               onClick={() => setSearch('')}
-            />
+            >
+              Cancel <span className='hidden-sm'>Search</span>
+            </Button>
             <Divider />
             <Button
               rightIcon='help'
-              text='Ask For Suggestion'
               onClick={() => {
                 engagePrecheck(null, true, err => {
                   if (err) {
@@ -48,12 +48,15 @@ const ResultsSection = (props: {
                   showAuthModal(AuthModalTypes.question);
                 })
               }}
-            />
+            >
+              Ask <span className='hidden-sm'>For Suggestion</span>
+            </Button>
             <Button
-              text='Browse All Books'
               rightIcon='chevron-right'
               onClick={() => linkTo({ type: 'ALLBOOKS' })}
-            />
+            >
+              Browse <span className='hidden-sm'>All Books</span>
+            </Button>
           </ButtonGroup>
         </div>
         <br />

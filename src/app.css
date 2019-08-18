@@ -1,9 +1,12 @@
 @import "~normalize.css";
+@import "~@fortawesome/fontawesome-pro/css/all.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 @import "~@blueprintjs/select/lib/css/blueprint-select.css";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 @import "~slick-carousel/slick/slick.css"; 
 @import "~slick-carousel/slick/slick-theme.css";
+
 
 /* @import "./assets/css/bootstrap.min.css";
 @import "./assets/css/bootstrap-theme.min.css"; */
@@ -73,6 +76,9 @@ button:focus {
   .centerOnSmall .singleBookWrapper {
     margin: 0 auto;
   }
+  .heroSliderWrapper .heroSliderStyle {
+    padding-top: 0 !important;
+  }
 } 
 @media (max-width: 500px) {
   .hidden-sm {
@@ -84,6 +90,23 @@ button:focus {
   .bookResultsWrapper {
     flex-direction: column
   }
+  .heroSliderWrapper {
+    background-size: auto !important
+  }
+  .heroSliderWrapper .heroSlider_slide .container .heroSlider_content_container {
+    flex-wrap: wrap-reverse;
+  }
+  .heroSliderWrapper .heroSlider_slide  .hero_slider_title {
+    font-size: 3em !important;
+  }
+  .heroSliderWrapper .heroSlider_slide .container .heroSlider_content_container .heroSlider_content_img {
+    margin-bottom: 15px;
+  }
+  .heroSliderWrapper .heroSlider_slide .container .heroSlider_content_container .heroSlider_content_text {
+    text-align: center !important;
+    margin-top: 25px;
+  }
+
 }
 @media (min-width: 768px) {
   .container {

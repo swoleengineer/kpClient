@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormGroup, InputGroup, Collapse, TextArea, Tag, Button } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Collapse, TextArea, Button } from '@blueprintjs/core';
 import { keenToaster } from '../../../../containers/switcher';
 import { connect } from 'react-redux';
 import { IStore, ITopic, IQuestionRequest, IExpandedBook } from '../../../../state-management/models';
@@ -8,6 +8,7 @@ import { getFormProps } from '../util';
 import { createQuestion } from '../../../../state-management/thunks';
 import Question from '../../../question';
 import TopicBrowse from '../topic/topicBrowse';
+import Topic from '../topic'
 
 
 
@@ -24,7 +25,7 @@ const QuestionForm = (props: {
   clearForm: Function;
   updateTopics: Function;
   books: IExpandedBook[];
-  style
+  style: any;
 }) => {
   const [formErrors, updateErrors] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' }>>([]);
   const [formComplete, updateStatus] = useState(false);
@@ -114,16 +115,18 @@ const QuestionForm = (props: {
               <div className='clearfix'>
                 {newQuestion.topics
                   .map((topic: ITopic) =>
-                    <Tag
-                      icon='lightbulb'
+                    <Topic
                       key={topic._id}
                       style={{
                         marginRight: '10px',
-                        marginBottom: '10px'
-                        }}
-                    >
-                      {topic.name}
-                    </Tag>
+                        marginBottom: '10px',
+                        display: 'block',
+                        float: 'left'
+                      }}
+                      interactive={false}
+                      skill={topic}
+                      topicSize='smallTopic'
+                    />
                   )
                 }
               </div>

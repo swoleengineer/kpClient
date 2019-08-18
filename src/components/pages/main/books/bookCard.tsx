@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Popover, Icon, Menu, MenuItem, Collapse, ControlGroup, InputGroup, Button, Alert, IAlertProps } from '@blueprintjs/core';
+import { Popover, Icon, Menu, MenuItem, Collapse, ControlGroup, InputGroup, Button, Alert, IAlertProps, Divider } from '@blueprintjs/core';
 import Book from '../../../book';
-import { IExpandedBook, IStore, IUser, acceptableTypes, IComment, IReportRequest } from '../../../../state-management/models';
+import { IExpandedBook, IStore, IUser, acceptableTypes, IComment, IReportRequest, IAppState } from '../../../../state-management/models';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { createComment, toggleUserBook, removeComment, createReport } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
- type alertConfigtype = {
+
+type alertConfigtype = {
     type: 'deleteComment' | 'reportComment' | 'reportBook';
     text: string;
   };
@@ -16,9 +17,10 @@ const BookCard = (props: {
   book: IExpandedBook;
   minimal: boolean;
   user: IUser;
-  linkTo: Function
+  linkTo: Function;
+  viewPort: IAppState['viewPort'];
 }) => {
-  const { book } = props;
+  const { book, viewPort } = props;
   const [newComment, updateComment] = useState({
     author: {
       _id: undefined,
@@ -153,7 +155,7 @@ const BookCard = (props: {
         </Popover> 
       </span>
       <div className='row'>
-        <div className='col-5 bookCard_book'>
+        <div className='col-md-5 bookCard_book'>
           <Book liv={book}  />
           <Alert
             {...alertProps}
@@ -163,8 +165,9 @@ const BookCard = (props: {
           >
             {alertConfig.text}
           </Alert>
+          {viewPort !== 'pc' && <Divider />}          
         </div>
-        <div className='col-7 bookCard_details'>
+        <div className='col-md-7 bookCard_details'>
           <ul className='bookCard_engage'>
             <li onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(props.user ? props.user._id : '') ? 'remove' : 'add')}>
               <Icon
@@ -288,7 +291,8 @@ const BookCard = (props: {
 
 const mapStateToProps = (state: IStore) => ({
   user: state.user.user,
-  books: state.book.books
+  books: state.book.books,
+  viewPort: state.app.viewPort
 })
 
 const mapDispatch = dispatch => ({

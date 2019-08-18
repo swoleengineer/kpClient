@@ -6,5 +6,9 @@ export const userActionTypes = {
 
   updateSavedBook: 'USER_UPDATE_SAVED_BOOK',
   toggleAuthModal: 'USER_TOGGLE_AUTH_MODAL',
-  setAuthModalPage: 'USER_SET_AUTH_MODAL_PAGEP'
+  setAuthModalPage: 'USER_SET_AUTH_MODAL_PAGEP',
+
+  setUserStats: 'USER_SET_STATS',
+  updateUserStats: 'USER_UPDATE_STATS',
+  setTopicToAdd: 'USER_SET_TOPIC_FOR_STAT'
 }

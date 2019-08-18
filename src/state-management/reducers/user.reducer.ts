@@ -12,13 +12,26 @@ export const userReducer = (state: IUserState = initialUserState, action: {
         ...state,
         user: {
           ...state.user,
-          ...action.payload
+          ...action.payload,
+          role: (action.payload.username  && ['swoleengineer', 'clervius'].includes(action.payload.username))
+            || (action.payload.email && ['clervius@gmail.com', 'joram@keenpages.com', 'hello@keenpages.com'].includes(action.payload.email))
+            || action.payload.role && action.payload.role === 'admin'
+            ? 'admin'
+            : action.payload.role
         }
       };
     case types.setUser:
       return {
         ...state,
-        user: action.payload
+        user: {
+          ...action.payload,
+          role: (action.payload.username  && ['swoleengineer', 'clervius'].includes(action.payload.username))
+            || (action.payload.email && ['clervius@gmail.com', 'joram@keenpages.com', 'hello@keenpages.com'].includes(action.payload.email))
+            || action.payload.role && action.payload.role === 'admin'
+            ? 'admin'
+            : action.payload.role
+
+        }
       };
     case types.updateLoggedIn:
       return {
@@ -47,7 +60,25 @@ export const userReducer = (state: IUserState = initialUserState, action: {
       return {
         ...state,
         authModalActivePage: action.payload
-      }
+      };
+    case types.setUserStats:
+      return {
+        ...state,
+        userStats: action.payload
+      };
+    case types.updateUserStats:
+      return {
+        ...state,
+        userStats: {
+          ...state.userStats,
+          ...action.payload
+        }
+      };
+    case types.setTopicToAdd:
+      return {
+        ...state,
+        topicForStat: action.payload
+      };    
     default:
       return state;
   }

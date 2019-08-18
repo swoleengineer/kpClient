@@ -6,3 +6,4 @@ export * from './comment';
 export * from './question';
 export * from './report';
 export * from './topic';
+export * from './stat';
