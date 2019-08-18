@@ -25,7 +25,7 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
         <div className='row'>
           <div className='col-12'>
             <div className='logoArea'>
-              <Logo large={false} dark={loggedIn} noText={props.viewPort === 'mobile'} />
+              <Logo large={false} dark={true} noText={props.viewPort === 'mobile' && loggedIn} />
             </div>
             <div className='menuArea'>
               <div className='authStatusWrapper'>
