@@ -41,7 +41,7 @@ const heroSearch = ({ topics = [], updateFilteredTopics, linkTo, queryMoreBooks,
       </li>
     </ul>
   );
-  const fadeOpacity: boolean = loggedIn && viewPort === 'mobile';
+  const fadeOpacity: boolean = !loggedIn && viewPort === 'mobile';
   const elementStyle = { ...(fadeOpacity ? { opacity: fadeOpacityNum } : {})};
   if (fadeOpacity && fadeOpacityNum < .8) {
     window.addEventListener('scroll', () => {

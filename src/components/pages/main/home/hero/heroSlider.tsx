@@ -30,7 +30,7 @@ const heroSlider = ({ loggedIn }) => {
     titleText: <>Level Up</>,
     descText: 'Track your growth and see yourself leveling thru stats.',
     img: IMG1,
-    actionVisibility: loggedIn,
+    actionVisibility: !loggedIn,
     primaryAction: {
       text: <>Log In  <KeenIcon icon='fa-sign-in' color={true} /></>,
       onClick: () => showAuthModal(AuthModalTypes.login)
@@ -43,12 +43,28 @@ const heroSlider = ({ loggedIn }) => {
     titleText: 'Library',
     descText: 'Organize your library through lists, topics, and comments',
     img: IMG1,
-    actionVisibility: !loggedIn
+    actionVisibility: !loggedIn,
+    primaryAction: {
+      text: <>Log In  <KeenIcon icon='fa-sign-in' color={true} /></>,
+      onClick: () => showAuthModal(AuthModalTypes.login)
+    },
+    secondaryAction: {
+      text: <>Register <KeenIcon icon='fa-user-edit' color={true} /></>,
+      onClick: () => showAuthModal(AuthModalTypes.register)
+    }
   }, {
     titleText: 'Questions',
     descText: 'Get suggestions for books/topics you want to learn about.. help others.',
     img: IMG1,
-    actionVisibility: !loggedIn
+    actionVisibility: !loggedIn,
+    primaryAction: {
+      text: <>Log In  <KeenIcon icon='fa-sign-in' color={true} /></>,
+      onClick: () => showAuthModal(AuthModalTypes.login)
+    },
+    secondaryAction: {
+      text: <>Register <KeenIcon icon='fa-user-edit' color={true} /></>,
+      onClick: () => showAuthModal(AuthModalTypes.register)
+    }
   }]
   return (
     <div className='heroSliderWrapper' style={{ backgroundImage: `url(${SLIDE000})`}}>
