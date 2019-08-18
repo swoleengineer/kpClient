@@ -35,7 +35,7 @@ const Hero = (props: {
   //     () => console.log('')
   //   )
   // }
-  const screenHeight = window.innerHeight - 37;
+  const screenHeight = window.innerHeight - 25;
   const style = {
     ...(searchText.length > 0
       ? {
