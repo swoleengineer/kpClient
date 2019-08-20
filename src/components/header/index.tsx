@@ -1,13 +1,13 @@
 import React from 'react';
 import Logo from './logo';
 import { connect } from 'react-redux';
-import { IStore, IUserState, IAppState } from 'src/state-management/models';
 import { Button, Popover, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 // import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import KeenIcon from '../icons';
-import { showAuthModal } from '../../state-management/thunks';
-import { AuthModalTypes } from '../../state-management/models';
+import { showAuthModal, logUserOut } from '../../state-management/thunks';
+import { AuthModalTypes, IStore, IUserState, IAppState, ProfileNavOptions } from '../../state-management/models';
+import { appActionTypes } from '../../state-management/actions';
 
 // interface IHeaderMenuItem {
 //   text: string;
@@ -17,9 +17,10 @@ import { AuthModalTypes } from '../../state-management/models';
 //     payload?: any;
 //   }
 // }
-const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPort: IAppState['viewPort'] }) => {
+const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPort: IAppState['viewPort'], setProfileNav: Function }) => {
   const { loggedIn, user } = props.user;
   const linkTo = props.linkTo;
+  const setProfileNav = props.setProfileNav;
   const { username } = user || { username: undefined };
   return (
     <header className={'appHeader loggedInHeader'} style={props.style}>
@@ -38,7 +39,7 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
                         minimal={true}
                         icon={<KeenIcon icon='fa-tasks-alt' />}
                         text={<span className='hidden-sm'>Stats</span>}
-                        onClick={() => linkTo({ type: 'MYPAGE' })}
+                        onClick={() => linkTo({ type: 'MYPAGE', payload: { page: 'stats' }})}
                       />
                       <Popover popoverClassName='headerUserMenu'>
                         <Button
@@ -51,28 +52,43 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
                           <MenuItem
                             icon={<KeenIcon icon='fa-tasks-alt' color={true} />}
                             text='My Stats'
+                            onClick={() => {
+                              linkTo({ type: 'MYPAGE', payload: { page: 'stats' }});
+                              setProfileNav({ topLevel: ProfileNavOptions.stats, lowerLevel: { [ProfileNavOptions.stats]: 'inProgress' }});
+                            }}
                           />
                           <MenuItem
                             icon={<KeenIcon icon='fa-books' color={true} />}
                             text='My Library'
+                            onClick={() => {
+                              linkTo({ type: 'MYPAGE', payload: { page: 'lists' }});
+                              setProfileNav({ topLevel: ProfileNavOptions.lists, lowerLevel: { [ProfileNavOptions.lists]: 'likedBooks' }});
+                            }}
                           />
                           <MenuItem
                             icon={<KeenIcon icon='fa-user-circle' color={true} />}
                             text='My Profile'
+                            onClick={() => {
+                              linkTo({ type: 'MYPAGE', payload: { page: 'profile' }});
+                              setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'profile' }});
+                            }}
                           />
                           <MenuDivider />
                           <MenuItem
                             icon={<KeenIcon icon='fa-books-medical' color={true} />}
                             text='Track Topic'
+                            onClick={() => showAuthModal(AuthModalTypes.topicToStat)}
                           />
                           <MenuItem
                             icon={<KeenIcon icon='fa-hands-helping' color={true} />}
                             text='Get Suggestion'
+                            onClick={() => showAuthModal(AuthModalTypes.question)}
                           />
                           <MenuDivider />
                           <MenuItem
                             icon={<KeenIcon icon='fa-sign-out-alt' color={true} />}
                             text='Log out'
+                            onClick={() => logUserOut()}
                           />
                         </Menu>
                       </Popover>
@@ -95,7 +111,8 @@ const mapStateToProps = (state: IStore) => ({
 })
 
 const mapDispatch = dispatch => ({
-  linkTo: payload => dispatch(redirect(payload))
+  linkTo: payload => dispatch(redirect(payload)),
+  setProfileNav: (payload: { topLevel: ProfileNavOptions; lowerLevel: {[key: string]: string; }}) => dispatch({ type: appActionTypes.setProfileNav, payload })
 });
 
 export default connect(mapStateToProps, mapDispatch)(Header);

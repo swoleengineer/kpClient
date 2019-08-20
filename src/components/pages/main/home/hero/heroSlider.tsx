@@ -77,6 +77,7 @@ const heroSlider = ({ loggedIn }) => {
         // fade={true}
         arrows={false}
         className='heroSliderStyle'
+        focusOnSelect={false}
       >
         {slides.map((slide, i) => (
           <div key={i}>
@@ -98,7 +99,7 @@ const heroSlider = ({ loggedIn }) => {
                     )}
                   </div>
                   <div className='heroSlider_content_img'>
-                    <img src={IMG1} alt='omage' />
+                    <img src={IMG1} alt={slide.titleText} onClick={e => e.preventDefault()}/>
                   </div>
                 </div>
               </div>

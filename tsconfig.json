@@ -33,7 +33,8 @@
     "removeComments": true,
     "sourceMap": true,
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "jquery"
     ]
   },
   "include": [

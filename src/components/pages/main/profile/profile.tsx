@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Card, FormGroup, InputGroup, Collapse, Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 import { getFormProps } from '../../auth/util';
-import { IStore, IUser } from '../../../../state-management/models';
+import { IUser, IAppState } from '../../../../state-management/models';
 import { has, isEqual, pick, omit } from 'lodash';
 import { keenToaster } from '../../../../containers/switcher';
 import { updateAccount } from '../../../../state-management/thunks';
+import Notifications from './notifications';
 
 const Profile = (props: {
   user: IUser;
+  viewPort: IAppState['viewPort'];
+  profileNav: IAppState['profile'];
 }) => {
-  const { user } = props;
+  const { user, profileNav: { topLevel, lowerLevel: { [topLevel]: selectedPage = 'account' }}} = props;
   const [accountErrors, updateAccountErrs] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' }>>([]);
   const [passwordErrors, updatePwErrs] = useState<Array<{ field: string; message: string; intent: 'danger' | 'none' }>>([]);
   const [accountFields, updateAccountFields] = useState({
@@ -94,6 +96,9 @@ const Profile = (props: {
         ...sectionUpdated,
         account: false
       }))
+  }
+  if (selectedPage === 'notifications') {
+    return <Notifications />
   }
   return (
     <div className='row'>
@@ -273,8 +278,5 @@ const Profile = (props: {
   )
 }
 
-const mapStateToProps = (state: IStore) => ({
-  user: state.user.user
-})
 
-export default connect(mapStateToProps)(Profile);
+export default Profile;

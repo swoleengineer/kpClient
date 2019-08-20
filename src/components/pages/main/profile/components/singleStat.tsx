@@ -1,7 +1,8 @@
 import React from 'react';
-import { Checkbox, Icon } from '@blueprintjs/core';
+import { Checkbox } from '@blueprintjs/core';
 import FullStat from './fullStat';
 import * as moment from 'moment';
+import Icon from '../../../../icons';
 
 const singleStat = ({ openPanel, user, checked, checkboxClick, showCheckbox, figure, viewPort, profileNavPage }) => {
   if (!figure) {
@@ -45,10 +46,10 @@ const singleStat = ({ openPanel, user, checked, checkboxClick, showCheckbox, fig
               })
             }}
           >
-            <Icon icon={<i className='fa fa-graduation-cap' />} />
+            <Icon icon='fa-graduation-cap' />
             <span className='stats_item_body_header_topicName'>{topic.name || 'Topic Name'}</span>
             <span  className='stats_item_body_header_rightBtn' >
-              <Icon icon='chevron-right' />
+              <Icon icon='fa-chevron-right' />
             </span>
             <div className='stats_item_body_meta'>
               <div>

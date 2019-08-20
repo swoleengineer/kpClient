@@ -1,0 +1,56 @@
+.library_list_wrapper {
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 25px 0;
+  box-shadow: 0px 3px 8px rgba(0,0,0,.1);
+}
+.library_list_wrapper .library_list_top_container {
+  width: 100%;
+  background-color: #5c7080;
+  position: relative;
+  margin-bottom: 200px;
+  height: 300px;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_header {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_header .library_list_top_header_text {
+  color: white;
+  font-weight: 500;
+  font-size: 1.25em;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_header .library_list_top_header_text i {
+  margin-right: 5px;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_header .library_list_top_header_count {
+  background-color: rgba(255,255,255,.85);
+  border-radius: 5px;
+  padding: 4px 7px;
+  font-weight: 500;
+  font-size: .9em;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_topics_wrapper {
+  padding: 15px;
+}
+.library_list_top_title {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1em;
+  margin: 0 0 5px 0;
+  display: block;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_topics_wrapper .library_list_top_topics_container {
+  background-color: #b2c0ca;
+  display: block;
+  padding: 8px 10px 2px;
+  margin: 0 -15px;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_books_wrapper {
+  position: absolute;
+  bottom: -175px;
+}
+.library_list_wrapper .library_list_top_container .library_list_top_books_wrapper .library_list_top_books_container {
+  padding: 0 15px;
+}

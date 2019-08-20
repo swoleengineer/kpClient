@@ -1,11 +1,10 @@
 import React from 'react';
-import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { IStore, ProfileNavOptions, IAppState } from '../../../../state-management/models';
 import { LocationState } from 'redux-first-router';
 import { appActionTypes } from '../../../../state-management/actions';
-import KeenIcon from '../../../icons';
+import Icon, { IconTypeEnum } from '../../../icons';
 
 interface IProps {
   topLevel: ProfileNavOptions;
@@ -19,7 +18,7 @@ const accountNav = (props: IProps) => {
   const { topLevel, linkTo, location: { payload = { page: undefined }}, setProfileNav } = props;
   const setActiveState = (level: 'topLevel' | 'lowerLevel', activeString: string): string => {
     const mainClass = level === 'topLevel' ? 'userProfileNav_top_item' : 'userProfileNav_bottom_list_item';
-    const checkClass = level === 'topLevel' ? payload['page'] || props['topLevel'] : props['lowerLevel'][payload['page'] || topLevel];
+    const checkClass = level === 'topLevel' ? payload['page'] || props['topLevel'] : props['lowerLevel'][payload['page'] === 'profile' ? 'account' : payload['page'] || topLevel];
     return activeString === checkClass ? `${mainClass} nav_active` : mainClass;
   }
   const statLinks = [{
@@ -36,18 +35,18 @@ const accountNav = (props: IProps) => {
     className: setActiveState('lowerLevel', 'all')
   }]
   const listLinks = [{
-    text: <span><Icon icon='heart' iconSize={13} /> Liked Books</span>,
+    text: <span><Icon type={IconTypeEnum.solid} icon='fa-heart' iconSize={13} /> Liked Books</span>,
     onClick: () => setProfileNav({ topLevel: ProfileNavOptions.lists, lowerLevel: { [ProfileNavOptions.lists]: 'likedBooks' }}),
     className: setActiveState('lowerLevel', 'likedBooks')
   }, {
-    text: <span><Icon icon='bookmark' iconSize={13} /> Read Books</span>,
+    text: <span><Icon icon='fa-bookmark' iconSize={13} /> Read Books</span>,
     onClick: () => setProfileNav({ topLevel: ProfileNavOptions.lists, lowerLevel: { [ProfileNavOptions.lists]: 'readBooks' }}),
     className: setActiveState('lowerLevel', 'readBooks')
   }]
   const accountLinks = [{
     text: 'My Account',
-    onClick: () => setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'profile' }}),
-    className: setActiveState('lowerLevel', 'profile')
+    onClick: () => setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'account' }}),
+    className: setActiveState('lowerLevel', 'account')
   }, {
     text: 'Notifications',
     onClick: () => setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'notifications' }}),
@@ -64,7 +63,7 @@ const accountNav = (props: IProps) => {
             setProfileNav({ topLevel: ProfileNavOptions.stats, lowerLevel: { [ProfileNavOptions.stats]: 'inProgress' }});
           }}
         >
-          <KeenIcon icon='fa-tasks-alt' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Stats</span>
+          <Icon icon='fa-tasks-alt' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Stats</span>
         </span>
         <span
           className={setActiveState('topLevel', 'lists')}
@@ -73,22 +72,22 @@ const accountNav = (props: IProps) => {
             setProfileNav({ topLevel: ProfileNavOptions.lists, lowerLevel: { [ProfileNavOptions.lists]: 'likedBooks' }});
           }}
         >
-          <KeenIcon icon='fa-books' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Library</span>
+          <Icon icon='fa-books' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Library</span>
         </span>
         <span
-          className={setActiveState('topLevel', 'account')}
+          className={setActiveState('topLevel', 'profile')}
           onClick={() => {
             linkTo({ type: 'MYPAGE', payload: { page: 'profile' }});
-            setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'profile' }});
+            setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'account' }});
           }}
         >
-          <KeenIcon icon='fa-user-circle' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Profile</span>
+          <Icon icon='fa-user-circle' /> <span className='hidden-xs'><span className='hidden-sm'>My </span>Profile</span>
         </span>
       </div>
       <div className='userProfileNav_bottom'>
         {[payload['page'], topLevel].includes('stats') && <ul className='userProfileNav_bottom_list'> {statLinks.map(generateLink)} </ul>}
         {[payload['page'], topLevel].includes('lists') && <ul className='userProfileNav_bottom_list'> {listLinks.map(generateLink)} </ul>}
-        {[payload['page'], topLevel].includes('account') && <ul className='userProfileNav_bottom_list'> {accountLinks.map(generateLink)} </ul>}
+        {[payload['page'], topLevel].includes('profile') && <ul className='userProfileNav_bottom_list'> {accountLinks.map(generateLink)} </ul>}
       </div>
     </div>
   );

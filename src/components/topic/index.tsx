@@ -1,11 +1,11 @@
 import React from 'react';
-import { Icon, Menu, MenuItem, Popover } from '@blueprintjs/core';
+import { Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { ITopicBodyObj, ITopic, AuthModalTypes } from '../../state-management/models';
 import './topic.css';
 import { showAuthModal } from '../../state-management/thunks';
 import { userActionTypes } from '../../state-management/actions';
 import { connect } from 'react-redux';
-import KeenIcon from '../icons';
+import Icon, { IconTypeEnum } from '../icons';
 
 const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, selected, onClick,
   style, hideNumber, removable, className, setTopicToAdd, addDisabled }: {
@@ -54,10 +54,10 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
     <div className={wrapperClasses.join(' ')} style={style}>
       <div className='topicCompLeft'>
         <Popover disabled={addDisabled}>
-          <Icon icon={<KeenIcon icon='fa-graduation-cap' />} iconSize={12} />
+          <Icon icon='fa-graduation-cap' iconSize={12} />
           <Menu>
             <MenuItem
-              icon={<KeenIcon icon='fa-books-medical' push={true} />}
+              icon={<Icon icon='fa-books-medical' push={true} />}
               text='Track topic'
               onClick={() => {
                 setTopicToAdd(topic);
@@ -67,7 +67,7 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
           </Menu>
         </Popover>
         <span className='topicCompName' onClick={() => onClick()}>{topic.name}</span>
-        {(removable && interactive) && <Icon icon='small-cross' className='topicComCloseIcon' onClick={() => onClick()}/>}
+        {(removable && interactive) && <Icon type={IconTypeEnum.solid} icon='fa-times' className='topicComCloseIcon' onClick={() => onClick()}/>}
       </div>
       {(topicBody && !hideNumber) && <div className='topicCompRight' onClick={() => onClick()}>
         <span >{agreed.length}</span>

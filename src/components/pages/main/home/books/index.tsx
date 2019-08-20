@@ -6,6 +6,7 @@ import Book from '../../../../book';
 import { Button, ButtonGroup, Divider } from '@blueprintjs/core';
 import Slider from 'react-slick';
 import { redirect } from 'redux-first-router';
+import Icon from '../../../../icons';
 
 const BooksSection = ({ books, toPage }) => {
   const [activeSlide, updateActiveSlide] = useState(0);
@@ -21,12 +22,12 @@ const BooksSection = ({ books, toPage }) => {
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLBOOKS' })}>All <span className='hidden-sm'>Books</span></Button>
+                <Button icon={<Icon icon='fa fa-angle-right' />} onClick={() => toPage({ type: 'ALLBOOKS' })}>All <span className='hidden-sm'>Books</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>
               <ButtonGroup className='hidden-xs'>
-                <Button icon='chevron-left' onClick={() => componentSlider.slickGoTo(activeSlide - 1)}/>
-                <Button icon='chevron-right' onClick={() => componentSlider.slickGoTo(activeSlide + 1)}/>
+                <Button onClick={() => componentSlider.slickGoTo(activeSlide - 1)}><Icon icon='fa fa-angle-left' /></Button>
+                <Button icon={<Icon icon='fa fa-angle-right' />} onClick={() => componentSlider.slickGoTo(activeSlide + 1)}/>
               </ButtonGroup>
             </div>
           </div>

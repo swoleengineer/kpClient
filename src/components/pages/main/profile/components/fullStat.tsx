@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IUser, ITopic, IStatFigure, IAppState, IStore } from '../../../../../state-management/models';
 import { editStats, queryMoreBooks, deleteStatSkill } from '../../../../../state-management/thunks';
 import { bookActionTypes as bookTypes } from '../../../../../state-management/actions';
-import { Icon, Button, Collapse, FormGroup, Slider, TextArea, Alert } from '@blueprintjs/core';
+import { Button, Collapse, FormGroup, Slider, TextArea, Alert } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import * as moment from 'moment';
 import { getFormProps } from '../../../auth/util';
@@ -11,6 +11,7 @@ import KPBOOK from '../../../../../assets/kp_book.png';
 import JustbooksPage from './justBooks';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
+import Icon from '../../../../icons';
 
 interface IProps {
   openPanel: Function;
@@ -136,7 +137,7 @@ const fullStat = (props: IProps) => {
         Are you sure you no longer want to track <strong>{topic.name}</strong> in your stats?
       </Alert>
       <header className='fullStat_header'>
-          <Icon icon={<i className='fa fa-graduation-cap' />} />
+          <Icon icon='fa-graduation-cap' />
           <span>{topic.name || 'Topic Name'}</span>
           {statPage === 'inProgress' && <div className='fullStat_header_btns'>
             <Button
@@ -259,7 +260,7 @@ const fullStat = (props: IProps) => {
               return (
                 <Icon
                   key={i}
-                  icon='book'
+                  icon='fa-book'
                   style={{
                       color: over
                         ? '#C9CC89'
@@ -288,7 +289,7 @@ const fullStat = (props: IProps) => {
                 )
               }}
             >
-              Browse <strong>{topic.name}</strong> books <Icon icon='chevron-right' />
+              Browse <strong>{topic.name}</strong> books <Icon icon='fa-chevron-right' />
             </span>
           </span>
           <table>
@@ -367,7 +368,7 @@ const fullStat = (props: IProps) => {
                       }}
                     >
                       {moment(shotDate).format('MMM. Do, YYYY')}
-                      {viewPort === 'mobile' && <Icon icon='chevron-right' />}
+                      {viewPort === 'mobile' && <Icon icon='fa-chevron-right' />}
                     </span>
                     {shotBooks.length > 0 && <div className='single_stat_snapshot_details_btn hidden-sm'>
                       <Button

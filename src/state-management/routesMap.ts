@@ -1,6 +1,6 @@
 import { getSingleBook, postSearchManyComments, getSingleQuestion } from '../config'
-import { IBook, acceptableTypes, IQuestion, IUserPages, IStore } from './models';
-import { bookActionTypes as bookTypes, questionActionTypes as questionTypes } from './actions';
+import { IBook, acceptableTypes, IQuestion, IUserPages, IStore, ProfileNavOptions } from './models';
+import { bookActionTypes as bookTypes, questionActionTypes as questionTypes, appActionTypes } from './actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router';
 // const wait = (seconds: number) => new Promise((resolve) => setTimeout(() => resolve(), seconds * 1000));
@@ -174,8 +174,31 @@ const routesMap = {
       const { location: { payload: { page }}} = getState();
       if (!IUserPages.includes(page) || !page) {
         dispatch(redirect({ type: 'MYPAGE', payload: { page: 'stats' }}));
+        dispatch({
+          type: appActionTypes.setProfileNav,
+          payload: {
+            topLevel: ProfileNavOptions.stats,
+            lowerLevel: {
+              [ProfileNavOptions.stats]: 'inProgress'
+            }
+          }
+        })
         return;
       }
+      dispatch({
+        type: appActionTypes.setProfileNav,
+        payload: {
+          topLevel: ProfileNavOptions[page === 'profile' ? 'account' : page],
+          lowerLevel: {
+            [ProfileNavOptions[page === 'profile' ? 'account' : page]]: page === 'profile'
+              ? 'account'
+              : page === 'lists'
+                ? 'likedBooks'
+                : 'inProgress'
+          }
+        }
+      })
+      return;
     }
   },
   PRIVACY: '/privacy-statement',

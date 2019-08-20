@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IUser, IUserProfile } from '../../state-management/models';
-import { Icon } from '@blueprintjs/core';
 import './avatar.css';
+import Icon from '../icons';
 
 interface IProps {
   user?: IUser;
@@ -12,7 +12,7 @@ interface IProps {
 const avatarComponent = (props: IProps) => {
   const { user = undefined, style = null, border = false } = props;
   if (!user) {
-    return ( <Icon icon='user' style={style} /> );
+    return ( <Icon icon='fa-user-circle' style={style} /> );
   }
   const [size, setSize] = useState<number>(0);
   const { profile: { first_name = '', last_name = '', picture = {} }} = user as IUser;

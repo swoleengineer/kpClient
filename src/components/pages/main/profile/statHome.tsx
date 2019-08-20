@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { IUser, IStore, IStat, IAppState, AuthModalTypes } from '../../../../state-management/models';
-import { IPanelProps, Button, NonIdealState, Icon } from '@blueprintjs/core';
+import { IUser, IStat, IAppState, AuthModalTypes } from '../../../../state-management/models';
+import { IPanelProps, Button, NonIdealState } from '@blueprintjs/core';
 import SingleStat from './components/singleStat';
-import { connect } from 'react-redux';
 import { generateStats, showAuthModal } from '../../.././../state-management/thunks';
 import { omit } from 'lodash';
+import Icon from '../../../icons';
 
 interface IProps extends IPanelProps {
   user: IUser;
   userStats: IStat;
   viewPort: IAppState['viewPort'];
-  profileNav: IAppState['profile']
+  profileNav: IAppState['profile'];
 }
 
 const statHomeComponent = (props: IProps) => {
-  const { user, openPanel, userStats, viewPort, profileNav: { topLevel, lowerLevel: { [topLevel]: selectedStat } } } = props;
+  const { user, openPanel, userStats, viewPort, profileNav: { topLevel, lowerLevel: { [topLevel]: selectedStat = 'inProgress' }} } = props;
   if (!userStats) {
     return null;
   }
@@ -39,6 +39,9 @@ const statHomeComponent = (props: IProps) => {
     icon: 'add',
     onClick: () => showAuthModal(AuthModalTypes.topicToStat)
   }];
+  if (['inProgress', 'completed', 'all'].includes(selectedStat)) {
+    
+  }
   const figuresToShow = figures.filter(fig => selectedStat === 'all' ? true : fig.state === selectedStat);
   const displayText = {
     inProgress: {
@@ -47,7 +50,7 @@ const statHomeComponent = (props: IProps) => {
         <>
           Click on any stat below to see more details about your progress.
           <br />
-          Clicking on the Refresh &nbsp;<Icon icon='refresh' iconSize={12} />&nbsp; will generate a new update for any skill you haven't updated in one month.
+          Clicking on the Refresh &nbsp;<Icon icon='fa-redo' iconSize={12} />&nbsp; will generate a new update for any skill you haven't updated in one month.
         </>
       )
     },
@@ -116,9 +119,5 @@ const statHomeComponent = (props: IProps) => {
   );
 }
 
-const mapStateToProps = (state: IStore) => ({
-  userStats: state.user.userStats,
-  viewPort: state.app.viewPort,
-  profileNav: state.app.profile
-})
-export default connect(mapStateToProps)(statHomeComponent);
+
+export default statHomeComponent;

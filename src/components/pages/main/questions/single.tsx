@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IExpandedQuestion, IExpandedBook, IUser, IStore, ITopic, IComment, IReportRequest, acceptableTypes } from '../../../../state-management/models';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
-import { Card, IAlertProps, Popover, Menu, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Icon, Collapse, Button, MenuItem, Spinner, Tooltip, Card } from '@blueprintjs/core';
+import { Card, IAlertProps, Popover, Menu, ControlGroup, InputGroup, ButtonGroup, Alert, Breadcrumbs, Collapse, Button, MenuItem, Spinner, Tooltip  } from '@blueprintjs/core';
 import { createComment, createReport, removeComment, addTopicsToQuestion,
   toggleTopicAgreeQuestion, searchBooks, engagePrecheck } from '../../../../state-management/thunks';
 import { keenToaster } from '../../../../containers/switcher';
@@ -13,6 +13,7 @@ import './questions.css';
 import { bookFilter, getAuthorName } from '../../../../state-management/utils/book.util'
 import KPBOOK from '../../../../assets/kp_book.png';
 import Topic from '../../../topic';
+import Icon from '../../../icons';
 
 const SingleQuestionPage = (props: {
   question: IExpandedQuestion;
@@ -58,8 +59,8 @@ const SingleQuestionPage = (props: {
   const [bookfilterText, updateFilter] = useState('');
   const [loadingComment, updateLoading] = useState(false);
   const pathToHere = [
-    { type: 'HOME', href: '/', icon: 'home', text: 'Home' },
-    { type: 'ALLQUESTIONS', href: '/questions', icon: 'th', text: 'All questions' },
+    { type: 'HOME', href: '/', icon: 'fa-home', text: 'Home' },
+    { type: 'ALLQUESTIONS', href: '/questions', icon: 'fa-th-list', text: 'All questions' },
     { type: 'SINGLEQUESTION', payload: { id: question._id }, href: `/question/${question._id}`, text: `${question.title}${question.title && !question.title.includes('?') ? '?' : ''}`}
   ];
 
@@ -387,7 +388,7 @@ const SingleQuestionPage = (props: {
               <Card elevation={3}>
                 <div className='row'>
                   <div className='col-md-12'>
-                    <strong><Icon icon='book' /> {bookToAdd.title}</strong>
+                    <strong><Icon icon='fa-book' /> {bookToAdd.title}</strong>
                     <span className='sq_booksubtitle'>{bookToAdd.subtitle}</span>
                     <small>{getAuthorName(bookToAdd)}</small>
                     <br />
@@ -510,7 +511,7 @@ const SingleQuestionPage = (props: {
                           <div className='keen_comments_details'>
                             <div className='row'>
                               <div className='col-12'>
-                                <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
+                                <small><Icon icon='fa-user-circle' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
                                 <span className='keen_comment_text'>{comment.text}</span>
                               </div>
                             </div>

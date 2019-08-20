@@ -21,8 +21,8 @@ export interface IAppState {
     topLevel: ProfileNavOptions;
     lowerLevel: {
       [ProfileNavOptions.stats]: 'inProgress' | 'completed' | 'all';
-      [ProfileNavOptions.lists]: string;
-      [ProfileNavOptions.account]: 'profile' | 'notifications'
+      [ProfileNavOptions.lists]: 'likedBooks' | 'readBooks';
+      [ProfileNavOptions.account]: 'account' | 'notifications'
     }
   },
   viewPort: 'mobile' | 'tablet' | 'pc'

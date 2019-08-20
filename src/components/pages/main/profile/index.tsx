@@ -1,10 +1,10 @@
 import React from 'react';
 import './profile.css';
-import { IStore, IUser, IStat } from '../../../../state-management/models';
+import { IStore, IUser, IStat, IAppState } from '../../../../state-management/models';
 import { connect } from 'react-redux';
 import { LocationState, redirect } from 'redux-first-router';
-// import Profile from './profile';
-// import BookList from './bookList';
+import Profile from './profile';
+import BookList from './bookList';
 // import NotificationSettings from './notifications';
 import TopSection from './profileTopSection';
 import Nav from './accountNavigator';
@@ -18,9 +18,11 @@ const ProfilePage = (props: {
   linkTo: Function;
   user: IUser;
   loggedIn: boolean;
-  stats: IStat
+  stats: IStat;
+  viewPort: IAppState['viewPort'];
+  profileNav: IAppState['profile'];
 }) => {
-  const { location: { payload = { page: undefined }},  user, loggedIn, stats } = props;
+  const { location: { payload = { page: undefined }},  user, loggedIn, stats, profileNav, viewPort } = props;
   const { page } = payload as any;
   const processImg = (err, result) => {
     if (err) {
@@ -68,9 +70,9 @@ const ProfilePage = (props: {
               <TopSection user={user} processImg={processImg} stats={stats} />
               <Nav />
             </div>
-            {page === 'stats' && <StatPage user={user}/>}
-              {/* <BookList listType={page} /> */}
-            
+            {page === 'stats' && <StatPage user={user} userStats={stats} viewPort={viewPort} profileNav={profileNav}/>}
+            {page === 'lists' && <BookList profileNav={profileNav} viewPort={viewPort} user={user} />}
+            {page === 'profile' && <Profile profileNav={profileNav} viewPort={viewPort} user={user}  />}            
           </div>
         </div>
       </div>
@@ -82,7 +84,10 @@ export const mapStateToProps = (state: IStore) => ({
   location: state.location,
   user: state.user.user,
   loggedIn: state.user.loggedIn,
-  stats: state.user.userStats
+  stats: state.user.userStats,
+  viewPort: state.app.viewPort,
+  profileNav: state.app.profile
+
 })
 export const mapDispatch = dispatch => ({
   linkTo: payload => dispatch(redirect(payload))

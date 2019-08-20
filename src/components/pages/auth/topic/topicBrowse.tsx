@@ -1,9 +1,10 @@
 import React from 'react';
 import { ITopic, IStore } from '../../../../state-management/models';
-import { MenuItem, Icon, ITagProps, } from '@blueprintjs/core';
+import { MenuItem, ITagProps, } from '@blueprintjs/core';
 import { ItemRenderer, MultiSelect, ItemPredicate } from '@blueprintjs/select';
 import { connect } from 'react-redux';
 import '../auth.css';
+import Icon from '../../../icons';
 
 const TopicMultiSelect = MultiSelect.ofType<ITopic>();
 const TopicBrowse = (props: {
@@ -74,7 +75,7 @@ const TopicBrowse = (props: {
           return (
             <MenuItem
               icon='add'
-              labelElement={<Icon icon='lightbulb' />}
+              labelElement={<Icon icon='fa-graduation-cap' />}
               active={active}
               onClick={handleClick}
               shouldDismissPopover={false}

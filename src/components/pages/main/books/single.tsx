@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { IStore, IExpandedBook, IUser, ITopic, IComment, acceptableTypes, IReportRequest } from '../../../../state-management/models';
-import { Card, Icon, Breadcrumbs, Tag, Collapse, ButtonGroup, Button, Popover, Menu, MenuItem, ControlGroup, InputGroup, Alert, IAlertProps } from '@blueprintjs/core'
+import { Card, Breadcrumbs, Tag, Collapse, ButtonGroup, Button, Popover, Menu, MenuItem, ControlGroup, InputGroup, Alert, IAlertProps } from '@blueprintjs/core'
 import moment from 'moment';
 import './books.css';
 import Book from '../../../book';
@@ -13,6 +13,7 @@ import { keenToaster } from '../../../../containers/switcher';
 import { getAuthorName } from '../../../../state-management/utils/book.util';
 import Topic from '../../../topic';
 import EditBook from './editBook';
+import Icon, { IconTypeEnum } from '../../../icons';
 
 const SingleBook = (props: {
   book: IExpandedBook;
@@ -50,9 +51,9 @@ const SingleBook = (props: {
     reportType: 'inappropriate'
   })
   const pathToHere = [
-    { type: 'HOME', href: '/', icon: 'home', text: 'Home' },
-    { type: 'ALLBOOKS', href: '/books', icon: 'th', text: 'All books' },
-    { type: 'SINGLEBOOK', payload: { id: book._id }, href: `/book/${book._id}`, icon: 'book', text: book.title}
+    { type: 'HOME', href: '/', icon: 'fa-home', text: 'Home' },
+    { type: 'ALLBOOKS', href: '/books', icon: 'fa-th-list', text: 'All books' },
+    { type: 'SINGLEBOOK', payload: { id: book._id }, href: `/book/${book._id}`, icon: 'fa-book', text: book.title}
   ]
   const userBook = user && user.readBooks.map(livre => livre._id).includes(book._id)
     ? 'readBooks'
@@ -163,7 +164,7 @@ const SingleBook = (props: {
             />
             {(book.affiliate_link || book.amazon_link) && <>
               <Menu.Divider />
-              <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+              <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='fa-share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
             </>}
             {user && user.role === 'admin' && <>
               <Menu.Divider />
@@ -226,12 +227,13 @@ const SingleBook = (props: {
                 }}
               >
                 <Icon
-                  icon='heart'
+                  type={IconTypeEnum.solid}
+                  icon='fa-heart'
                   intent={user && book.likes.includes(user._id) ? 'danger' : 'none'}
                 /> {book.likes.length}
               </li>
-              <li onClick={() => commentInput.focus()}> <Icon icon='comment' /> {book.comments.length} </li>
-              <li onClick={() => setTopicForm(!addTopicOpen)}> <Icon icon={<i className='fa fa-graduation-cap' />} /> {book.topics.length} </li>
+              <li onClick={() => commentInput.focus()}> <Icon icon='fa-comments' /> {book.comments.length} </li>
+              <li onClick={() => setTopicForm(!addTopicOpen)}> <Icon icon='fa-graduation-cap' /> {book.topics.length} </li>
             </ul>
           </div>
           {(showEdit && user && user.role === 'admin') && <EditBook
@@ -367,43 +369,6 @@ const SingleBook = (props: {
                     })
                   }}
                 />
-                // <div className='topicCompWrapper topicCompInteractive'>
-                //   <div className='topicCompLeft'>
-                //     <Icon icon='lightbulb' iconSize={12} />
-                //     <span className='topicCompName'>{topic.topic.name}</span>
-                //   </div>
-                //   <div className='topicCompRight'>
-                //     {topic.agreed.length}
-                //   </div>
-                // </div>
-                // <Tag
-                //   icon='lightbulb'
-                //   rightIcon={<span>| <Icon icon='thumbs-up' /> {topic.agreed.length}</span>}
-                //   interactive={true}
-                //   large={true}
-                //   key={i}
-                //   style={{
-                //     marginRight: '10px',
-                //     marginBottom: '10px'
-                //   }}
-                //   minimal={!(user && (typeof topic.agreed[0] === 'object' ? topic.agreed.map(person => person._id).includes(user._id) : topic.agreed.includes(user._id)))}
-                //   onClick={() => {
-                //     engagePrecheck(book, true, err => {
-                //       if (err) {
-                //         return;
-                //       }
-                //       return user
-                //         ? toggleTopicAgreeBook(book._id, topic._id)
-                //             .then(
-                //               () => console.log('request successful. Toggled agree status'),
-                //               () => console.log('request failed toggling topic agree status')
-                //             )
-                //         : null
-                //     })
-                //   }}
-                // >
-                //   {topic.topic.name}
-                // </Tag>
               )
             })}
             </div>}
@@ -418,7 +383,7 @@ const SingleBook = (props: {
                       <li key={i}>
                         <Popover>
                           <div className='keen_comments_details'>
-                            <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
+                            <small><Icon icon='fa-user-circle' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
                             <span className='keen_comment_text'>{comment.text}</span>
                           </div>
                           <Menu>
@@ -485,14 +450,14 @@ const SingleBook = (props: {
                   <Collapse isOpen={newComment.text.length > 0}>
                     <li>
                       <div className='keen_comments_details'>
-                        <small><Icon icon='user' iconSize={13}/> &nbsp; @{newComment.author.username}&nbsp;&nbsp;·&nbsp;&nbsp;{moment().fromNow()}</small>
+                        <small><Icon icon='fa-user-circle' iconSize={13}/> &nbsp; @{newComment.author.username}&nbsp;&nbsp;·&nbsp;&nbsp;{moment().fromNow()}</small>
                         {newComment.text.length > 0 && <span className='keen_comment_text'>{newComment.text}</span>}
                       </div>
                     </li>
                   </Collapse>
                 </ul>
                 <div className='keen_comments_meta'>
-                  <small><Icon iconSize={11} icon='comment' /> {book.comments.length}</small>
+                  <small><Icon iconSize={11} icon='fa-comments' /> {book.comments.length}</small>
                 </div>
                 <div className='keen_comments_Input'>
                   <ControlGroup fill={true} vertical={false} >

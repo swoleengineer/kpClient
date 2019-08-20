@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Slider from 'react-slick';
 import { ITopic, IAppState } from '../../../../../state-management/models';
 import Topic from '../../../../topic';
-import { Icon } from '@blueprintjs/core';
+import Icon from '../../../../icons';
 
 interface IProps {
   topics: Array<ITopic>;
@@ -87,7 +87,7 @@ const heroSearch = ({ topics = [], updateFilteredTopics, linkTo, queryMoreBooks,
                     className={searchText.length > 0 ? 'heroSearch_searchBox_btn isActive' : 'heroSearch_searchBox_btn'}
                     onClick={() => processSearch()}
                   >
-                    <Icon icon='search' iconSize={23} />
+                    <Icon icon='fa-search' iconSize={23} />
                   </span>
                 </div>
                 {searchMode && SearchBoxCategories}

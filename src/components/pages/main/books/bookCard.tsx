@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Popover, Icon, Menu, MenuItem, Collapse, ControlGroup, InputGroup, Button, Alert, IAlertProps, Divider } from '@blueprintjs/core';
+import { Popover, Menu, MenuItem, Collapse, ControlGroup, InputGroup, Button, Alert, IAlertProps, Divider } from '@blueprintjs/core';
 import Book from '../../../book';
 import { IExpandedBook, IStore, IUser, acceptableTypes, IComment, IReportRequest, IAppState } from '../../../../state-management/models';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { createComment, toggleUserBook, removeComment, createReport } from '../../../../state-management/thunks'
 import { keenToaster } from '../../../../containers/switcher';
+import Icon, { IconTypeEnum } from '../../../icons';
 
 type alertConfigtype = {
     type: 'deleteComment' | 'reportComment' | 'reportBook';
@@ -115,7 +116,7 @@ const BookCard = (props: {
     <div className='bookCardWrapper'>
       <span className='bookCard_more'>
         <Popover>
-          <Icon icon='more' />
+          <Icon icon='fa-ellipsis-h' />
           <Menu>
             <MenuItem
               icon={props.user && props.user.readBooks.map(livre => livre._id).includes(book._id) ? 'remove-column' : 'bookmark'}
@@ -124,7 +125,7 @@ const BookCard = (props: {
             />
             <MenuItem icon='lightbulb' text='Add Topic' onClick={() => console.log(book)}/>
             <Menu.Divider />
-            <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+            <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='fa-share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
             <Menu.Divider />
             <MenuItem
               icon='flag'
@@ -171,12 +172,13 @@ const BookCard = (props: {
           <ul className='bookCard_engage'>
             <li onClick={() => toggleUserBook(book._id, 'savedBooks', book.likes.includes(props.user ? props.user._id : '') ? 'remove' : 'add')}>
               <Icon
-                icon='heart'
+                type={IconTypeEnum.solid}
+                icon='fa-heart'
                 intent={book.likes && book.likes.includes(props.user ? props.user._id : '') ? 'danger' : 'none'}
               /> {book.likes && book.likes.length}
             </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='comment' /> {book.comments && book.comments.length} </li>
-            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='lightbulb' /> {book.topics && book.topics.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='fa-comment' /> {book.comments && book.comments.length} </li>
+            <li onClick={() => linkTo({ type: 'SINGLEBOOK', payload: { id: book._id } })}> <Icon icon='fa-graduation-cap' /> {book.topics && book.topics.length} </li>
           </ul>
           <div className='bookCard_commentsContainer'>
             <ul className='keen_comments_wrapper'>
@@ -188,7 +190,7 @@ const BookCard = (props: {
                   <li key={i}>
                     <Popover>
                       <div className='keen_comments_details'>
-                        <small><Icon icon='user' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
+                        <small><Icon icon='fa-user-circle' iconSize={13}/> &nbsp; @{comment.author.username} | {moment(comment.created).fromNow()}</small>
                         <span className='keen_comment_text'>{comment.text}</span>
                       </div>
                       <Menu>
@@ -250,14 +252,14 @@ const BookCard = (props: {
               <Collapse isOpen={newComment.text.length > 0}>
                 <li>
                   <div className='keen_comments_details'>
-                    <small><Icon icon='user' iconSize={13}/> &nbsp; @{newComment.author.username}&nbsp;&nbsp;·&nbsp;&nbsp;{moment().fromNow()}</small>
+                    <small><Icon icon='fa-user-circle' iconSize={13}/> &nbsp; @{newComment.author.username}&nbsp;&nbsp;·&nbsp;&nbsp;{moment().fromNow()}</small>
                     {newComment.text.length > 0 && <span className='keen_comment_text'>{newComment.text}</span>}
                   </div>
                 </li>
               </Collapse>
             </ul>
             <div className='keen_comments_meta'>
-              <small><Icon iconSize={11} icon='comment' /> {book.comments && book.comments.length}</small>
+              <small><Icon iconSize={11} icon='fa-comments' /> {book.comments && book.comments.length}</small>
               <small><Link to={{ type: 'SINGLEBOOK', payload: { id: book._id }}}>View All</Link></small>
             </div>
             <div className='keen_comments_Input'>

@@ -1,27 +1,125 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { IStore, IUser, ITopicBodyObj } from '../../../../state-management/models';
-import { Icon, Card } from '@blueprintjs/core';
+import { IUser, ITopicBodyObj, IAppState, ITopic } from '../../../../state-management/models';
 import { flatten } from 'lodash';
 import Book from '../../../book';
+import Icon, { IconTypeEnum } from '../../../icons';
+import Slider from 'react-slick';
+import Topic from '../../../topic';
 
 const getUnique = (arr, prop) => arr.filter(e => e).map(e => e[prop]).map((e, i, f) => f.indexOf(e) === i && i).filter(e => arr[e]).map(e => arr[e])
 
 const BookList = (props: {
-  listType: string;
+  viewPort: IAppState['viewPort'];
+  profileNav: IAppState['profile'];
   user: IUser;
 }) => {
-  const { user, listType } = props;
+  const { user,  profileNav: { topLevel, lowerLevel: { [topLevel]: listType = 'likedBooks' }}} = props;
   if (!user) {
     return null;
   }
-  const books = user[listType] || [];
-  const icon = listType === 'likedBooks' ? 'book' : 'bookmark';
+  const books = user[listType === 'likedBooks' ? 'savedBooks' : listType] || [];
+  
+  const icon = listType === 'likedBooks' ? 'fa-heart' : 'fa-bookmark';
+  const iconProps = {
+    likedBooks: {
+      type: IconTypeEnum.solid,
+      icon
+    },
+    readBooks: { icon }
+  }
+  const listName = {
+    likedBooks: 'Liked Books',
+    readBooks: 'Read Books'
+  }[listType];
   const allTopics = getUnique(flatten(books.map(book => book.topics.map((topic : ITopicBodyObj) => topic.topic))), '_id')
-
+  let bookSlider;
   return (
-    <div className='row'>
-      <div className='col-12'>
+    <div className='library_list_wrapper'>
+      <div className='library_list_top_container'>
+        <header className='library_list_top_header'>
+          <span className='library_list_top_header_text'><Icon {...iconProps[listType]} /> {listName}</span>
+          <span className='library_list_top_header_count'>{books.length} <span className='hidden-sm'>books</span></span>
+        </header>
+        <div className='library_list_top_topics_wrapper'>
+          <span className='library_list_top_title'>{allTopics.length} topics total</span>
+          <div className='library_list_top_topics_container'>
+            <Slider
+              dots={false}
+              infinite={true}
+              speed={1000}
+              slidesToShow={3}
+              slidesToScroll={2}
+              arrows={false}
+              variableWidth={true}
+              autoplay={true}
+              autoplaySpeed={15000}
+            >
+              {allTopics
+                .reduce((acc, curr) => [...acc, curr, ``], [])
+                .map((topic: ITopic, i) => topic
+                  ? <Topic
+                      skill={topic}
+                      key={topic._id}
+                      interactive={true}
+                      topicSize='smallTopic'
+                      minimal={false}
+                      onClick={() => {
+                        // Add logic that filters books by that topic
+                      }}
+                  />                
+                  : <span key={i}>&nbsp;&nbsp;</span>)
+              }
+            </Slider>
+          </div>
+        </div>
+        <div className='library_list_top_books_wrapper'>
+          <div className='library_list_top_books_container'>
+            <Slider
+              ref={slider => bookSlider = slider}
+              dots={false}
+              infinite={true}
+              speed={1000}
+              slidesToShow={3}
+              slidesToScroll={1}
+              arrows={false}
+              variableWidth={true}
+              swipeToSlide={false}
+              afterChange={index => {
+                // update the part on the bottom.
+                return null;
+              }}
+              responsive={[{
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
+                  slidesPerRow: 1,
+                  slidesToScroll: 1,
+                }
+              }, {
+                breakpoint: 600,
+                settings: {
+                  slidesToShow: 1,
+                  slidesPerRow: 1,
+                  slidesToScroll: 1,
+                }
+              }, {
+                breakpoint: 480,
+                settings: {
+                  slidesToShow: 1,
+                  slidesPerRow: 1,
+                  slidesToScroll: 1,
+                }
+              }]}
+            >
+              {books.map((book, i) => <Book liv={book} key={book.gId}/>)}
+            </Slider>
+          </div>
+        </div>
+      </div>
+      <div className='library_list_bottom_container'>
+        bottom half goes in here
+      </div>
+      {/* <div className='col-12'>
         <header className='listPage_header'>
           <h4>
             <strong>{books.length} Books</strong>
@@ -51,13 +149,11 @@ const BookList = (props: {
             </div>
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
 
-const mapStateToProps = (state: IStore) => ({
-  user: state.user.user
-});
 
-export default connect(mapStateToProps)(BookList);
+
+export default BookList;

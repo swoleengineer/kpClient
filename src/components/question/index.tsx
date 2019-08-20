@@ -1,6 +1,6 @@
 import React from 'react';
 import './question.css';
-import { Text, Button, ButtonGroup, Popover, Menu, MenuItem, Icon } from '@blueprintjs/core';
+import { Text, Button, ButtonGroup, Popover, Menu, MenuItem } from '@blueprintjs/core';
 import Slider from 'react-slick';
 import { IExpandedBook, ITopicBodyObj, IExpandedQuestion } from 'src/state-management/models';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import { connect } from 'react-redux';
 import Topic from '../topic';
+import Icon from '../icons';
 const QuestionCard = (props: { linkTo: Function; style: any; question: IExpandedQuestion; books: IExpandedBook[]; responsive: boolean; }) => {
   const { responsive, question, style } = props;
   if (!question) {
@@ -23,7 +24,7 @@ const QuestionCard = (props: { linkTo: Function; style: any; question: IExpanded
             <span className='questionCard_meta_time'>{moment(created).fromNow()}</span>
             <span className='questionCard_meta_more'>
               <Popover>
-                <Icon icon='more' />
+                <Icon icon='fa-ellipsis-h' />
                 <Menu>
                   <MenuItem icon='lightbulb' text='Add Topic' onClick={() => props.linkTo({ type: 'SINGLEQUESTION', payload: { id: question._id} })}/>
                   <Menu.Divider />

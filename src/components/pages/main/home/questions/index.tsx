@@ -7,6 +7,7 @@ import Slider from 'react-slick';
 import { ButtonGroup, Button, Divider } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router';
 import { showModal } from '../../../../../state-management/thunks';
+import Icon from '../../../../icons';
 
 
 const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[]; toPage: Function }) => {
@@ -24,7 +25,7 @@ const Questions = (props: { books: Array<IExpandedBook>; questions: IQuestion[];
           <div className='col-6'>
             <div className='headerMenu'>
               <ButtonGroup>
-                <Button icon='help' onClick={() => showModal(AuthModalTypes.question)}>Ask <span className='hidden-sm'>For Suggestion</span></Button>
+                <Button icon={<Icon icon='fad fa-hands-helping' />} onClick={() => showModal(AuthModalTypes.question)}>Ask <span className='hidden-sm'>For Suggestion</span></Button>
                 <Button icon='arrow-right' onClick={() => toPage({ type: 'ALLQUESTIONS' })}>All <span className='hidden-sm'>Questions</span></Button>
               </ButtonGroup>
               <Divider className='hidden-xs'/>

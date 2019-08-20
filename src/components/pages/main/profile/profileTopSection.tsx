@@ -1,10 +1,10 @@
 import React from 'react';
 import { IUser, IStat } from '../../../../state-management/models';
-import { Icon, } from '@blueprintjs/core';
 import { logUserOut } from '../../../../state-management/thunks';
 import moment from 'moment';
 import { uploadToCloudinary } from './profile.util';
 import Avatar from '../../../avatar';
+import Icon from '../../../icons';
 
 const TopSection = (props: {
   user: IUser;
@@ -30,7 +30,7 @@ const TopSection = (props: {
         <span className='aum_name'>{user.profile.first_name} {user.profile.last_name}</span>
         <span className='aum_joined'>since {moment(user.created).format('MMM DD, YYYY')}</span>
         <br />
-        <span className='aum_logoutLink' onClick={() => logUserOut()}>Log out <Icon icon='log-out' iconSize={11} /></span>
+        <span className='aum_logoutLink' onClick={() => logUserOut()}>Log out <Icon icon='fa-sign-out' iconSize={11} /></span>
       </div>
       <div className='col-12'>
         <div className='aum_Numbers_Wrapper'>

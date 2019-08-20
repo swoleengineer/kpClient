@@ -1,19 +1,22 @@
 import React from 'react';
 import { IPanel, PanelStack } from '@blueprintjs/core';
 import StatHome from './statHome';
-import { IUser } from '../../../../state-management/models';
+import { IUser, IStat, IAppState } from '../../../../state-management/models';
 import './components/profile-components.css';
 
 const statPage = (props: {
-  user: IUser
+  user: IUser;
+  userStats: IStat;
+  viewPort: IAppState['viewPort'];
+  profileNav: IAppState['profile'];
 }) => {
-  const { user } = props;
+  const { user, userStats, viewPort, profileNav } = props;
   if (!user) {
     return null;
   }
   const initialPanel: IPanel = {
     component: StatHome,
-    props: { user },
+    props: { user, userStats, viewPort, profileNav },
     title: 'My Stats'
   }
   return (

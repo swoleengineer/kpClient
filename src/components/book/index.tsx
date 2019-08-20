@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { redirect } from 'redux-first-router';
-import { Icon, Tooltip, Menu, MenuItem, Popover, IAlertProps, Alert, Spinner } from '@blueprintjs/core';
+import { Tooltip, Menu, MenuItem, Popover, IAlertProps, Alert, Spinner } from '@blueprintjs/core';
 import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
@@ -11,6 +11,7 @@ import { keenToaster } from '../../containers/switcher'
 import { getAuthorName } from '../../state-management/utils/book.util';
 import Topic from '../topic';
 import './book.css';
+import Icon, { IconTypeEnum } from '../icons';
 
 const Book = ({
   bookId, 
@@ -125,7 +126,7 @@ const Book = ({
           {isLoading && <Spinner size={35} />}
         </span>
         {isRead
-          ? <span className='bookMark' style={{ position: 'absolute', top: '0'}}><Icon icon='bookmark' iconSize={40} intent='danger'/></span>
+          ? <span className='bookMark' style={{ position: 'absolute', top: '0'}}><Icon icon='fa-bookmark' iconSize={40} intent='danger'/></span>
           : <Tooltip content='Mark as read' className='unreadBookMark'>
               <span
                 className='unreadBookMark'
@@ -142,7 +143,7 @@ const Book = ({
                   }) 
                 }}
               >
-                <Icon icon='bookmark' iconSize={40} />
+                <Icon icon='fa-bookmark' iconSize={40} />
               </span>
             </Tooltip>
         }
@@ -195,7 +196,8 @@ const Book = ({
             <Tooltip content={book.likes && book.likes.includes(user ? user._id : '') ? 'Unlike Book' : 'Save Book'}>
               <span >
                 <Icon
-                  icon='heart'
+                  type={IconTypeEnum.solid}
+                  icon='fa-heart'
                   iconSize={12}
                   intent={book.likes && book.likes.includes(user ? user._id : '') ? 'danger' : 'none'}
                 />
@@ -204,13 +206,13 @@ const Book = ({
           </div>
           <div className='bookMenu_item' onClick={() => goToBook()}>
             <Tooltip content='View book'>
-              <span><Icon icon='share' iconSize={12} /></span>
+              <span><Icon icon='fa-share' iconSize={12} /></span>
             </Tooltip>
           </div>
           <div className='bookMenu_item'>
             <Popover>
               <Tooltip content='More...'>
-                <span><Icon icon='more' iconSize={12} /></span>
+                <span><Icon icon='fa-ellipsis-h' iconSize={12} /></span>
               </Tooltip>
               <Menu>
                 <MenuItem
@@ -231,7 +233,7 @@ const Book = ({
                 />
                 {(book.affiliate_link || book.amazon_link) && <>
                   <Menu.Divider />
-                  <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
+                  <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='fa-share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
                 </>}
                 <Menu.Divider />
                 <MenuItem
