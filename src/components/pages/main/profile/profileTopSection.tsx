@@ -5,6 +5,7 @@ import moment from 'moment';
 import { uploadToCloudinary } from './profile.util';
 import Avatar from '../../../avatar';
 import Icon from '../../../icons';
+import { Button } from '@blueprintjs/core';
 
 const TopSection = (props: {
   user: IUser;
@@ -20,17 +21,21 @@ const TopSection = (props: {
         <div className='user_profile_wrapper'>
           <Avatar user={user} border={true}/>
         </div>
-        {/* {user.profile.picture && ![undefined, null].includes(user.profile.picture.link)
-          ? <div className='user_profile_wrapper' style={{ backgroundImage: `url(${user.profile.picture.link})`}} />
-          : <Icon icon='user' iconSize={60} />
-        } */}
       </div>
       <div className='col-8 accountUserMetaWrapper'>
         <span className='aum_username'>{user.username}</span>
         <span className='aum_name'>{user.profile.first_name} {user.profile.last_name}</span>
         <span className='aum_joined'>since {moment(user.created).format('MMM DD, YYYY')}</span>
         <br />
-        <span className='aum_logoutLink' onClick={() => logUserOut()}>Log out <Icon icon='fa-sign-out' iconSize={11} /></span>
+        <Button
+          text='Log out'
+          icon={<Icon icon='fa-sign-out' iconSize={11} />}
+          onClick={() => logUserOut()}
+          small={true}
+          minimal={true}
+          style={{ color: `rgba(0,0,0,.4)`}}
+        />
+        
       </div>
       <div className='col-12'>
         <div className='aum_Numbers_Wrapper'>

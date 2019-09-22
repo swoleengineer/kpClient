@@ -8,7 +8,7 @@ import querySerializer from 'query-string';
 import { initialAppState, siteName, pageTitleMap } from './state-management/utils';
 
 
-const development = process.env.NODE_ENV === 'development';
+const development = process.env.NODE_ENV !== 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   querySerializer,
@@ -48,7 +48,7 @@ export const rootReducer = combineReducers<IStore>({
 });
 
 function configureStore(initialState?: any) {
-  const middleWares: any[] = development ? [ logger ] : [];
+  const middleWares: any[] = !development ? [ logger ] : [];
   const combinedEnhancers = compose(enhancer, applyMiddleware(...middleWares));
   return createStore(
     rootReducer,

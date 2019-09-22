@@ -8,7 +8,7 @@
   position: relative;
 }
 .topicCompWrapper.topicCompMinimal {
-  background-color: rgba(138,155,168,.2);
+  background-color: rgba(255,255,255,.6);
   color: #182026;
   border-color: rgba(138,155,168,.3)
 }
@@ -22,6 +22,7 @@
 .topicCompWrapper.topicCompInteractive:hover, .topicCompWrapper.topicCompSelected {
   cursor: pointer;
   box-shadow: 0 10px 8px -8px rgba(138,155,168,.5);
+  border-color: white !important;
 }
 .topicCompWrapper.topicCompMinimal.topicCompInteractive:hover, .topicCompWrapper.topicCompMinimal.topicCompSelected {
   cursor: pointer;
@@ -32,31 +33,45 @@
   display: flex;
   float: left;
   padding: 5px 10px;
-  flex-wrap: nowrap
+  flex-wrap: nowrap;
+  padding-left: 0;
 }
 .topicCompWrapper.smallTopic .topicCompLeft {
-  padding: 2px 10px;
+  padding: 2px 10px 2px 0px;
 }
 .topicCompWrapper.largeTopic .topicCompLeft {
-  padding: 7px 10px;
+  padding: 7px 10px 2px 0px;
 }
-.topicCompWrapper .topicCompLeft .bp3-icon, .topicCompWrapper .topicCompLeft i.fa {
-  margin-right: 5px;
+.topicCompWrapper .topicCompLeft .bp3-popover-wrapper {
+  text-align: center;
+  width: 35px
+}
+.topicCompWrapper .topicCompLeft .bp3-popover-wrapper .bp3-popover-target {
+  width: 100%
+}
+.topicCompWrapper .topicCompLeft .bp3-popover-wrapper {
+  padding: 0 5px;
+}
+.topicCompWrapper .topicCompLeft .bp3-icon, .topicCompWrapper .topicCompLeft i {
+  margin: 0 auto;
   position: relative;
-  top: -1px
+  top: -1px;
+  display: block;
 }
-.topicCompWrapper.smallTopic .topicCompLeft .bp3-icon, .topicCompWrapper .topicCompLeft i.fa {
+/* .topicCompWrapper.smallTopic .topicCompLeft .bp3-icon, .topicCompWrapper .topicCompLeft i {
   top: 0
-}
+} */
 .topicCompWrapper .topicCompLeft .topicCompName {
   border-left: 1px solid rgba(0,0,0,.15);
-  padding: 0 0 0 7px;
+  padding: 2px 0 0 7px;
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap
+  white-space: nowrap;
+  position: relative;
+  display: block
 }
 .topicCompWrapper.smallTopic .topicCompLeft .topicCompName {
-  padding: 0 0 0 5px;
+  padding: 2px 0 0 5px;
   font-size: 12px;
 }
 .topicCompWrapper.largeTopic .topicCompLeft .topicCompName {
@@ -67,19 +82,22 @@
   display: block;
   float: left;
   height: 100%;
-  /* background-color: rgba(0,0,0, .08); */
-  /* background-color: rgba(167, 182, 194, 0.85); */
   background-color: rgba(138,155,168,.3);
   padding: 5px 10px;
   font-size: 11px;
-  position: relative
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .topicCompWrapper.topicCompSelected {
   border-color: #339af0;
 }
 .topicCompWrapper.topicCompSelected .topicCompRight {
   background-color: rgba(138,155,168,.6);
-  transition: all .18s ease
+ 
+}
+.topicCompWrapper.topicCompInteractive:hover .topicCompRight,
+.topicCompWrapper.topicCompSelected .topicCompRight {
+  background-color: rgba(138,155,168,.8);
 }
 .topicCompWrapper .topicCompRight span {
   position: relative;
@@ -101,14 +119,20 @@
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent; 
   border-right:5px solid rgba(138,155,168,.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .topicCompWrapper.topicCompSelected .topicCompRight:before {
   border-right-color: rgba(138,155,168,.6);
 }
+.topicCompWrapper.topicCompInteractive:hover .topicCompRight:before,
+.topicCompWrapper.topicCompSelected .topicCompRight:before {
+  border-right-color: rgba(138,155,168,.8);
+}
 .topicComCloseIcon {
-  margin: 0 -5px 0 5px;
+  margin: 5px 5px 0 5px !important;
   position: relative;
   left: 5px;
+
 }
 .topicCompWrapper .topicCompLeft .bp3-popover-wrapper {
   transition: all .18s ease;

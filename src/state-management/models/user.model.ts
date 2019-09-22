@@ -1,4 +1,4 @@
-import { IBook, ITopic } from './';
+import { IBook, ITopic, IComment } from './';
 export interface IUserProfile {
   first_name: string;
   last_name: string;
@@ -41,6 +41,11 @@ export interface IUser extends INewUserRequest {
   username: string;
   savedBooks: Array<IBook>;
   readBooks: Array<IBook>;
+  myShelves: Array<IShelfDetail>;
+  listPublicStatus: {
+    readBooks: boolean;
+    savedBooks: boolean;
+  }
 }
 
 
@@ -49,7 +54,10 @@ export enum AuthModalTypes {
   register = 'auth/register',
   forgot = 'auth/forgotPw/forgot',
   question = 'auth/question',
-  topicToStat = 'auth/stats/addTopic'
+  topicToStat = 'auth/stats/addTopic',
+  newShelf = 'auth/shelves/newShelf',
+  bookToShelf = 'auth/shelves/addBook',
+  searchBooks = 'auth/searchBooks'
 }
 
 
@@ -83,6 +91,61 @@ export interface IStat {
   figures: Array<IStatFigure>;
   updated: Date;
 }
+
+export enum ShelfEditType {
+  addBook = 'addBook',
+  rmBook = 'rmBook',
+  makePublic = 'makePublic',
+  makePrivate = 'makePrivate',
+  editTitle = 'editTitle',
+  editIcon = 'editIcon'
+}
+
+export interface INewShelfRequest {
+  title: string;
+  icon: string;
+  public: boolean;
+}
+
+export enum ShelfUpdateType {
+  newBook = 'newBook',
+  rmBook = 'rmBook',
+  newFollower = 'newFollower',
+  newShelf = 'newShelf',
+  titleEdit = 'titleEdit'
+}
+export interface IShelfUpdate {
+  _id: string;
+  text: string;
+  created: Date;
+  data: any;
+  eventType: ShelfUpdateType;
+}
+export interface IShelf {
+  _id: string;
+  icon: string;
+  created: Date;
+  books: Array<IBook>;
+  public: boolean;
+  followers: Array<IUser>;
+  owner: IUser;
+  integratedType: 'readBooks' | 'savedBooks';
+  listType: 'integrated' | 'single';
+  updates: Array<IShelfUpdate>;
+  disabled: boolean;
+  title: string;
+}
+
+export interface IShelfDetail {
+  id: string;
+  listType: 'integrated' | 'single';
+  integratedType: 'readBooks' | 'savedBooks';
+  owner: IUser;
+  public: boolean;
+  icon: string;
+  title: string;
+  books: number
+}
 export interface IUserState {
   jwt: string;
   user:  IUser;
@@ -91,6 +154,10 @@ export interface IUserState {
   authModalActivePage: AuthModalTypes;
   userStats: IStat | null;
   topicForStat: ITopic | null;
+  followedShelves: Array<IShelfDetail>;
+  selectedShelf: IShelf;
+  selectedShelfComments: Array<IComment>;
+  authModalData: any;
 }
 
 export interface IAddTopicToStatRequest {

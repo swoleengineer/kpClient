@@ -16,7 +16,6 @@ const AppToaster = Toaster.create({
 export const engagePrecheck = (book: IBook | IExpandedBook | null, auth: boolean = true, cb) => {
   const { user: { loggedIn, user }} = store.getState() as IStore;
   const { active = false } = book || {};
-  console.log('precheck called')
   if (auth && (!loggedIn || !user || !user.profile)) {
     // not logged in, show popup
     AppToaster.show({

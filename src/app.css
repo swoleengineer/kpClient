@@ -6,6 +6,7 @@
 @import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 @import "~slick-carousel/slick/slick.css"; 
 @import "~slick-carousel/slick/slick-theme.css";
+@import "~draft-js/dist/Draft.css"
 
 
 /* @import "./assets/css/bootstrap.min.css";
@@ -79,6 +80,7 @@ button:focus {
   .heroSliderWrapper .heroSliderStyle {
     padding-top: 0 !important;
   }
+
 } 
 @media (max-width: 500px) {
   .hidden-sm {
@@ -106,7 +108,12 @@ button:focus {
     text-align: center !important;
     margin-top: 25px;
   }
-
+  .shelfForm_fields_wrapper {
+    padding-top: 25px !important
+  }
+  .book_card_picture_wrapper {
+    padding: 25px 13px !important;
+  }
 }
 @media (min-width: 768px) {
   .container {
@@ -138,14 +145,22 @@ button:focus {
 .authModalWrapper .authModalCard {
   position: relative;
   margin: auto;
+  overflow: hidden;
 }
 .authModalWrapper .authModalCard h6, .authModalWrapper .authModalCard h5 {
-  color: #5c7080;
-  margin: 15px 0 25px;
+  color: white;
+
+}
+.authModalWrapper .authModalCard h6, .authModalWrapper .authModalCard h5 a {
+  position: relative;
+  top: 1px
 }
 .authModalCard header.authModalHeader {
   display: block;
   position: relative;
+  background-color: #5c7080;
+  margin: -20px -20px 0px;
+  padding: 20px 20px 15px;
 }
 .authModalCard header.authModalHeader strong, .authModalCard header.authModalHeader small {
   display: block;
@@ -156,12 +171,35 @@ button:focus {
 }
 .authModalCard header.authModalHeader .authModalDismissBtn {
   position: absolute;
-  top: -10px;
-  right: -5px
+  top: 10px;
+  right: 10px;
+  color: white;
+}
+.authModalMiddleLinks {}
+.authModalMiddleLinks .authBtnHolder {
+  background-color: #5c7080;
+  margin: 0 -20px 0;
+  padding: 5px 20px;
+  border-top: 1px solid rgba(255,255,255,.2);
+}
+.authModalMiddleLinks .authBtnHolder button {
+  color: white;
+  margin-right: 10px;
+}
+.authModalMiddleLinks .authBtnHolder button:hover {
+  color: white
 }
 .margin-right-15 {
   margin-right: 15px
 }
 .auto-width {
   width: auto !important
+}
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

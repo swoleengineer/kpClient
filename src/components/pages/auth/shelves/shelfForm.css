@@ -1,0 +1,47 @@
+.shelfForm_field_row {
+  margin: 0 0 25px;
+}
+.shelfForm_topics_wrapper {
+ 
+}
+.shelfForm_topics_wrapper h6 {
+  color: rgba(0,0,0,.7) !important;
+}
+.shelfForm_topics_wrapper p {
+  font-size: 1.1em
+}
+.shelfForm_topics_container {
+  padding: 15px;
+  background-color: #b2c0ca;
+  display: flex;
+  border-radius: 4px 4px 0 0;
+}
+.shelfForm_topics_btns_container {
+  padding: 5px;
+  background-color: rgba(178,192,202,.5);
+  text-align: right;
+  border-radius: 0 0 4px 4px;
+  border-top: 1px solid white;
+}
+.shelfForm_topics_btns_container button {
+  color: white;
+}
+.shelfForm_final_actions_container {
+  padding: 15px 0;
+}
+.shelfForm_final_actions_container button,
+.shelfForm_final_actions_container a {
+  margin-right: 15px;
+}
+.shelfForm_final_actions_container a span {
+  margin: 0 5px !important
+}
+.shelfForm_topics_adding_wrapper {}
+.shelfForm_topics_adding_wrapper .shelfForm_topics_adding_container {
+  display: flex;
+  padding: 15px 15px 0;
+  background-color: rgba(178,192,202,.5);
+}
+.shelfForm_topics_adding_wrapper .shelfForm_topics_adding_container .topicCompWrapper {
+  margin: 0 15px 15px 0;
+}

@@ -10,7 +10,7 @@ import logoLight from '../../assets/simple_light.png';
 const Logo = ({ large = false, dark = false, noText = false }: { large: boolean; dark?: boolean; noText?: boolean }) => (
   <Link
     to={{ type: 'HOME' }}
-    className={['logoWrapper', ...(large ? ['larger'] : []), ...(dark ? ['logoLight'] : []), ...(noText ? ['logoBorder'] : [])].join(' ')}
+    className={['logoWrapper', ...(large ? ['larger'] : []), ...(dark ? ['logoLight'] : [])].join(' ')}
   >
     <img src={dark ? logoLight : logo} alt='Keen Pages' />
     {noText ? null : <>

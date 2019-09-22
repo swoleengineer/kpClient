@@ -14,6 +14,9 @@ import Profile from '../components/pages/main/profile';
 import Privacy from '../components/pages/main/privacy';
 import Terms from '../components/pages/main/termsOfService';
 import AddTopicToStats from '../components/pages/auth/stats/addTopic';
+import CreateShelf from '../components/pages/auth/shelves/newShelf';
+import AddBookToShelf from '../components/pages/auth/shelves/addBook';
+import SearchBooks from '../components/pages/auth/searchBooks';
 
 export default {
   'main/home': Home,
@@ -29,6 +32,9 @@ export default {
   'main/books/single': SingleBook,
   'main/questions/all': AllQuestions,
   'main/questions/single': SingleQuestion,
+  'auth/shelves/newShelf': CreateShelf,
+  'auth/shelves/addBook': AddBookToShelf,
+  'auth/searchBooks': SearchBooks,
   'main/profile': Profile,
   'main/privacy': Privacy,
   'main/termsOfService': Terms

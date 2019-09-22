@@ -7,7 +7,7 @@ export enum HomeSearchCategories {
 
 export enum ProfileNavOptions {
   stats = 'stats',
-  lists =  'lists',
+  lists =  'shelves',
   account = 'account'
 }
 export interface IAppState {

@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import { ITopic, IAppState } from '../../../../../state-management/models';
 import Topic from '../../../../topic';
 import Icon from '../../../../icons';
+import SearchInput from './searchInput';
 
 interface IProps {
   topics: Array<ITopic>;
@@ -64,72 +65,16 @@ const heroSearch = ({ topics = [], updateFilteredTopics, linkTo, queryMoreBooks,
       <div className='heroSearch_container'>
         <div className='container'>
           <div className='row'>
-            <div className='col-md-10 col-11 heroSearch_box'>
-              <div className='heroSearch_searchBox_wrapper'>
-                {!searchMode && SearchBoxCategories}
-                <div 
-                  className={searchText.length > 0 ? 'heroSearch_searchBox_input_group isFocus' : 'heroSearch_searchBox_input_group'}
-                >
-                  <input
-                    className='heroSearch_searchBox_input'
-                    type='text'
-                    placeholder={`Search by ${searchCategory}...`}
-                    onKeyUp={e => {
-                      const value = e.target.value;
-                      if (e.keyCode === 13) {
-                        processSearch(value);
-                        return
-                      }
-                      updateSearchText(value);
-                    }}
-                  />
-                  <span
-                    className={searchText.length > 0 ? 'heroSearch_searchBox_btn isActive' : 'heroSearch_searchBox_btn'}
-                    onClick={() => processSearch()}
-                  >
-                    <Icon icon='fa-search' iconSize={23} />
-                  </span>
-                </div>
-                {searchMode && SearchBoxCategories}
-              </div>
-              {!searchMode && <div className='heroSearch_topics_wrapper'>
-                <Slider
-                  dots={false}
-                  infinite={true}
-                  speed={1000}
-                  slidesToShow={3}
-                  slidesToScroll={2}
-                  arrows={false}
-                  variableWidth={true}
-                  autoplay={true}
-                  autoplaySpeed={15000}
-                >
-                  {topics
-                    .reduce((acc, curr) => [...acc, curr, ``], [])
-                    .map((topic: ITopic, i) => topic
-                      ? <Topic
-                          skill={topic}
-                          key={topic._id}
-                          interactive={true}
-                          topicSize='smallTopic'
-                          minimal={false}
-                          onClick={() => {
-                            updateFilteredTopics({
-                              type: 'add',
-                              data: topic
-                            });
-                            linkTo({ type: 'ALLBOOKS' });
-                            queryMoreBooks(undefined, [topic._id], undefined).then(
-                              () => {},
-                              () => console.log('error retrieving books')
-                            )
-                          }}
-                      />                
-                      : <span key={i}>&nbsp;&nbsp;</span>)
-                  }
-                </Slider>
-              </div>}
-            </div>
+            <SearchInput
+              className='col-md-10 col-11'
+              searchMode={searchMode}
+              SearchBoxCategories={SearchBoxCategories}
+              searchText={searchText}
+              searchCategory={searchCategory}
+              processSearch={processSearch}
+              updateSearchText={updateSearchText}
+              topics={topics}
+            />
           </div>
         </div>
       </div>

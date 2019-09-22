@@ -21,8 +21,8 @@ const PageWrapper = ({ page }: { page: string }) => {
           : <section className='section_gray section_padding'>
             <div className='container'>
               <div className='row'>
-                <div className='col-md-8'><Display /></div>
-                <div className='col-md-4 makeSticky'><SidebarComponent /></div>
+                <div className='col-md-9'><Display /></div>
+                <div className='col-md-3 makeSticky'><SidebarComponent /></div>
               </div>
             </div>
           </section>

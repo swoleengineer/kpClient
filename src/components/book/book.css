@@ -14,7 +14,8 @@
   overflow: hidden;
 }
 
-.singleBookWrapper div.bookPicture:hover {
+.singleBookWrapper div.bookPicture:hover,
+.singleBookWrapper.selectedBook div.bookPicture {
   box-shadow: 0 10px 20px rgba(92, 112, 128, 0.4);
   cursor: pointer;
   background-position: center center;
@@ -51,7 +52,8 @@
   opacity: 0;
   transition: all .2s ease
 }
-.singleBookWrapper div.bookPicture:hover .unreadBookMark {
+.singleBookWrapper div.bookPicture:hover .unreadBookMark,
+.singleBookWrapper.selectedBook div.bookPicture .unreadBookMark {
   opacity: .5;
   top: 0
 }
@@ -87,10 +89,12 @@
   visibility: hidden;
   border-top: 1px solid rgba(255, 255, 255, .5);
 }
+.singleBookWrapper.selectedBook div.bookPicture .bookMenu,
 .singleBookWrapper:hover div.bookPicture .bookMenu {
   bottom: -1px;
   visibility: visible;
 }
+.singleBookWrapper.selectedBook div.bookPicture .topicsMeta,
 .singleBookWrapper:hover div.bookPicture .topicsMeta {
   bottom: 30px;
   visibility: visible;

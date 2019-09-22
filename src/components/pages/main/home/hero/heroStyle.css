@@ -110,11 +110,19 @@
   position: relative;
   overflow: hidden;
 }
+.heroSearch_box.noShadow {
+  box-shadow: none !important;
+  height: 125px;
+  overflow: unset !important;
+}
 .heroSearch_box.searchMode {
   height: 100px;
 }
 .heroSearch_box .heroSearch_searchBox_wrapper {
   padding: 15px 0 0;
+}
+.heroSearch_box.noShadow .heroSearch_searchBox_wrapper {
+  padding: 0;
 }
 .heroSearch_box .heroSearch_searchBox_wrapper .heroSearch_searchBox_categories {
   display: flex;
@@ -213,4 +221,10 @@
   width: 100%;
   padding: 12px 15px 0;
   box-sizing: border-box;
+}
+.heroSearch_box.noShadow .heroSearch_topics_wrapper {
+  left: -20px !important;
+  bottom: -20px;
+  width: calc(100% + 40px);
+  padding: 12px 20px 0;
 }

@@ -1,10 +1,11 @@
 import { userActionTypes as types } from '../actions';
 import { IUserState } from '../models';
-import { initialUserState  } from '../utils';
+import { initialUserState, updateFollowedShelves  } from '../utils';
 
 export const userReducer = (state: IUserState = initialUserState, action: {
   type: string;
-  payload?: any
+  payload?: any;
+  data?: any;
 }): IUserState => {
   switch(action.type) {
     case types.updateUser:
@@ -54,12 +55,13 @@ export const userReducer = (state: IUserState = initialUserState, action: {
     case types.toggleAuthModal:
       return {
         ...state,
-        showAuthModal: action.payload
+        showAuthModal: action.payload,
       };
     case types.setAuthModalPage:
       return {
         ...state,
-        authModalActivePage: action.payload
+        authModalActivePage: action.payload,
+        authModalData: action.data
       };
     case types.setUserStats:
       return {
@@ -78,7 +80,38 @@ export const userReducer = (state: IUserState = initialUserState, action: {
       return {
         ...state,
         topicForStat: action.payload
-      };    
+      };
+    case types.setFollowedShelves:
+      return {
+        ...state,
+        followedShelves: action.payload
+      };
+    case types.updateFollowedShelves:
+      return {
+        ...state,
+        followedShelves: updateFollowedShelves(action.payload.type, action.payload.data)(state.followedShelves)
+      };
+    case types.setSelectedShelf:
+      return {
+        ...state,
+        selectedShelf: action.payload
+      }
+    case types.updateMyShelves:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          myShelves: updateFollowedShelves(action.payload.type, action.payload.data)(state.user.myShelves)
+        }
+      };
+    case types.updateSelectedShelf:
+        return {
+          ...state,
+          selectedShelf: {
+            ...(state.selectedShelf || {}),
+            ...action.payload
+          }
+        }
     default:
       return state;
   }

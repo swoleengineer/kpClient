@@ -1,6 +1,6 @@
-import { getSingleBook, postSearchManyComments, getSingleQuestion } from '../config'
+import { getSingleBook, postSearchManyComments, getSingleQuestion, getSingleShelfReq } from '../config'
 import { IBook, acceptableTypes, IQuestion, IUserPages, IStore, ProfileNavOptions } from './models';
-import { bookActionTypes as bookTypes, questionActionTypes as questionTypes, appActionTypes } from './actions';
+import { bookActionTypes as bookTypes, questionActionTypes as questionTypes, userActionTypes as userTypes } from './actions';
 import { Toaster } from '@blueprintjs/core';
 import { redirect } from 'redux-first-router';
 // const wait = (seconds: number) => new Promise((resolve) => setTimeout(() => resolve(), seconds * 1000));
@@ -168,37 +168,64 @@ const routesMap = {
       dispatch(redirect({ type: 'MYPAGE', payload: { page: 'stats' } }));
     }
   },
-  MYPAGE: {
+  INBETWEEN: {
     path: '/account/:page',
     thunk: (dispatch, getState) => {
-      const { location: { payload: { page }}} = getState();
+      console.log('in the in between')
+      const { location: { payload: { page, part }}} = getState();
+      const defaultPart = {
+        [ProfileNavOptions.stats]: 'inProgress',
+        [ProfileNavOptions.lists]: 'readBooks',
+        [ProfileNavOptions.account]: 'account'
+      }
+      if (!part) {
+        dispatch(redirect({ type: 'MYPAGE', payload: { page, part: defaultPart[page] }}))
+      }
+    }
+  },
+  MYPAGE: {
+    path: '/account/:page/:part',
+    thunk: (dispatch, getState) => {
+      const { location: { payload: { page, part }}} = getState();
+      const defaultPart = {
+        [ProfileNavOptions.stats]: 'inProgress',
+        [ProfileNavOptions.lists]: 'readBooks',
+        [ProfileNavOptions.account]: 'account'
+      }
+      if (!part) {
+        dispatch(redirect({ type: 'MYPAGE', payload: { page, part: defaultPart[page] }}))
+      }
       if (!IUserPages.includes(page) || !page) {
         dispatch(redirect({ type: 'MYPAGE', payload: { page: 'stats' }}));
-        dispatch({
-          type: appActionTypes.setProfileNav,
-          payload: {
-            topLevel: ProfileNavOptions.stats,
-            lowerLevel: {
-              [ProfileNavOptions.stats]: 'inProgress'
-            }
-          }
-        })
         return;
       }
-      dispatch({
-        type: appActionTypes.setProfileNav,
-        payload: {
-          topLevel: ProfileNavOptions[page === 'profile' ? 'account' : page],
-          lowerLevel: {
-            [ProfileNavOptions[page === 'profile' ? 'account' : page]]: page === 'profile'
-              ? 'account'
-              : page === 'lists'
-                ? 'likedBooks'
-                : 'inProgress'
+      if (page === ProfileNavOptions.lists && part && !['readBooks', 'savedBooks', 'likedBooks'].includes(part)) {
+        dispatch({
+          type: userTypes.setSelectedShelf,
+          payload: null
+        })
+        getSingleShelfReq(part).then(
+          (res: any) => {
+            console.log(res.data);
+            dispatch({
+              type: userTypes.setSelectedShelf,
+              payload: res.data
+            })
+          },
+          err => {
+            console.error(err)
+            AppToaster.show({
+              message: 'Error retrieving shelf details.',
+              intent: 'danger',
+              icon: 'error',
+              onDismiss: () => dispatch(redirect({
+                type: 'MYPAGE',
+                payload: { page, part: defaultPart[page] }
+              }))
+            })
           }
-        }
-      })
-      return;
+        )
+      }
     }
   },
   PRIVACY: '/privacy-statement',

@@ -78,7 +78,23 @@ module.exports = (env = {}) => {
         }
       }, {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: [
+          'style-loader', 'css-loader' ,
+        //   {
+        //     loader: 'style-loader',
+        //     options: {
+        //         injectType: 'singletonStyleTag'
+        //     }
+        //   }, {
+        //     loader: 'postcss-loader',
+        //     options: styles.getPostCssConfig( {
+        //         themeImporter: {
+        //             themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+        //         },
+        //         minify: true
+        //     } )
+        // }, 'postcss-url'
+      ]
       }, {
         test: /\.(woff(2)?|ttf|eot|svg|gif|png)(\?v=\d+\.\d+\.\d+)?$/,
         use: [{
@@ -88,8 +104,7 @@ module.exports = (env = {}) => {
                 outputPath: 'fonts/'
             }
         }]
-    }
-    ]
+      }]
     },
     optimization: {
       runtimeChunk: {
@@ -152,7 +167,7 @@ module.exports = (env = {}) => {
           minimize: true,
           debug: false
         })
-      ] : []),
+      ] : [])
     ]
   }
 }

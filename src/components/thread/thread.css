@@ -1,0 +1,298 @@
+.single_container_discussions_list {
+  padding: 15px 0
+}
+.threadItem_wrapper {
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0px 1px 3px rgba(0,0,0,.05);
+  margin-bottom:25px;
+}
+
+.threadComment_wrapper {
+  margin: 0 0 10px
+}
+.threadComment_header_wrapper {
+  display: flex;
+  padding: 15px 15px 0;
+  position: relative;
+}
+.threadComment_header_avatar {
+  width: 40px;
+}
+.threadComment_header_info {
+  margin-left: 10px;
+}
+.threadComment_header_info span {
+  display: block;
+}
+.threadComment_header_info_username {
+  font-weight: 500;
+  font-size: .98em
+}
+.threadComment_header_info_created {
+  font-weight: 400;
+  font-size: .9em;
+  color: rgba(0,0,0,.45)
+}
+.threadComment_header_actions {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  
+}
+.threadComment_header_actions_target {
+  padding: 5px 10px;
+  transition: all .2s ease;
+}
+.threadComment_header_actions:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+.threadComment_content_wrapper {
+  padding: 5px 15px 0;
+  line-height: 1.4em;
+  margin: 0 0 5px;
+}
+.threadComment_content {
+  margin: 0;
+}
+.threadComment_engage_wrapper {
+  padding: 0 15px;
+  font-size: .95em;
+  display: flex;
+  justify-content: space-between
+}
+.threadComment_engage_button {
+  padding: 5px 5px 5px 0;
+  opacity: .7;
+  transition: all .15s ease;
+  font-size: .9em
+}
+.threadComment_engage_button i {
+  margin-right: 5px;
+  position: relative;
+  top: -1px;
+}
+.threadComment_engage_button:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.threadComment_engage_options {
+  display: flex;
+  padding: 0 5px;
+  font-size: 1.2em
+}
+.threadComment_engage_option {
+  display: block;
+  padding: 5px;
+}
+.threadComment_engage_option:not(:last-child) {
+  margin-right: 5px;
+}
+.threadComment_engage_option {
+  color: #5c7080
+}
+.threadComment_engage_evidence {
+  display: flex
+}
+.threadComment_engage_evidence:hover {
+  cursor: pointer;
+}
+.threadComment_engage_evidence_item {
+  background-color: rgba(92,112,128, .18);
+  display: block;
+  padding: 3px;
+  font-size: .76em;
+  margin-right: 3px;
+  border-radius: 50%;
+  position: relative;
+  width: 20px;
+  opacity: .7;
+  transition: all .15s ease
+}
+.threadComment_engage_evidence:hover .threadComment_engage_evidence_item  {
+  opacity: 1;
+  margin-right: -5px;
+}
+.threadComment_engage_evidence_item i {
+  position: absolute;
+  top: calc(50% - 25%);
+  left: calc(50% - 30%);
+}
+.threadComment_engage_evidence_item:after {
+  content: ' ';
+  padding-bottom: 100%;
+  display: block;
+}
+.threadComment_engage_evidence_count {
+  color: rgba(92,112,128, .6);
+  margin-left: 5px;
+  font-weight: 500
+}
+
+
+.threadItem_newComment_wrapper {
+  border-top: 1px solid rgba(0,0,0,.07);
+  background-color: rgba(0,0,0,.03);
+}
+.threadItem_newComment_input_container {
+  padding: 0 15px;
+}
+.threadItem_newComment_input_btn {
+  font-size: .9em;
+  padding: 5px 5px 5px 0;
+  color: rgba(0,0,0,.5);
+  display: inline-block
+}
+.threadItem_newComment_input_div input {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+  outline: none !important
+}
+
+.threadComment_content_book_wrapper {
+  padding: 0 15px;
+  margin: 15px 0;
+}
+.threadComment_content_book_wrapper.threadCommentBookExpanded {}
+.threadComment_content_book_container {
+  background-color: rgba(92,112,128, .1);
+  display: flex;
+  border-radius: 4px;
+  justify-content: flex-start;
+  transition: all .2s ease;
+  overflow: hidden;
+}
+.threadComment_content_book_container:hover {
+  cursor: pointer;
+  background-color: rgba(92,112,128, .15);
+}
+.threadComment_conent_book_picture_wrapper {
+  width: 40px;
+  padding: 8px 10px;
+  transition: all .10s ease;
+  position: relative;
+  z-index: 55
+}
+.threadComment_content_book_wrapper.threadCommentBookExpanded .threadComment_conent_book_picture_wrapper {
+  width: 100px;
+  padding: 15px;
+}
+.threadComment_content_book_picture {
+  width: 20px;
+  height: 26.7px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0px 3px 4px rgba(0,0,0,.15);
+  margin: 0 auto;
+  /* transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); */
+  
+  position: relative;
+  z-index: 99
+}
+.threadComment_content_book_wrapper.threadCommentBookExpanded .threadComment_content_book_picture {
+  width: 60px;
+  height: 80px;
+  position: relative;
+  z-index: 99
+}
+.threadComment_content_book_container:hover .threadComment_content_book_picture  {
+  box-shadow: 0px 3px 6px rgba(0,0,0,.25);
+}
+.threadComment_content_book_info_wrapper {
+  width: calc(100% - 115px);
+  position: relative;
+  z-index: 2;
+}
+.threadComment_content_book_wrapper.threadCommentBookExpanded .threadComment_content_book_info_wrapper {
+  width: calc(100% - 70px)
+}
+.threadComment_content_book_title_wrapper {
+  font-weight: 500;
+  padding: 9px 15px 0 5px;
+}
+.threadComment_content_book_title_wrapper span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.threadComment_content_clipIcon {
+  margin-left: auto;
+  width: 50px;
+  text-align: center;
+  padding: 10px 0 0;
+  color: rgba(92,112,128, .27);
+  font-size: 1.2em;
+  position: relative;
+  z-index: 1
+}
+.threadComment_content_clipIcon {}
+.threadComment_content_book_actions_wrapper {
+  padding: 5px 0 5px;
+  background-color: #b2c0ca;
+  width: 100%;
+  position: relative;
+  z-index: 55
+}
+.threadComment_content_book_actions_wrapper:before {
+  position: absolute;
+  top: 0;
+  left: -95px;
+  height: 100%;
+  width: 95px;
+  content: ' ';
+  background-color: #b2c0ca;
+  z-index: 2;
+  animation: .08s ease 0s 1 moveleft;
+}
+
+.threadComment_content_book_actions_container {
+  display: flex;
+  padding: 2px 10px 2px 0;
+  justify-content: flex-end;
+}
+.threadComment_content_book_actions_container button {
+  color: white !important;
+  background-color: rgba(92,112,128,.60) !important;
+  transition: all .2s ease;
+  margin-left: 10px;
+}
+.threadComment_content_book_actions_container button i {
+  color: white !important
+}
+.threadComment_content_book_actions_container button:hover {
+  background-color: rgba(92,112,128,.90) !important
+}
+/* .threadComment_content_book_actions_wrapper .topicCompWrapper {
+  display: inline-block
+} */
+@keyframes moveleft {
+  0% {
+    left: 0px
+  }
+  100% {
+    left: -95px
+  }
+}
+.threadComment_content_book_meta_wrapper {
+  padding: 0 0 0 5px;
+  margin-bottom: 10px;
+}
+.threadComment_content_book_meta_author {
+  display: block;
+  font-size: .9em;
+  color: rgba(0,0,0,.5);
+}
+.threadComment_content_engagements {
+  display: flex;
+  margin: 5px 0 0;
+}
+.threadComment_content_engagements span {
+  margin-right: 15px;
+  font-size: .7em;
+  color: rgba(0,0,0,.4);
+}

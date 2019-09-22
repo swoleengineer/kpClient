@@ -10,5 +10,13 @@ export const userActionTypes = {
 
   setUserStats: 'USER_SET_STATS',
   updateUserStats: 'USER_UPDATE_STATS',
-  setTopicToAdd: 'USER_SET_TOPIC_FOR_STAT'
+  setTopicToAdd: 'USER_SET_TOPIC_FOR_STAT',
+
+  setFollowedShelves: 'USER_SET_FOLLOWED_SHELVES',
+  updateFollowedShelves: 'USER_UPDATE_FOLLOWED_SHELVES',
+  updateMyShelves: 'USER_UPDATE_MY_SHELVES',
+  setSelectedShelf: 'USER_SET_SELECTED_SHELF',
+  updateSelectedShelf: 'USER_UPDATE_SELECTED_SHELF',
+
+
 }

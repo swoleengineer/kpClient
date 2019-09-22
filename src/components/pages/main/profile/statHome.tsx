@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { IUser, IStat, IAppState, AuthModalTypes } from '../../../../state-management/models';
+import { IUser, IStat, IAppState, AuthModalTypes, IStore } from '../../../../state-management/models';
 import { IPanelProps, Button, NonIdealState } from '@blueprintjs/core';
 import SingleStat from './components/singleStat';
 import { generateStats, showAuthModal } from '../../.././../state-management/thunks';
 import { omit } from 'lodash';
 import Icon from '../../../icons';
-
+import { LocationState } from 'redux-first-router';
+import { connect } from 'react-redux';
 interface IProps extends IPanelProps {
   user: IUser;
   userStats: IStat;
   viewPort: IAppState['viewPort'];
-  profileNav: IAppState['profile'];
+  location: LocationState;
 }
 
 const statHomeComponent = (props: IProps) => {
-  const { user, openPanel, userStats, viewPort, profileNav: { topLevel, lowerLevel: { [topLevel]: selectedStat = 'inProgress' }} } = props;
+  const { user, openPanel, userStats, viewPort, location: { payload: { part }} } = props;
   if (!userStats) {
     return null;
   }
@@ -29,7 +30,6 @@ const statHomeComponent = (props: IProps) => {
         : 'inProgress'
     }));
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  // const [editMode, setEditMode] = useState<boolean>(false);
   const menuItems = [{
     visible: true,
     icon: 'refresh',
@@ -39,10 +39,10 @@ const statHomeComponent = (props: IProps) => {
     icon: 'add',
     onClick: () => showAuthModal(AuthModalTypes.topicToStat)
   }];
-  if (['inProgress', 'completed', 'all'].includes(selectedStat)) {
+  if (['inProgress', 'completed', 'all'].includes(part)) {
     
   }
-  const figuresToShow = figures.filter(fig => selectedStat === 'all' ? true : fig.state === selectedStat);
+  const figuresToShow = figures.filter(fig => part === 'all' ? true : fig.state === part);
   const displayText = {
     inProgress: {
       header: 'In Progress',
@@ -68,12 +68,12 @@ const statHomeComponent = (props: IProps) => {
       <div className='row'>
         <div className='col-md-12'>
           <header>
-            <h4>{displayText[selectedStat].header}</h4>
+            <h4>{displayText[part].header}</h4>
           </header>
-          <p>{displayText[selectedStat].desc}</p>
+          <p>{displayText[part].desc}</p>
         </div>
       </div>
-      {selectedStat === 'inProgress' && <div className='row'>
+      {part === 'inProgress' && <div className='row'>
         <div className='col-md-8' style={{ margin: '15px auto 0' }}>
           <div className='statNavBarWrapper'>
             <div className='statNavBarActions'>
@@ -90,7 +90,7 @@ const statHomeComponent = (props: IProps) => {
               {figuresToShow.map(fig => <SingleStat
                 openPanel={openPanel}
                 user={user}
-                profileNavPage={selectedStat}
+                profileNavPage={part}
                 viewPort={viewPort}
                 checked={selectedTopics.includes(fig._id)}
                 checkboxClick={(figId) => {
@@ -119,5 +119,10 @@ const statHomeComponent = (props: IProps) => {
   );
 }
 
+const mapStateToProps = (state: IStore) => ({
+  location: state.location,
+  userStats: state.user.userStats
+})
 
-export default statHomeComponent;
+
+export default connect(mapStateToProps)(statHomeComponent);

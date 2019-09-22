@@ -15,4 +15,4 @@ export interface IStore {
   author: IAuthorState;
 }
 
-export const IUserPages = ['profile', 'lists', 'stats'];
+export const IUserPages = ['account', 'shelves', 'stats'];

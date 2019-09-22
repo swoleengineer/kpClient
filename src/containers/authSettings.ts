@@ -57,5 +57,28 @@ export const authSettings = {
     pageTitle: 'Track New Topic',
     pageSubtitle: '',
     pageDescription: 'Add new topic to your stats so you can track progress.'
+  },
+  newShelf: {
+    cardWidth: 'col-md-3',
+    topPadding: '15%',
+    pageTitle: 'New Shelf',
+    pageSubtitle: '',
+    pageDescription: 'Create a new book-shelf in your library.'
+  },
+  addBook: {
+    cardWidth: 'col-md-5',
+    topPadding: '10%',
+    pageTitle: 'Add To Shelf',
+    pageSubtitle: '',
+    pageDescription: 'Add a new book to one of your shelves.'
+  },
+  searchBooks: {
+    cardWidth: 'col-md-4',
+    topPadding: '10%',
+    pageTitle: 'Search Books',
+    pageSubtitle: '',
+    pageDescription: 'Use the form below to search for books.',
+    hideHeader: true
+    ,outsideClose: true
   }
 }

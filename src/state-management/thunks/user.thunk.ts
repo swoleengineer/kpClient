@@ -1,9 +1,13 @@
 import { store } from '../../store';
-import { INewUserRequest, IUserLoginRequest, IStore, IUser, IAddTopicToStatRequest, AuthModalTypes, ITopic } from '../models';
+import { INewUserRequest, IUserLoginRequest, IStore, IUser, IAddTopicToStatRequest, AuthModalTypes, ITopic,
+  INewShelfRequest, ProfileNavOptions, ShelfEditType
+} from '../models';
 import { postNewUser, postUserLogin, postSaveBookToUser, postRmBookFrUser,
   postUserAutoAuth, postUserForgotPass, postUserResetPassword, postUserUpdatePic,
   postUserUpdate, postUserChangePassword, postUserNotificationSettings,
-  getSingeUserStats, postNewTopicToStat, postGenerateStat, postEditStatSkill, postRemoveStatSkill
+  getSingeUserStats, postNewTopicToStat, postGenerateStat, postEditStatSkill, postRemoveStatSkill,
+
+  getSingleShelfReq, postMultipleShelvesReq, postCreateShelfReq, getMyShelvesReq, postEditShelfReq
 } from '../../config';
 import { userActionTypes as types, bookActionTypes as bookTypes } from '../actions';
 import { Toaster } from '@blueprintjs/core'
@@ -13,14 +17,15 @@ const AppToaster = Toaster.create({
   className: 'keenpagesToaster',
 })
 
-export const showAuthModal = (page: AuthModalTypes) => {
+export const showAuthModal = (page: AuthModalTypes, data: any = null) => {
   store.dispatch({
     type: types.toggleAuthModal,
     payload: true
   });
   store.dispatch({
     type: types.setAuthModalPage,
-    payload: page
+    payload: page,
+    data
   })
 }
 
@@ -131,6 +136,7 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
         icon: 'tick',
         onDismiss: () => goNext ? store.dispatch(redirect(nexpload)) : null
       });
+      return { user }
     },
     error => {
       console.log(error, error.response.data);
@@ -141,7 +147,20 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
       });
     }
   )
-});
+}).then(() => getMyShelvesReq().then(
+  (res: any) => {
+    const { user: { user }} = store.getState() as IStore;
+    const { data } = res;
+    store.dispatch({
+      type: types.updateUser,
+      payload: {
+        ...user,
+        myShelves: data.data
+      }
+    })
+  },
+  err => Promise.reject(err)
+))
 
 export const autoLogin = () => {
   const token = localStorage.getItem('x-access-token');
@@ -191,7 +210,22 @@ export const autoLogin = () => {
         });
       }
     )
-  }).catch((err) => err)
+  }).then(
+    () => getMyShelvesReq().then(
+      (res: any) => {
+        const { user: { user }} = store.getState() as IStore;
+        const { data } = res;
+        store.dispatch({
+          type: types.updateUser,
+          payload: {
+            ...user,
+            myShelves: data.data
+          }
+        })
+      },
+      err => Promise.reject(err)
+    )
+  ).catch((err) => err)
 }
 
 export const updateProfilePicture = (id: string, body: { public_id: string; link: string }) => postUserUpdatePic(id, body).then(
@@ -448,3 +482,82 @@ export const deleteStatSkill = (figureId: string) => {
     handleStatErr('Could not delete this skill from your stats. Please try again later.')
   );
 }
+
+export const createNewShelf = (title: string, icon: string = '', privacy: boolean = false) => {
+  const { user: { user }} = store.getState() as IStore;
+  const request: INewShelfRequest = {
+    title,
+    icon,
+    public: privacy
+  };
+  return postCreateShelfReq(request).then(
+    (res: any) => {
+      const { data } = res;
+      const { _id: id, title, public: privacy, owner, listType, integratedType, icon } = data;
+      store.dispatch({
+        type: types.updateUser,
+        payload: {
+          ...user,
+          myShelves: user.myShelves.concat({
+            id, title, owner, listType, integratedType, icon,
+            public: privacy
+          })
+        }
+      });
+      AppToaster.show({
+        message: 'New shelf created.',
+        intent: 'none',
+        icon: 'tick',
+        onDismiss: () => store.dispatch(redirect({
+          type: 'MYPAGE',
+          payload: {
+            page: ProfileNavOptions.lists,
+            part: id
+          }
+        }))
+      })
+      return data;
+    },
+    (err) => Promise.reject(err)
+  )
+}
+
+export const editShelf = (shelfId: string, body: { edits: Array<{ type: ShelfEditType; payload?: { [key: string]: any }}>}) => {
+  const { user: { selectedShelf }} = store.getState() as IStore;
+  return postEditShelfReq(shelfId, body).then(
+    (res: any) => {
+      const { data: payload } = res;
+      if (selectedShelf && payload._id === selectedShelf._id) {
+        store.dispatch({
+          type: types.updateSelectedShelf,
+          payload
+        });
+      }
+      const { title, _id: id, icon, integratedType, listType, owner, public: privacy } = payload;
+      store.dispatch({
+        type: types.updateMyShelves,
+        payload: {
+          type: 'replace',
+          data: { title, id, icon, integratedType, listType, owner, public: privacy }
+        }
+      })
+      return payload;
+    },
+    err => Promise.reject(err)
+  )
+}
+
+export const getMyShelves = () => getMyShelvesReq().then(
+  (res: any) => {
+    const { user: { user }} = store.getState() as IStore;
+    const { data } = res;
+    store.dispatch({
+      type: types.updateUser,
+      payload: {
+        ...user,
+        myShelves: data.data
+      }
+    })
+  },
+  err => Promise.reject(err)
+)

@@ -39,9 +39,15 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
                         minimal={true}
                         icon={<KeenIcon icon='fa-tasks-alt' />}
                         text={<span className='hidden-sm'>Stats</span>}
-                        onClick={() => linkTo({ type: 'MYPAGE', payload: { page: 'stats' }})}
+                        onClick={() => linkTo({ type: 'MYPAGE', payload: { page: ProfileNavOptions.stats }})}
                       />
-                      <Popover popoverClassName='headerUserMenu'>
+                      <Popover 
+                        popoverClassName='headerUserMenu'
+                        position='bottom-right'
+                        modifiers={{
+                          arrow: { enabled: false }
+                        }}
+                      >
                         <Button
                           small={true}
                           minimal={true}
@@ -53,24 +59,21 @@ const Header = (props: { user: IUserState; style: any; linkTo: Function; viewPor
                             icon={<KeenIcon icon='fa-tasks-alt' color={true} />}
                             text='My Stats'
                             onClick={() => {
-                              linkTo({ type: 'MYPAGE', payload: { page: 'stats' }});
-                              setProfileNav({ topLevel: ProfileNavOptions.stats, lowerLevel: { [ProfileNavOptions.stats]: 'inProgress' }});
+                              linkTo({ type: 'MYPAGE', payload: { page: ProfileNavOptions.stats }});
                             }}
                           />
                           <MenuItem
                             icon={<KeenIcon icon='fa-books' color={true} />}
                             text='My Library'
                             onClick={() => {
-                              linkTo({ type: 'MYPAGE', payload: { page: 'lists' }});
-                              setProfileNav({ topLevel: ProfileNavOptions.lists, lowerLevel: { [ProfileNavOptions.lists]: 'likedBooks' }});
+                              linkTo({ type: 'MYPAGE', payload: { page: ProfileNavOptions.lists }});
                             }}
                           />
                           <MenuItem
                             icon={<KeenIcon icon='fa-user-circle' color={true} />}
                             text='My Profile'
                             onClick={() => {
-                              linkTo({ type: 'MYPAGE', payload: { page: 'profile' }});
-                              setProfileNav({ topLevel: ProfileNavOptions.account, lowerLevel: { [ProfileNavOptions.account]: 'profile' }});
+                              linkTo({ type: 'MYPAGE', payload: { page: ProfileNavOptions.account }});
                             }}
                           />
                           <MenuDivider />

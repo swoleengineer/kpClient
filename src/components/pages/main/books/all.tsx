@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IStore, IExpandedBook, ITopic, AuthModalTypes, IAppState } from '../../../../state-management/models';
+import { IStore, IExpandedBook, ITopic, AuthModalTypes, IAppState, IUser } from '../../../../state-management/models';
 import './books.css';
-import BookCard from './bookCard';
+import BookCard from '../../../bookCard';
 import { NonIdealState, Collapse, Switch, Button, ButtonGroup, Tooltip, Spinner, Divider, ControlGroup, InputGroup } from '@blueprintjs/core';
 import TopicSearch from '../../auth/topic/topicBrowse';
 import Book from '../../../book';
@@ -13,6 +13,7 @@ import { bookFilter, bookSorts,
 } from '../../../../state-management/utils/book.util';
 import { bookActionTypes as bookTypes, userActionTypes as userTypes } from '../../../../state-management/actions';
 import Topic from '../../../topic';
+import { redirect } from 'redux-first-router';
 
 const tagStyle = {
   margin: '0 10px 10px 0',
@@ -25,9 +26,11 @@ const Allbooks = (props: {
   selectedTopics: ITopic[];
   updateFilteredTopics: Function;
   showAuthModal: Function;
-  viewPort: IAppState['viewPort']
+  viewPort: IAppState['viewPort'];
+  user: IUser;
+  linkTo: Function;
 }) => {
-  const { updateFilteredTopics, selectedTopics, showAuthModal, viewPort } = props;
+  const { updateFilteredTopics, selectedTopics, showAuthModal, viewPort, user, linkTo } = props;
   const [commentsFirst, updateCommentSort] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [searchOpen, updateSearchOpen] = useState(allBooksSearchOpen.get());
@@ -247,7 +250,7 @@ const Allbooks = (props: {
         </div>
         {isLoading && <Spinner />}
         {(!isLoading && shownBooks.length > 0) && shownBooks.map((book, i) => viewCards
-            ? <BookCard book={book} key={i} />
+            ? <BookCard book={book} key={i} user={user} linkTo={linkTo}/>
             : <div className='singleBookContainer' key={i}><Book liv={book} /></div>
             )}
         {(!isLoading && !shownBooks.length) && <div className='nonIdealWrapper'>
@@ -275,7 +278,8 @@ const mapStateToProps = (state: IStore) => ({
   books: state.book.books,
   topics: state.topic.allTopics,
   selectedTopics: state.book.selectedTopics,
-  viewPort: state.app.viewPort
+  viewPort: state.app.viewPort,
+  user: state.user.user
 });
 
 const mapDispatch = dispatch => ({
@@ -289,6 +293,7 @@ const mapDispatch = dispatch => ({
       payload: page
     })
   },
-  updateFilteredTopics: payload => dispatch({ type: bookTypes.updateFilterTopics, payload })
+  updateFilteredTopics: payload => dispatch({ type: bookTypes.updateFilterTopics, payload }),
+  linkTo: payload => dispatch(redirect(payload))
 })
 export default connect(mapStateToProps, mapDispatch)(Allbooks);

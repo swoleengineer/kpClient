@@ -8,13 +8,14 @@ interface IProps {
   style?: any;
   border?: boolean;
   interactive?: boolean
+  initialStyle?: any
 }
 const avatarComponent = (props: IProps) => {
-  const { user = undefined, style = null, border = false } = props;
+  const { user = undefined, style = null, border = false, initialStyle = {} } = props;
   if (!user) {
     return ( <Icon icon='fa-user-circle' style={style} /> );
   }
-  const [size, setSize] = useState<number>(0);
+  // const [size, setSize] = useState<number>(0);
   const { profile: { first_name = '', last_name = '', picture = {} }} = user as IUser;
   const { link = undefined } = picture as IUserProfile['picture'];
   const initials: string = `${first_name[0]} ${last_name[0]}`;
@@ -26,21 +27,17 @@ const avatarComponent = (props: IProps) => {
     <div
       className={classes}
       style={style}
-      ref={element => {
-        const { clientHeight = 0, clientWidth = 0} = element as HTMLDivElement || { }
-        setSize(clientHeight || clientWidth)
-      }}
     >
       {link
         ? <div
           className='keen_avatar_pictureHolder'
           style={{
-            backgroundImage: `url(${link})`,
-            width: style && style.width ? style.width : `${size}px`,
-            height: style && style.height ? style.height : `${size}px`
+            backgroundImage: `url(${link})`
           }}
         />
-        : <div className='keen_avatr_initialHolder'>{initials}</div>
+        : <div className='keen_avatar_initialHolder'>
+          <span style={initialStyle} >{initials}</span>
+        </div>
       }
     </div>
   );

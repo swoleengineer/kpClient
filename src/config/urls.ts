@@ -21,6 +21,15 @@ export const statGenerateUrl: string = `/stat/generateStats`;
 export const statEditSkillUrl = (statId: string): string => `/stat/editSkill/${statId}`;
 export const statRemoveSkillUrl = (statId: string, figureId: string): string => `/stat/removeSkill/${statId}/${figureId}`;
 
+// Shelves
+export const shelfGetSingleUrl = (shelfId: string): string => `/shelf/single/${shelfId}`;
+export const shelfGetMultipleUrl: string = `/shelf/multiple`;
+export const shelfCreateUrl: string = `/shelf/create`;
+export const shelfNewFollowerUrl = (shelfId: string): string => `/shelf/newFollower/${shelfId}`;
+export const shelfRmFollowerUrl = (shelfId: string): string => `/shelf/rmFollower/${shelfId}`;
+export const shelfDeleteUrl = (shelfId: string): string => `/shelf/singleShelf/${shelfId}`;
+export const shelfEditUrl = (shelfId: string): string => `/shelf/editShelf/${shelfId}`;
+export const shelfGetMyShelvesUrl: string = `shelf/myShelves`;
 
 // Author '/author
 export const authorCreateUrl: string = `/author/new`;

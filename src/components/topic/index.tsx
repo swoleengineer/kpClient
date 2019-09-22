@@ -1,5 +1,5 @@
-import React from 'react';
-import { Menu, MenuItem, Popover } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { Menu, MenuItem, Popover, MenuDivider } from '@blueprintjs/core';
 import { ITopicBodyObj, ITopic, AuthModalTypes } from '../../state-management/models';
 import './topic.css';
 import { showAuthModal } from '../../state-management/thunks';
@@ -37,7 +37,7 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
   setTopicToAdd: () => null,
   addDisabled: false
 }) => {
-  if (!topicBody && !skill) {
+  if (!skill && (!topicBody || !topicBody.topic)) {
     return null;
   }
   const topic = topicBody ? topicBody.topic : skill as ITopic
@@ -50,19 +50,33 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
     ...(interactive ? ['topicCompInteractive'] : []),
     ...(selected ? ['topicCompSelected'] : [])
   ];
+  const [hovered, setHovered] = useState<boolean>(false)
+  const wrapperProps = {
+    onMouseEnter: () => setHovered(true),
+    onMouseLeave: () => setHovered(false)
+  }
   return (
-    <div className={wrapperClasses.join(' ')} style={style}>
+    <div className={wrapperClasses.join(' ')} style={style} { ...(interactive ? wrapperProps : [])}>
       <div className='topicCompLeft'>
         <Popover disabled={addDisabled}>
-          <Icon icon='fa-graduation-cap' iconSize={12} />
+          <Icon icon={'fa-graduation-cap'} iconSize={12} />
           <Menu>
             <MenuItem
-              icon={<Icon icon='fa-books-medical' push={true} />}
+              icon={<Icon icon='fa-poll-people' push={true} />}
               text='Track topic'
               onClick={() => {
                 setTopicToAdd(topic);
                 showAuthModal(AuthModalTypes.topicToStat)
               }}
+            />
+            <MenuItem
+              icon={<Icon icon='fa-search' push={true} />}
+              text={`Search books`}
+            />
+            <MenuDivider />
+            <MenuItem
+              icon={<Icon icon='fa-flag' push={true} />}
+              text='Report topic'
             />
           </Menu>
         </Popover>
@@ -72,8 +86,6 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
       {(topicBody && !hideNumber) && <div className='topicCompRight' onClick={() => onClick()}>
         <span >{agreed.length}</span>
       </div>}
-      <div className='clearfix' />
-      <div className='topicCompProgressWrapper'><div className='topicCompProgressBar' style={{ width: '60%'}} /></div>
     </div>
   );
 }

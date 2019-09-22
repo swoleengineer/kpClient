@@ -157,7 +157,7 @@ const BookCard = (props: {
       </span>
       <div className='row'>
         <div className='col-md-5 bookCard_book'>
-          <Book liv={book}  />
+          <Book liv={book} minimal={true}  />
           <Alert
             {...alertProps}
             onConfirm={() => alertFunctions[alertConfig.type]()}

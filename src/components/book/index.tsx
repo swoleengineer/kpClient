@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import { redirect } from 'redux-first-router';
 import { Tooltip, Menu, MenuItem, Popover, IAlertProps, Alert, Spinner } from '@blueprintjs/core';
-import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes } from '../../state-management/models';
+import { IExpandedBook, ITopicBodyObj, IUser, IStore, IReportRequest, acceptableTypes, AuthModalTypes } from '../../state-management/models';
 import Slider from 'react-slick';
 import KPBOOK from '../../assets/kp_book.png';
-import { toggleUserBook, createReport, engagePrecheck, addBookFromInt } from '../../state-management/thunks';
+import { toggleUserBook, createReport, engagePrecheck, addBookFromInt, showAuthModal } from '../../state-management/thunks';
 import { connect } from 'react-redux';
 import { keenToaster } from '../../containers/switcher'
 import { getAuthorName } from '../../state-management/utils/book.util';
@@ -19,6 +19,11 @@ const Book = ({
   user,
   linkTo,
   liv = undefined,
+  navigate = true,
+  onClick = undefined,
+  className = '',
+  selectedBook = false,
+  minimal = false,
   style
 }: {
   bookId: string;
@@ -27,6 +32,11 @@ const Book = ({
   user: IUser;
   linkTo: Function;
   style: any;
+  navigate?: boolean;
+  onClick?: Function;
+  className?: string;
+  selectedBook?: boolean;
+  minimal?: boolean;
 }) => {
   const book = liv;
   if (!book) {
@@ -109,7 +119,7 @@ const Book = ({
     reportBook: () => itemToReport.parentId && itemToReport.author ? submitNewReport() : null
   }
   return (
-    <div className='singleBookWrapper'>
+    <div className={`${className} singleBookWrapper ${selectedBook ? 'selectedBook' : ''}`}>
       <div className='bookPicture' style={{backgroundImage: `url(${picture.link || KPBOOK})`}}>
         <Alert
           {...alertProps}
@@ -121,7 +131,15 @@ const Book = ({
         </Alert>
         <span
           className={isLoading ? 'bookLink loadingBook' : 'bookLink'}
-          onClick={() => goToBook()}
+          onClick={() => {
+            if (navigate && !onclick) {
+              goToBook();
+              return;
+            }
+            if (!navigate && onClick && typeof onClick === 'function') {
+              onClick();
+            }
+          }}
         >
           {isLoading && <Spinner size={35} />}
         </span>
@@ -231,6 +249,11 @@ const Book = ({
                     })
                   }}
                 />
+                <MenuItem
+                  icon={<Icon icon='fa-books'/>}
+                  text='Add to shelf'
+                  onClick={() => showAuthModal(AuthModalTypes.bookToShelf, book)}
+                />
                 {(book.affiliate_link || book.amazon_link) && <>
                   <Menu.Divider />
                   <MenuItem icon='shopping-cart' text='Purchase' labelElement={<Icon icon='fa-share' />} onClick={() => window.open(book.affiliate_link || book.amazon_link, '_blank')}/>
@@ -272,8 +295,12 @@ const Book = ({
           </div>
         </div>
       </div>
-      <span className='bookTitle'>{title}</span>
-      <span className='bookAuthor'>{getAuthorName(book)}</span>
+      {!minimal && (
+        <>
+          <span className='bookTitle'>{title}</span>
+          <span className='bookAuthor'>{getAuthorName(book)}</span>
+        </>
+      )}
     </div>
   );
 }

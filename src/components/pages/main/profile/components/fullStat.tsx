@@ -12,7 +12,7 @@ import JustbooksPage from './justBooks';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import Icon from '../../../../icons';
-
+import { LocationState } from 'redux-first-router';
 interface IProps {
   openPanel: Function;
   user: IUser;
@@ -22,12 +22,11 @@ interface IProps {
   viewPort: IAppState['viewPort'];
   linkTo: Function;
   updateFilteredTopics: Function;
-  profileNav: IAppState['profile'];
   profileNavPage: string;
-  
+  location: LocationState;
 }
 const fullStat = (props: IProps) => {
-  const { profileNavPage, closePanel, figure: figFromProp, statTopic: topic, viewPort, openPanel, user, linkTo, updateFilteredTopics, profileNav: { topLevel, lowerLevel: { [topLevel]: statPage }} } = props;
+  const { location: { payload: { page: statPage, part: profileNavPage }}, closePanel, figure: figFromProp, statTopic: topic, viewPort, openPanel, user, linkTo, updateFilteredTopics } = props;
   if (!figFromProp) {
     return null;
   }
@@ -35,6 +34,7 @@ const fullStat = (props: IProps) => {
   const [figure, updateFigure] = useState(figFromProp);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [dateChanged, setDateChanged] = useState(false);
+  const [currentType] = useState<string>(profileNavPage)
   const [formData, formUpdate] = useState({
     goal: figure.goal,
     dueDate: moment(figure.dueDate).toDate() || nextMonth,
@@ -120,7 +120,7 @@ const fullStat = (props: IProps) => {
       }
     )
   }
-  if (profileNavPage && profileNavPage !== statPage) {
+  if (profileNavPage && profileNavPage !== currentType) {
     closePanel();
   }
   return (
@@ -425,7 +425,7 @@ const fullStat = (props: IProps) => {
 }
 
 const mapStateToProps = (store: IStore) => ({
-  profileNav: store.app.profile
+  location: store.location
 })
 
 const mapDispatch = dispatch => ({
