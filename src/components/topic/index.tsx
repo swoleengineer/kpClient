@@ -59,7 +59,7 @@ const topicComponent = ({ topicBody, skill, interactive, topicSize, minimal, sel
     <div className={wrapperClasses.join(' ')} style={style} { ...(interactive ? wrapperProps : [])}>
       <div className='topicCompLeft'>
         <Popover disabled={addDisabled}>
-          <Icon icon={'fa-graduation-cap'} iconSize={12} />
+          <Icon icon={'fa-head-side-brain'} iconSize={12} />
           <Menu>
             <MenuItem
               icon={<Icon icon='fa-poll-people' push={true} />}

@@ -16,7 +16,9 @@ const PageWrapper = ({ page }: { page: string }) => {
     <Fragment>
       <StickyContainer>
         <Sticky>{({ style }) => (<Header style={style}/>)}</Sticky>
-        {homePage || profilePage
+        <div><Display /></div>
+
+        {/* {homePage || profilePage
           ? <div> <Display /> </div>
           : <section className='section_gray section_padding'>
             <div className='container'>
@@ -26,7 +28,7 @@ const PageWrapper = ({ page }: { page: string }) => {
               </div>
             </div>
           </section>
-        }
+        } */}
         <Footer />
       </StickyContainer>
     </Fragment>

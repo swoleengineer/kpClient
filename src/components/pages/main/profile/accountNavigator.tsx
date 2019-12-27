@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const accountNav = (props: IProps) => {
-  const { linkTo, location: { payload: { page, part, id } = { page: undefined, part: undefined }}, myShelves} = props;
+  const { linkTo, location: { payload: { page, part, id } = { page: undefined, part: undefined }}, myShelves = []} = props;
   const setActiveState = (level: 'topLevel' | 'lowerLevel', activeString: string): string => {
     const mainClass = level === 'topLevel' ? 'userProfileNav_top_item' : 'userProfileNav_bottom_list_item';
     const checkClass = level === 'topLevel' ? page : part;

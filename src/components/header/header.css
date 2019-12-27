@@ -88,7 +88,12 @@
   display: block;
 }
 .menuArea .loggedOutLinks span {
-  display: inline-block
+  display: inline-block;
+  transition: all .2s ease;
+}
+.menuArea .loggedOutLinks span:hover {
+  cursor: pointer;
+  opacity: .7;
 }
 .menuArea .loggedOutLinks span a {
   color: rgba(255,255,255,.6)

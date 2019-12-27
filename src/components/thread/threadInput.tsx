@@ -4,7 +4,7 @@ import Icon, { IconTypeEnum } from '../icons';
 import { CompactPicker } from 'react-color';
 import SearchBooks from './bookSearchPopover';
 import { Picker, Emoji } from 'emoji-mart';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, ContentState } from 'draft-js';
 import 'emoji-mart/css/emoji-mart.css';
 import { IUser } from '../../state-management/models';
 import Avatar from '../avatar';
@@ -20,7 +20,9 @@ interface IProps {
 }
 
 enum RichTextStyles {
-  bold = 'BOLD'
+  bold = 'BOLD',
+  italic = 'ITALIC',
+  underline = 'UNDERLINE'
 }
 
 
@@ -91,11 +93,13 @@ const threadInput = (props: IProps) => {
               </span>
               <span
                 className='single_container_discussions_form_option'
+                onClick={() => handleStyleSet(RichTextStyles.italic)}
               >
                 <Icon icon='fa-italic' type={IconTypeEnum.regular} />
               </span>
               <span
                 className='single_container_discussions_form_option'
+                onClick={() => handleStyleSet(RichTextStyles.underline)}
               >
                 <Icon icon='fa-underline' type={IconTypeEnum.duo} />
               </span>
@@ -226,7 +230,13 @@ const threadInput = (props: IProps) => {
           </span>
           <span
             className='single_container_discussions_form_option'
-            onClick={() => setRichTextStatus(!richTextActive)}
+            onClick={() => {
+              const currentStatus: boolean = richTextActive;
+              setRichTextStatus(!currentStatus);
+              if (!currentStatus && (inputValue && inputValue.length)) {
+                setEditorState(EditorState.createWithContent(ContentState.createFromText(inputValue)))
+              }
+            }}
           >
             <Icon icon={`fa-${richTextActive ? 'compress' : 'expand'}`} type={IconTypeEnum.regular} />
           </span>
