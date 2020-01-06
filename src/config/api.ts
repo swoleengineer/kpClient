@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Sentry from '@sentry/browser';
+// import * as Sentry from '@sentry/browser';
 
 const currentUrl = window.location.hostname;
 
@@ -36,11 +36,11 @@ instance.interceptors.response.use(response => response, error => {
   } else {
     message = `Something happened in setting up the request that triggered an error... ${JSON.stringify(error.message)}`;
   }
-  Sentry.captureException({
-    type: 'HTTP Request Error',
-    message,
-    data: error
-  });
+  // Sentry.captureException({
+  //   type: 'HTTP Request Error',
+  //   message,
+  //   data: error
+  // });
   return Promise.reject(error);
 });
 

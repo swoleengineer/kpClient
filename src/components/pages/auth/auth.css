@@ -23,3 +23,23 @@
   padding: 10px 15px;
   width: 100%
 }
+
+.kp_input_btn {
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-align: center;
+  background-color: rgba(92,112,128, .25);
+  color: rgba(92,112,128, 1);
+  font-size: .75rem;
+  font-weight: 500;
+  margin: 3px;
+  transition: all .2s ease;
+}
+.kp_input_btn:hover {
+  cursor: pointer;
+  background-color:  rgba(92,112,128, .35);
+}
+
+.kp_input_btn {
+  background-color: white;
+}

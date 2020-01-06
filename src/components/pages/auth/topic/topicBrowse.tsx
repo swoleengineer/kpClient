@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { ITopic, IStore } from '../../../../state-management/models';
-import { MenuItem, ITagProps, } from '@blueprintjs/core';
+import { MenuItem, ITagProps, Button } from '@blueprintjs/core';
 import { ItemRenderer, MultiSelect, ItemPredicate } from '@blueprintjs/select';
 import { connect } from 'react-redux';
 import '../auth.css';
@@ -11,8 +11,15 @@ const TopicBrowse = (props: {
   topics: ITopic[];
   processNewItem: Function;
   processRemove: Function;
+  large?: boolean;
+  showButton?: boolean;
+  btnClick?: Function;
+  btnText?: any; 
+  minimal?: boolean;
+  placeholder?: string;
+  autoOpen?: boolean;
 }) => {
-  const { topics, processNewItem, processRemove } = props;
+  const { autoOpen = false, placeholder = 'Search for topics to add.', minimal = false, topics, processNewItem, processRemove, large = !props.minimal, showButton = false, btnClick = () => null, btnText = '' } = props;
   const filterTopic: ItemPredicate<ITopic> = (query, topic, _index, exactMatch) => {
     const { name = '', description = '' } = topic
     const normalizedTitle = name.toLowerCase();
@@ -52,11 +59,36 @@ const TopicBrowse = (props: {
     placeholder: 'Add topic(s)',
     createdItems: []
   }
+  // let inputRef;
   const topicInputProps = {
     tagProps: (value: string, index: number): ITagProps => ({ icon: 'lightbulb' }),
     onRemove: (tag: string, index: number) => processRemove(tag, index),
-    large: true,
-    placeholder: 'Search for topics to add.'
+    large,
+    placeholder,
+    inputRef: input => {
+      if (autoOpen && input) {
+        input.focus();
+      }
+      // inputRef = input
+    }
+  }
+  const popoverProps = {};
+  if (autoOpen) {
+    // debugger;
+    popoverProps['defaultIsOpen'] = true;
+  }
+  if (showButton && (btnText || btnText.length) && !minimal) {
+    topicInputProps['rightElement'] = (
+      <span
+        className='kp_input_btn'
+        onClick={() => btnClick()}
+      >
+        {btnText}
+      </span>
+    );
+  }
+  if (minimal) {
+    topicInputProps['onBlur'] = () => (btnClick || (() => null))();
   }
   return (
     <div className='topicSearchWrapper'>
@@ -86,6 +118,7 @@ const TopicBrowse = (props: {
         tagRenderer={topic => topic.name}
         tagInputProps={topicInputProps}
         onItemSelect={(topic, event) => processNewItem(topic, event)}
+        popoverProps={popoverProps}
       />
     </div>
   )

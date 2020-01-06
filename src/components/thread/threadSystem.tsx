@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import ThreadInput from './threadInput';
+import Avatar from '../avatar';
 import { IUser } from '../../state-management/models';
 import { Popover, Menu, MenuItem, NonIdealState, Button } from '@blueprintjs/core';
 import Icon, { IconTypeEnum } from '../icons';
 import Thread from './';
+import './threadInput.css';
 
 interface IProps {
+  tempData?: any;
   inputRef: Function;
   newCommentFormActive: boolean;
   setNewCommentForm: Function;
@@ -18,14 +21,66 @@ interface IProps {
 }
 const threadSystem = (props: IProps) => {
   const { newCommentFormActive, setNewCommentForm, user, submitComment, threads = [],
-    linkTo, deleteCommentClicked, reportCommentClicked
+    linkTo, deleteCommentClicked, reportCommentClicked, tempData
   } = props;
   const [commentPositionTop, commentPositionSet] = useState<boolean>(true);
   const [sortBy, setSortBy] = useState<'recent' | 'activity'>('activity');
   let commentInput;
   return (
     <>
-      {commentPositionTop && (
+      <div className='kp_thread_input_wrapper'>
+        <div className='kp_thread_input_container'>
+          <div className='kp_thread_input'>
+            <div className='kp_thread_input_avatar'>
+              <Avatar
+                user={user}
+              />
+            </div>
+            <div className='kp_thread_input_action_wrapper'>
+              <div className='kp_thread_input_action_container'>
+                <span
+                  className='kp_thread_input_action'
+                >
+                  Start your post
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className='kp_thread_input_addons_wrapper'>
+            <div className='kp_thread_input_addons_container'>
+              <ul className='kp_thread_input_addons'>
+                <li
+                  className='kp_thread_input_addon'
+                >
+                  <div>
+                    <Icon icon='fa-quote-left' />
+                    <span className='kp_thread_input_addon_text'>Quote/Excerpt</span>
+                  </div>
+                  
+                </li>
+                <li
+                  className='kp_thread_input_addon'
+                >
+                  <div>
+                    <Icon icon='fa-typewriter' />
+                    <span className='kp_thread_input_addon_text'>Review</span>
+                  </div>
+                  
+                </li>
+                <li
+                  className='kp_thread_input_addon'
+                >
+                  <div>
+                    <Icon icon='fa-image' />
+                    <span className='kp_thread_input_addon_text'>Picture</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* {commentPositionTop && (
         <ThreadInput
           inputRef={input =>  commentInput = input}
           newCommentFormActive={newCommentFormActive}
@@ -35,7 +90,7 @@ const threadSystem = (props: IProps) => {
           setPosition={commentPositionSet}
           positionTop={commentPositionTop}
         />
-      )}
+      )} */}
 
       <div className='single_container_discussions_actions'>
         <Popover
@@ -60,7 +115,7 @@ const threadSystem = (props: IProps) => {
           </Menu>
         </Popover>
       </div>
-
+      {(threads.length < 1 && tempData !== undefined) && tempData}
       {threads.length < 1 && (
         <div className='single_container_discussions_empty'>
           <div className='nonIdealWrapper' style={{ padding: '25px 0 50px'}}>

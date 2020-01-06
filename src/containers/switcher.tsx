@@ -11,16 +11,17 @@ export const keenToaster = Toaster.create({
   className: 'keenpagesToaster'
 })
 
-const Switcher = ({ page, updateViewPort }: { 
+const Switcher = ({ page, updateViewPort, searchText }: { 
   page: string;
   updateViewPort: Function;
+  searchText: string
 }) => {
   return (
     <ResizeSensor onResize={() => updateViewPort()}>
       <>
         {page.startsWith('auth')
           ? <AuthWrapper page={page} />
-          : <PageWrapper page={page} />}
+          : <PageWrapper page={page} searchText={searchText} />}
         <AuthModal />
       </>
     </ResizeSensor>
@@ -28,7 +29,8 @@ const Switcher = ({ page, updateViewPort }: {
 }
 
 const mapStateToProps = (state: IStore) => ({
-  page: state.page
+  page: state.page,
+  searchText: state.app.home.searchText
 });
 
 const mapDispatch = dispatch => ({

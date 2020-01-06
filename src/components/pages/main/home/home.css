@@ -8,6 +8,9 @@
 .section_gray {
   background-color: rgba(167, 182, 194, 0.13);
 }
+.section_top {
+  margin-top: 50px;
+}
 .heroSection {
   background-color: rgba(167, 182, 194, 0.13);
   font-family: ministry, sans-serif;

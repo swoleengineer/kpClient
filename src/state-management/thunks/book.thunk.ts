@@ -63,28 +63,19 @@ export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
   })
 )
 
-export const searchBooks = (text) => getBookSearch(text).then(
+export const searchBooks = (text, sendToStore: boolean = false) => getBookSearch(text).then(
   (response: any) => {
-    store.dispatch({
-      type: types.gotMoreBooks,
-      payload: response.data.data
-    })
-  },
-  (err: any) => {
-    let message;
-    try {
-      const { message: mesaj =  '' } = { ...err.response.data, ...(err.response.data.data || {}) }
-      message = mesaj
-    } catch {
-      message = 'Could not create this book. Please try again later'
+    const { data: payload = undefined } = response.data || {};
+    if (sendToStore) {
+      store.dispatch({
+        type: types.gotMoreBooks,
+        payload
+      })
     }
-    AppToaster.show({
-      message,
-      intent: 'danger',
-      icon: 'error'
-    })
-  }
-)
+    return payload;
+  },
+  (err: any) => Promise.reject(err));
+  
 export const createBook = (params: IBookRequest, goToNext: boolean = false, redirectPayload: {
   type: string;
   payload?: any
@@ -233,32 +224,19 @@ export const toggleTopicAgreeBook = (bookId: string, topicId: string) => putTogg
 
 export const addTopicsToBook = (book: string, topics: ITopic[]) => postAddTopicsToBook(book, { topics }).then(
   (res: any) => {
-    if (!res || !res.data) {
-      throw { response: { data: {
-        message: 'Error updating topics for this book',
-        status: 400,
-        data: false
-      }}};
-      return;
+    debugger;
+    const { data } = res;
+    
+    if (!res || !data) {
+      return res
     }
     store.dispatch({
       type: types.updateSelected,
-      payload: res.data
+      payload: data
     });
+    return res
   },
-  (err: any) => {
-    let message;
-    try {
-      message = err.response.data.message
-    } catch {
-      message = 'Could not update topics for this book.'
-    }
-    AppToaster.show({
-      message,
-      intent: 'danger',
-      icon: 'error'
-    })
-  }
+  (err: any) => Promise.reject(err)
 )
 
 export const editBookDetails = (bookId: string, details: { [key: string]: any}) => postEditBook(bookId, details).then(

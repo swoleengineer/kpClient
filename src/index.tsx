@@ -3,14 +3,14 @@ import * as ReactDOM from 'react-dom';
 import { App, HotApp } from './app';
 import { store, rootReducer } from './store';
 import * as Sentry from '@sentry/browser';
-Sentry.init({
-  dsn: 'https://61a6a7658c77406eacab944b5baf2ef1@sentry.io/1468876',
-  integrations: [
-    new Sentry.Integrations.Breadcrumbs({
-      console: false
-    })
-  ]
-});
+// Sentry.init({
+//   dsn: 'https://61a6a7658c77406eacab944b5baf2ef1@sentry.io/1468876',
+//   integrations: [
+//     new Sentry.Integrations.Breadcrumbs({
+//       console: false
+//     })
+//   ]
+// });
 
 const renderRoot = (app: JSX.Element) => {
   ReactDOM.render(app, document.getElementById('root'))

@@ -18,8 +18,44 @@
 body {
   font-family: ministry, sans-serif;
 }
+.noscroll {
+  overflow: hidden;
+}
 #root {
-  height: 100%
+  height: 100%;
+  position: relative;
+}
+.flatten_shadows * {
+  box-shadow: none !important;
+  /* opacity: .98; */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-color: transparent;
+  /* background-color: black; */
+  text-shadow: none !important;
+
+}
+.flatten_shadows {
+  position: relative;
+}
+.flatten_shadows:before {
+  content: ' ';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.18);
+
+  z-index: 17;
+  animation: .15s ease 0s 1 popupEntrance;
+}
+@keyframes popupEntrance {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 button:focus {
   outline: none;

@@ -8,7 +8,7 @@ import querySerializer from 'query-string';
 import { initialAppState, siteName, pageTitleMap } from './state-management/utils';
 
 
-const development = process.env.NODE_ENV !== 'development';
+const development = process.env.NODE_ENV === 'development';
 
 const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   querySerializer,
@@ -32,7 +32,7 @@ const { reducer, middleware, enhancer } = connectRoutes(routesMap, {
   }
 });
 
-const middlewares = applyMiddleware(middleware);
+// const middlewares = applyMiddleware(middleware);
 
 export const rootReducer = combineReducers<IStore>({
   app: reducers.appReducer,
@@ -48,15 +48,25 @@ export const rootReducer = combineReducers<IStore>({
 });
 
 function configureStore(initialState?: any) {
-  const middleWares: any[] = !development ? [ logger ] : [];
-  const combinedEnhancers = compose(enhancer, applyMiddleware(...middleWares));
-  return createStore(
-    rootReducer,
-    initialState!,
-    development
-      ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-      : compose(combinedEnhancers, middlewares));
+  const middleWares: any[] = [ middleware ];
+  const composeEnhancers =
+          typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && development
+            ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+          : compose;
+  const combinedEnhancers = composeEnhancers(enhancer, applyMiddleware(...middleWares));
+  return createStore(rootReducer, initialState!, combinedEnhancers);
 };
+
+// function configureStore(initialState?: any) {
+//   const middleWares: any[] = !development ? [ logger ] : [];
+//   const combinedEnhancers = compose(enhancer, applyMiddleware(...middleWares));
+//   return createStore(
+//     rootReducer,
+//     initialState!,
+//     development
+//       ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+//       : compose(combinedEnhancers, middlewares));
+// };
 
 export const store = configureStore(initialAppState);
 
