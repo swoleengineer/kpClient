@@ -61,7 +61,7 @@ const singleBook = () => {
 		}
 		const { thirdPartyData } = book;
 		const goodReadsData = thirdPartyData.find(x => ['provider', 'goodReads'].includes(x.provider));
-		if (goodReadsData) {
+		if (goodReadsData && goodReadsData.data && goodReadsData.data.reviews_widget) {
 			setTempDiscussions(<div dangerouslySetInnerHTML={{ __html: goodReadsData.data.reviews_widget }} />)
 		}
 	}, [book])
@@ -113,7 +113,6 @@ const singleBook = () => {
 	const submitNewReport = () => {
 		if (!itemToReport.parentId || !itemToReport.author) {
 			keenToaster.show({
-				intent: 'warning',
 				message: 'Improper report request. Please try again.',
 				icon: 'error'
 			});
@@ -453,7 +452,6 @@ const singleBook = () => {
 					</div>
 				</nav>
 				<Display { ...pageTabs[activeTab].props } />
-
 		</section>
 	);
 }

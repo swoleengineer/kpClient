@@ -26,7 +26,7 @@ export const createReport = (params: IReportRequest) => postCreateReport(params)
     AppToaster.show({
       message,
       icon: 'error',
-      intent: 'danger'
-    })
+    });
+    return Promise.reject(err);
   }
 )

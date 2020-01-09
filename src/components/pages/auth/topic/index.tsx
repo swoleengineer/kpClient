@@ -56,7 +56,6 @@ const TopicForm = (props: {
     if (formErrors.length) {
       keenToaster.show({
         message: 'Please resolve form errors before submitting.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -70,7 +69,6 @@ const TopicForm = (props: {
     .catch(() => {
       keenToaster.show({
         message: 'Could not create topic.',
-        intent: 'danger',
         icon: 'error'
       })
     });

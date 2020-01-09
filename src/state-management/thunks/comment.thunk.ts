@@ -48,7 +48,7 @@ export const createComment = (params: ICommentRequest, goToNext: boolean = false
     } catch {
       message = 'Could not add your comment. Please try again later'
     }
-    AppToaster.show({ message, intent: 'danger', icon: 'error' });
+    AppToaster.show({ message, icon: 'error' });
   }
 )
 
@@ -71,7 +71,6 @@ export const removeComment = (comment: IComment) => deleteComment(comment._id).t
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
     })
   }

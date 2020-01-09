@@ -98,6 +98,7 @@ const searchPopup = (props: IProps) => {
           {searchText.length > 0 && (
             <span
               className='kp_search_popup_btn popup_btn_primary'
+              onClick={() => performSearch()}
             >
               <Icon icon='fa-search' type={IconTypeEnum.regular} />
             </span>

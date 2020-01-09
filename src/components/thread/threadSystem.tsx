@@ -28,7 +28,7 @@ const threadSystem = (props: IProps) => {
   let commentInput;
   return (
     <>
-      <div className='kp_thread_input_wrapper'>
+      {/* <div className='kp_thread_input_wrapper'>
         <div className='kp_thread_input_container'>
           <div className='kp_thread_input'>
             <div className='kp_thread_input_avatar'>
@@ -79,8 +79,8 @@ const threadSystem = (props: IProps) => {
             </div>
           </div>
         </div>
-      </div>
-      {/* {commentPositionTop && (
+      </div> */}
+      {commentPositionTop && (
         <ThreadInput
           inputRef={input =>  commentInput = input}
           newCommentFormActive={newCommentFormActive}
@@ -90,7 +90,7 @@ const threadSystem = (props: IProps) => {
           setPosition={commentPositionSet}
           positionTop={commentPositionTop}
         />
-      )} */}
+      )}
 
       <div className='single_container_discussions_actions'>
         <Popover

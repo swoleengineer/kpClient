@@ -49,9 +49,9 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
     console.log(err, err.response.data);
     AppToaster.show({
       message: err.response.data.message || 'Could not register your account. Please try again later.',
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 ).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
   const { user, goToNext: gNext, redirectPayload: rdPload, jwt } = nextPayload;
@@ -68,7 +68,6 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
       localStorage.setItem('x-access-token', jwt);
       AppToaster.show({
         message: 'Successfully registered.',
-        intent: 'success',
         icon: 'tick',
         onDismiss: () => gNext ? store.dispatch(redirect(rdPload)) : null
       });
@@ -77,9 +76,9 @@ export const register = (params: INewUserRequest, goToNext: boolean = false, red
       console.log(error, error.response.data);
       AppToaster.show({
         message: error.response.data.message || 'Could not register your account. Please try again later.',
-        intent: 'danger',
         icon: 'error'
       });
+      return Promise.reject(error);
     }
   )
 });
@@ -101,21 +100,15 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
       payload: { loggedIn: true, jwt }
     });
     localStorage.setItem('x-access-token', jwt);
-    AppToaster.show({
-      message: `Welcome ${user.profile.first_name}`,
-      intent: 'success',
-      icon: 'tick',
-      onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
-    });
     return { user, goToNext, redirectPayload, jwt };
   },
   err => {
     console.log(err, err.response.data);
     AppToaster.show({
       message: err.response.data.message || 'Could not log you in. Please try again later.',
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 ).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
   const { user, goToNext: goNext, redirectPayload: nexpload, jwt } = nextPayload;
@@ -130,21 +123,15 @@ export const login = (params: IUserLoginRequest, goToNext: boolean = false, redi
         payload
       });
       localStorage.setItem('x-access-token', jwt);
-      AppToaster.show({
-        message: 'Successfully registered.',
-        intent: 'success',
-        icon: 'tick',
-        onDismiss: () => goNext ? store.dispatch(redirect(nexpload)) : null
-      });
       return { user }
     },
     error => {
       console.log(error, error.response.data);
       AppToaster.show({
         message: error.response.data.message || 'Could not register your account. Please try again later.',
-        intent: 'danger',
         icon: 'error'
       });
+      return Promise.reject(error)
     }
   )
 }).then(() => getMyShelvesReq().then(
@@ -182,6 +169,7 @@ export const autoLogin = () => {
     },
     (err: any) => {
       localStorage.removeItem('x-access-token');
+      return Promise.reject(err);
     }
   ).then((nextPayload: { user: IUser; goToNext: boolean; redirectPayload: any; jwt: string }) => {
     const { user, jwt } = nextPayload;
@@ -198,16 +186,15 @@ export const autoLogin = () => {
         localStorage.setItem('x-access-token', jwt);
         AppToaster.show({
           message: `Welcome ${user.profile.first_name}`,
-          intent: 'success',
           icon: 'tick',
         });
       },
       error => {
         AppToaster.show({
           message: error.response.data.message || 'Could not register your account. Please try again later.',
-          intent: 'danger',
           icon: 'error'
         });
+        return Promise.reject(error);
       }
     )
   }).then(
@@ -225,7 +212,7 @@ export const autoLogin = () => {
       },
       err => Promise.reject(err)
     )
-  ).catch((err) => err)
+  ).catch((err) => Promise.reject(err))
 }
 
 export const updateProfilePicture = (id: string, body: { public_id: string; link: string }) => postUserUpdatePic(id, body).then(
@@ -237,11 +224,7 @@ export const updateProfilePicture = (id: string, body: { public_id: string; link
   },
   (err: any) => {
     console.log(err.response.data);
-    AppToaster.show({
-      message: 'Could not update your profile picture.',
-      intent: 'danger',
-      icon: 'error'
-    })
+    return Promise.reject(err);
   }
 )
 
@@ -261,9 +244,9 @@ export const editNotificationSettings = (id: string, params: { [key: string]: bo
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 )
 
@@ -283,9 +266,9 @@ export const updateAccount = (id: string, body: { [key: string]: any }) => postU
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 )
 
@@ -300,9 +283,9 @@ export const ChangeUserPassword = (id: string, params: { oldPassword: string; pa
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 )
 
@@ -314,7 +297,6 @@ export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', typ
     const { book, user } = res.data || { book: undefined, user: undefined};
     if (!book || !user) {
       throw { response: { data: { message: 'Could not manage this book in your account.'}}};
-      return;
     }
     store.dispatch({
       type: types.updateSavedBook,
@@ -329,9 +311,7 @@ export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', typ
           book: id
         }
       });
-    }
-    
-    
+    }    
     AppToaster.show({
       message: `'${book.title}' ${type === 'add' ? 'saved to' : 'removed from'} your ${list === 'readBooks' ? 'library' : 'saved books'}.`,
       intent: 'none',
@@ -346,9 +326,9 @@ export const toggleUserBook = (id: string, list: 'readBooks' | 'savedBooks', typ
     console.log(err.response.data);
     AppToaster.show({
       message: 'Could not update this book in your account.',
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 );
 
@@ -364,7 +344,7 @@ export const logUserOut = () => {
     message: `You've been logged out.`,
     intent: 'none',
     icon: 'log-out'
-  })
+  });
 }
 
 export const submitForgotPass = (params: { email: string }, goToNext: boolean = false, redirectPayload: {
@@ -388,7 +368,7 @@ export const submitResetPass = (params: { password: string }, goToNext: boolean 
   type: string;
   payload?: any
 } = { type: 'HOME' }) => {
-  const { ocation: { payload: { token }}} = store.getState();
+  const { location: { payload: { token }}} = store.getState();
   return postUserResetPassword({ password: params.password, token }).then(
     (res: any) => {
       const { user, jwt } = res.data || { jwt: undefined, user: undefined };
@@ -403,7 +383,6 @@ export const submitResetPass = (params: { password: string }, goToNext: boolean 
       localStorage.setItem('x-access-token', jwt);
       AppToaster.show({
         message: `Password updated. You are now logged in.`,
-        intent: 'success',
         icon: 'tick',
         onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
       });
@@ -417,9 +396,9 @@ export const submitResetPass = (params: { password: string }, goToNext: boolean 
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
-      })
+      });
+      return Promise.reject(err);
     }
   )
 }
@@ -439,8 +418,8 @@ const handleStatErr = (errMsg: string) => err => {
   } catch {
     message = errMsg;
   }
-  AppToaster.show({ message, intent: 'danger', icon: 'error' });
-  return err;
+  AppToaster.show({ message, icon: 'error' });
+  return Promise.reject(err);
 }
 
 export const addSkillToStats = (params: { topic: ITopic; description: string; goal: number; dueDate: Date }) => {
@@ -449,8 +428,8 @@ export const addSkillToStats = (params: { topic: ITopic; description: string; go
   const figures = statFigures.filter(fig => fig);
   if (figures.length && figures.findIndex(({ topic: { _id }}) => _id === params.topic._id) > -1) {
     const message = 'You are already tracking this topic.';
-    AppToaster.show({ message, intent: 'danger', icon: 'error' });
-    return new Promise((resolve, reject) => reject(undefined));
+    AppToaster.show({ message, icon: 'error' });
+    return Promise.reject(undefined);
   }
   
   const request: IAddTopicToStatRequest = { statId, ...params };

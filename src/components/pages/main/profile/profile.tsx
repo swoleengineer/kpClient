@@ -62,7 +62,6 @@ const Profile = (props: {
     if (accountErrors.length) {
       keenToaster.show({
         message: 'Please resolve form errors before submitting.',
-        intent: 'danger',
         icon: 'error'
       });
       return;

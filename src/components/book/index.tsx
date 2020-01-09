@@ -72,7 +72,6 @@ const Book = ({
         setLoading(false);
         if (!newBook || !newBook.active || !newBook._id) {
           keenToaster.show({
-            intent: 'danger',
             message: 'Server error loading this book',
             icon: 'error'
           });
@@ -84,7 +83,6 @@ const Book = ({
         setLoading(false);
         console.log(err);
         keenToaster.show({
-          intent: 'danger',
           message: 'Server error loading this book',
           icon: 'error'
         });
@@ -94,7 +92,6 @@ const Book = ({
   const submitNewReport = () => {
     if (!itemToReport.parentId || !itemToReport.author) {
       keenToaster.show({
-        intent: 'warning',
         message: 'Improper report request. Please try again.',
         icon: 'error'
       });

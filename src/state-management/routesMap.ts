@@ -35,7 +35,6 @@ const routesMap = {
       if (!token) {
         AppToaster.show({
           message: 'You do not have a valid token. Please make sure you have clicked on a link from your email.',
-          intent: 'danger',
           icon: 'error',
           onDismiss: () => dispatch(redirect({ type: 'FORGOTPASSWORD' }))
         });
@@ -73,7 +72,6 @@ const routesMap = {
         (err) => {
           AppToaster.show({
             message: 'Could not load question details. Please try again later.',
-            intent: 'danger',
             icon: 'error'
           })
         }
@@ -97,7 +95,6 @@ const routesMap = {
         }
       )).catch(() => AppToaster.show({
         message: 'Error getting the details for this question',
-        intent: 'danger',
         icon: 'error',
         onDismiss: () => dispatch(redirect({ type: 'HOME' }))
       }))
@@ -121,7 +118,6 @@ const routesMap = {
         (err) => {
           AppToaster.show({
             message: 'Could not load book details. Please try again later.',
-            intent: 'danger',
             icon: 'error'
           })
         }
@@ -146,7 +142,6 @@ const routesMap = {
       )
       ).catch(() => AppToaster.show({
         message: 'Error getting the details for this book',
-        intent: 'danger',
         icon: 'error',
         onDismiss: () => dispatch(redirect({ type: 'HOME' }))
       }))
@@ -160,7 +155,6 @@ const routesMap = {
         AppToaster.show({
           message: 'You must be logged in to access this page.',
           icon: 'lock',
-          intent: 'danger'
         });
         dispatch(redirect({ type: 'HOME' }));
         return;
@@ -216,7 +210,6 @@ const routesMap = {
             console.error(err)
             AppToaster.show({
               message: 'Error retrieving shelf details.',
-              intent: 'danger',
               icon: 'error',
               onDismiss: () => dispatch(redirect({
                 type: 'MYPAGE',

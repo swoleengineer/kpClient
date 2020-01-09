@@ -8,6 +8,7 @@ import { Editor, EditorState, RichUtils, ContentState } from 'draft-js';
 import 'emoji-mart/css/emoji-mart.css';
 import { IUser } from '../../state-management/models';
 import Avatar from '../avatar';
+import './threadInput.css';
 
 interface IProps {
   inputRef: Function;
@@ -81,9 +82,38 @@ const threadInput = (props: IProps) => {
 
   return (
     <div className={`single_container_discussions_form ${newCommentFormActive ? 'formActive' : ''}`}>
-      <Collapse isOpen={newCommentFormActive} transitionDuration={45}>
+      <Collapse isOpen={newCommentFormActive} transitionDuration={18}>
+        <div 
+          className='kp_thread_input_active_avatar_wrapper'
+          onClick={() => {
+            setNewCommentForm(false);
+            setRichTextStatus(false);
+          }}
+        >
+          <div className='kp_thread_input_active_avatar_container'>
+
+            <Avatar
+              user={user}
+              style={{
+                border: '1px solid rgba(0,0,0,.1)'
+              }}
+            />
+          </div>
+        </div>
+
         {richTextActive && (
           <div className='single_container_discussions_form_options_rt'>
+            <span 
+              className='single_container_discussions_form_option'
+              onClick={() => {
+                setNewCommentForm(false);
+                setRichTextStatus(false);
+              }}
+            >
+              <Icon
+                icon='fa-arrow-to-left'
+              />
+            </span>
             <div className='single_container_discussions_form_options_rt_group'>
               <span
                 className='single_container_discussions_form_option'
@@ -187,6 +217,17 @@ const threadInput = (props: IProps) => {
         )}
         {!richTextActive && (
           <div className='single_container_discussions_form_options'>
+            <span 
+              className='single_container_discussions_form_option'
+              onClick={() => {
+                setNewCommentForm(false);
+                setRichTextStatus(false);
+              }}
+            >
+              <Icon
+                icon='fa-arrow-to-left'
+              />
+            </span>
             <Popover
               className='single_container_discussions_form_option'
               position='bottom-left'
@@ -218,17 +259,30 @@ const threadInput = (props: IProps) => {
                 closePopover={() => setInputEmojiActive(false)}
               />
             </Popover>
-
+            <span 
+              className='single_container_discussions_form_option'
+              onClick={() => {
+                const currentStatus: boolean = richTextActive;
+                setRichTextStatus(!currentStatus);
+                if (!currentStatus && (inputValue && inputValue.length)) {
+                  setEditorState(EditorState.createWithContent(ContentState.createFromText(inputValue)))
+                }
+              }}
+            >
+              <Icon
+                icon='fa-arrow-from-left'
+              />
+            </span>
           </div>
         )}
         <div className='single_container_discussions_form_settings'>
-          <span
+          {/* <span
             className='single_container_discussions_form_option'
             onClick={() => setPosition(!positionTop)}
           >
             <Icon icon={`fa-long-arrow-${positionTop ? 'down' : 'up'}`} type={IconTypeEnum.light} />
-          </span>
-          <span
+          </span> */}
+          {/* <span
             className='single_container_discussions_form_option'
             onClick={() => {
               const currentStatus: boolean = richTextActive;
@@ -239,8 +293,8 @@ const threadInput = (props: IProps) => {
             }}
           >
             <Icon icon={`fa-${richTextActive ? 'compress' : 'expand'}`} type={IconTypeEnum.regular} />
-          </span>
-          <span
+          </span> */}
+          {/* <span
             className='single_container_discussions_form_option'
             onClick={() => {
               setNewCommentForm(false);
@@ -248,7 +302,7 @@ const threadInput = (props: IProps) => {
             }}
           >
             <Icon icon='fa-times' type={IconTypeEnum.light} />
-          </span>
+          </span> */}
         </div>
       </Collapse>
       {commentSelectedBook !== undefined && (
@@ -271,15 +325,22 @@ const threadInput = (props: IProps) => {
           <InputGroup
             fill={true}
             leftIcon={!newCommentFormActive
-              ? <span className='bp3-icon'>
-                  {user
-                    ? <Avatar 
-                        user={user}
-                        style={{ boxShadow: '0px 2px 4px rgba(0,0,0,.27)', border: '1px solid rgba(255,255,255,.5)'}}
-                        initialStyle={{ fontSize: '.7vmin', marginTop: '2px'}} />
-                    : <Icon icon='fa-pen-alt' /> 
-                  }
+              ? (
+                <span 
+                  className='bp3-icon'
+                  style={{
+                    width: '30px',
+                    margin: '0'
+                  }}
+                >
+                  <Avatar
+                    user={user}
+                    style={{
+                      border: '1px solid rgba(0,0,0,.1)'
+                    }}
+                  />
                 </span>
+              )
               : undefined
             }
             value={inputValue}

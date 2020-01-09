@@ -3,7 +3,7 @@ import { IUserState, AuthModalTypes } from '../models';
 // export const initial
 
 export const initialUserState: IUserState = {
-  jwt: '156156156',
+  jwt: '',
   user: null,
   loggedIn: false,
   showAuthModal: false,

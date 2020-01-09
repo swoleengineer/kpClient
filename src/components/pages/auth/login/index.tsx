@@ -55,7 +55,6 @@ const LoginPage = (props: {
       // there are errors to be fixed before submitting
       keenToaster.show({
         message: 'Please fix your form errors before submitting.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -68,7 +67,6 @@ const LoginPage = (props: {
     })
     .catch(() => keenToaster.show({
       message: 'An error has occured.',
-      intent: 'danger',
       icon: 'error'
     }))
   }

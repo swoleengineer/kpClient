@@ -76,7 +76,6 @@ const SingleQuestionPage = (props: {
       keenToaster.show({
         message: 'This book has already been suggested by another user.',
         icon: 'error',
-        intent: 'danger'
       });
       return;
     }
@@ -108,7 +107,6 @@ const SingleQuestionPage = (props: {
   const submitNewReport = () => {
     if (!itemToReport.parentId || !itemToReport.author) {
       keenToaster.show({
-        intent: 'warning',
         message: 'Improper report request. Please try again.',
         icon: 'error'
       });
@@ -272,7 +270,6 @@ const SingleQuestionPage = (props: {
                     if (topicsToAdd.length > 9) {
                       keenToaster.show({
                         message: '10 topics max at a time please.',
-                        intent: 'warning',
                         icon: 'info-sign'
                       });
                       return;
@@ -280,7 +277,6 @@ const SingleQuestionPage = (props: {
                     if (question.topics.map(tpc => tpc.topic._id).includes(topic._id)) {
                       keenToaster.show({
                         message: `${topic.name} already in this Request.`,
-                        intent: 'warning',
                         icon: 'error'
                       })
                       return;

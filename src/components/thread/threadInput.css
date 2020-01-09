@@ -82,3 +82,20 @@
 .kp_thread_input_addon div:hover .kp_thread_input_addon_text  {
   color: rgba(0,0,0,.5)
 }
+.single_container_discussions_form.formActive .bp3-collapse-body {
+  display: flex !important;
+}
+.kp_thread_input_active_avatar_wrapper {
+  width: 58px;
+  height: 100%;
+  /* animation: .2s ease 0s 1 slideLeft; */
+  transition: all .2s ease;
+  position: relative;
+}
+.kp_thread_input_active_avatar_wrapper:hover {
+  cursor: pointer;
+  background-color: rgba(255,255,255,.8);
+}
+.kp_thread_input_active_avatar_container {
+  padding: 8px 10px 0 15px;
+}

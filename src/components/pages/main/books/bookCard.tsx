@@ -81,7 +81,6 @@ const BookCard = (props: {
   const submitNewReport = () => {
     if (!itemToReport.parentId || !itemToReport.author) {
       keenToaster.show({
-        intent: 'warning',
         message: 'Improper report request. Please try again.',
         icon: 'error'
       });

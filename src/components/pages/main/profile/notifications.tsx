@@ -15,7 +15,7 @@ const NotificationSettings = (props: {
     const value = e.target.value !== 'on' ? true : false
     editNotificationSettings(user._id, { type, value}).then(
       () => keenToaster.show({ message: 'Notification setting updated' }),
-      () => keenToaster.show({ intent: 'danger', message: 'Could not update this setting.'})
+      () => keenToaster.show({ message: 'Could not update this setting.'})
     )
   }
   return (

@@ -22,7 +22,6 @@ export const createQuestion = (params: IQuestionRequest, goToNext: boolean = fal
     if (!data) {
       AppToaster.show({
         message: 'Something went wrong with this request.',
-        intent: 'warning',
         icon: 'error'
       });
       return;
@@ -31,7 +30,6 @@ export const createQuestion = (params: IQuestionRequest, goToNext: boolean = fal
     store.dispatch({ type: types.updateSingleQuestion, payload });
     AppToaster.show({
       message: 'Question added.',
-      intent: 'success',
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     });
@@ -44,7 +42,8 @@ export const createQuestion = (params: IQuestionRequest, goToNext: boolean = fal
     } catch {
       message = 'Could not create this question. Please try again later'
     }
-    AppToaster.show({ message, intent: 'danger', icon: 'error' })
+    AppToaster.show({ message,  icon: 'error' });
+    return Promise.reject(err);
   }
 );
 
@@ -73,9 +72,9 @@ export const addTopicsToQuestion = (id: string, topics: ITopic[]) => postQuestio
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 )
 
@@ -103,9 +102,9 @@ export const toggleTopicAgreeQuestion = (id: string, topicId: string) => putQues
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 );
 
@@ -134,9 +133,9 @@ export const queryMoreQuestions = (sort: { [key: string]: any } = questionSorts[
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
-      })
+      });
+      return Promise.reject(err);
     }
   ).then(
     (questionIds: any) => {
@@ -157,9 +156,9 @@ export const queryMoreQuestions = (sort: { [key: string]: any } = questionSorts[
         }
         AppToaster.show({
           message,
-          intent: 'danger',
           icon: 'error'
-        })
+        });
+        return Promise.reject(err);
       })
     },
     err => {
@@ -171,9 +170,9 @@ export const queryMoreQuestions = (sort: { [key: string]: any } = questionSorts[
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
-      })
+      });
+      return Promise.reject(err);
     }
   )
 }
@@ -204,9 +203,9 @@ export const searchQuestions = (text) => {
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
-      })
+      });
+      return Promise.reject(err);
     }
   ).then(
     (qIds: any) => {
@@ -227,9 +226,9 @@ export const searchQuestions = (text) => {
         }
         AppToaster.show({
           message,
-          intent: 'danger',
           icon: 'error'
-        })
+        });
+        return Promise.reject(err);
       })
     },
     err => {
@@ -241,9 +240,9 @@ export const searchQuestions = (text) => {
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
-      })
+      });
+      return Promise.reject(err);
     }
   )
 }

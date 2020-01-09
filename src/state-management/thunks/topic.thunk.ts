@@ -23,8 +23,7 @@ export const createTopic = (params: ITopicRequest, goToNext: boolean = false, re
       }
     });
     AppToaster.show({
-      message: `'${newTopic.name}' successfully created.`,
-      intent: 'success',
+      message: `'${newTopic.name}' added.`,
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     });
@@ -39,8 +38,8 @@ export const createTopic = (params: ITopicRequest, goToNext: boolean = false, re
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
-    })
+    });
+    return Promise.reject(err);
   }
 )

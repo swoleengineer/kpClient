@@ -83,7 +83,6 @@ const fullStat = (props: IProps) => {
     if (formErrors.length) {
       keenToaster.show({
         message: 'Please resolve form errors before submitting.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -113,7 +112,6 @@ const fullStat = (props: IProps) => {
         if (!err) {
           keenToaster.show({
             message: 'Error updating this stat. Try again later.',
-            intent: 'danger',
             icon: 'error'
           });
         }

@@ -18,8 +18,6 @@ import SearchOver from './searchOver';
 const Header = (props: { user: IUserState; style?: any; linkTo: Function; viewPort: IAppState['viewPort'], setProfileNav: Function }) => {
   const { loggedIn, user } = props.user;
   const linkTo = props.linkTo;
-  const setProfileNav = props.setProfileNav;
-  const { username } = user || { username: undefined };
   const searchText = useSelector((store: IStore) => store.app.home.searchText);
   const [searchResults, setSearchResults] = useState<Array<any>>([]);
   useEffect(() => {

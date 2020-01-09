@@ -78,7 +78,6 @@ const RegisterPage = (props: {
     if (formErrors.length) {
       keenToaster.show({
         message: 'Please correct your errors before submitting the form.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -91,7 +90,6 @@ const RegisterPage = (props: {
     })
     .catch(() => keenToaster.show({
       message: 'An error has occured',
-      intent: 'danger',
       icon: 'error'
     }))
   }

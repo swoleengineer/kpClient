@@ -115,7 +115,6 @@ const sectionTopics = (props: IProps) => {
 							if (topicsToAdd.length > 9 && topicsToAdd.findIndex(skill => skill.name === topic.name) < 0) {
 								keenToaster.show({
 									message: '10 topics max at a time please.',
-									intent: 'warning',
 									icon: 'info-sign'
 								});
 								return;
@@ -123,7 +122,6 @@ const sectionTopics = (props: IProps) => {
 							if (topics.filter(tpc => tpc.topic && tpc.topic.name).map(tpc => tpc.topic._id).includes(topic._id)) {
 								keenToaster.show({
 									message: `${topic.name} already in this book.`,
-									intent: 'warning',
 									icon: 'error'
 								})
 								return;

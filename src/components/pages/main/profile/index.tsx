@@ -36,7 +36,6 @@ const ProfilePage = (props: {
       }
       keenToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -55,7 +54,6 @@ const ProfilePage = (props: {
       },
       () => keenToaster.show({
         message: 'Could not update your pictures',
-        intent: 'danger',
         icon: 'error'
       })
     )

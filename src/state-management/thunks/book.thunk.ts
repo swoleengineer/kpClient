@@ -56,11 +56,13 @@ export const searchGoogle = (text: string) => getSearchGoogleBooks(text).then(
       }))
     });
   },
-  err => AppToaster.show({
-    intent: 'danger',
-    message: 'Could not get search results.',
-    icon: 'error'
-  })
+  err => {
+    AppToaster.show({
+      message: 'Could not get search results.',
+      icon: 'error'
+    });
+    return Promise.reject(err);
+  }
 )
 
 export const searchBooks = (text, sendToStore: boolean = false) => getBookSearch(text).then(
@@ -88,7 +90,6 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
     });
     AppToaster.show({
       message: `${newBook.title} successfully created.`,
-      intent: 'success',
       icon: 'tick',
       onDismiss: () => goToNext ? store.dispatch(redirect(redirectPayload)) : null
     })
@@ -104,7 +105,6 @@ export const createBook = (params: IBookRequest, goToNext: boolean = false, redi
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
     })
   }
@@ -147,7 +147,6 @@ export const queryMoreBooks = (sort: { [key: string]: any } = bookSorts[0].sort,
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
       })
     }
@@ -170,7 +169,6 @@ export const queryMoreBooks = (sort: { [key: string]: any } = bookSorts[0].sort,
         }
         AppToaster.show({
           message,
-          intent: 'danger',
           icon: 'error'
         })
       })
@@ -184,7 +182,6 @@ export const queryMoreBooks = (sort: { [key: string]: any } = bookSorts[0].sort,
       }
       AppToaster.show({
         message,
-        intent: 'danger',
         icon: 'error'
       })
     }
@@ -216,7 +213,6 @@ export const toggleTopicAgreeBook = (bookId: string, topicId: string) => putTogg
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
     })
   }
@@ -263,7 +259,6 @@ export const editBookDetails = (bookId: string, details: { [key: string]: any}) 
     }
     AppToaster.show({
       message,
-      intent: 'danger',
       icon: 'error'
     })
   }

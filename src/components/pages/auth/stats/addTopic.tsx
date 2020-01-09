@@ -62,7 +62,6 @@ const addTopicToStatForm = (props: {
     if (formErrors.length) {
       keenToaster.show({
         message: 'Please resolve form errors before submitting.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -71,7 +70,6 @@ const addTopicToStatForm = (props: {
     if (!topicToAdd) {
       keenToaster.show({
         message: 'You must have a topic selected.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
@@ -93,7 +91,6 @@ const addTopicToStatForm = (props: {
         if (!err) {
           keenToaster.show({
             message: 'Could not add this topic to your stats.',
-            intent: 'danger',
             icon: 'error'
           });
         }

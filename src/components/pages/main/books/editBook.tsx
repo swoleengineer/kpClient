@@ -46,7 +46,6 @@ const EditBook = ({ book, cancelEdit, saveEdit }: IFormProps) => {
     if (formErrors.length) {
       keenToaster.show({
         message: 'Please correct your errors before submitting the form.',
-        intent: 'danger',
         icon: 'error'
       });
       return;
